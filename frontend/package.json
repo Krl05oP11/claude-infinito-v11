@@ -1,0 +1,41 @@
+{
+  "name": "claude-infinito-frontend",
+  "version": "1.1.0",
+  "description": "Frontend for Claude Infinito v1.1",
+  "main": "electron.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "electron": "electron .",
+    "electron-dev": "ELECTRON_IS_DEV=true electron .",
+    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && npm run electron-dev\""
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^5.14.0",
+    "@mui/material": "^5.18.0",
+    "axios": "^1.5.0",
+    "electron": "^26.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "react-scripts": "^5.0.1",
+    "wait-on": "^7.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

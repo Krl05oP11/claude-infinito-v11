@@ -1,0 +1,249 @@
+import axios from 'axios';
+import { createLogger } from '../utils/logger';
+import { EmbeddingService } from './embedding.service';
+
+const logger = createLogger();
+
+export interface MemoryDocument {
+  id: string;
+  content: string;
+  metadata: Record<string, any>;
+  similarity?: number;
+}
+
+export class RAGService {
+  private chromaHost: string;
+  private chromaPort: string;
+  private authToken: string;
+  private embeddingService: EmbeddingService;
+
+  constructor() {
+    this.chromaHost = process.env.CHROMADB_HOST || 'localhost';
+    this.chromaPort = process.env.CHROMADB_PORT || '8001';
+    this.authToken = process.env.CHROMA_AUTH_TOKEN || '';
+    this.embeddingService = new EmbeddingService();
+    
+    logger.info(`ChromaDB config: ${this.chromaHost}:${this.chromaPort}, token: ${this.authToken ? 'configured' : 'missing'}`);
+  }
+
+  private getBaseUrl(): string {
+    // La clave: usar /api/v1/ aunque el cliente sea v2
+    return `http://${this.chromaHost}:${this.chromaPort}/api/v1`;
+  }
+
+  private getHeaders(): any {
+    const headers: any = {
+      'Content-Type': 'application/json'
+    };
+    
+    if (this.authToken) {
+      headers['X-Chroma-Token'] = this.authToken;
+    }
+    
+    return headers;
+  }
+
+  async createCollection(projectId: string): Promise<void> {
+    try {
+      const collectionName = `project_${projectId.replace(/-/g, '_')}`;
+      logger.info(`Creating ChromaDB collection: ${collectionName}`);
+      
+      await axios.post(`${this.getBaseUrl()}/collections`, {
+        name: collectionName,
+        metadata: { project_id: projectId }
+      }, {
+        headers: this.getHeaders()
+      });
+      
+      logger.info(`✅ Created collection: ${collectionName}`);
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        logger.info('Collection already exists - continuing');
+      } else {
+        logger.error('Error creating collection:', {
+          status: error.response?.status,
+          data: error.response?.data,
+          message: error.message,
+          url: `${this.getBaseUrl()}/collections`
+        });
+        throw error;
+      }
+    }
+  }
+
+  async addMemory(projectId: string, conversationId: string, content: string, metadata: any = {}): Promise<void> {
+    try {
+      const collectionName = `project_${projectId.replace(/-/g, '_')}`;
+      logger.info(`Generating embedding for content: "${content.substring(0, 100)}..."`);
+      
+      const embedding = await this.embeddingService.generateEmbedding(content);
+      logger.info(`✅ Generated embedding with ${embedding.length} dimensions`);
+      
+      // Ensure collection exists
+      await this.createCollection(projectId);
+      
+      const memoryId = `conv_${conversationId}_${Date.now()}`;
+      logger.info(`Storing memory in ChromaDB: ${memoryId}`);
+      
+      await axios.post(`${this.getBaseUrl()}/collections/${collectionName}/add`, {
+        ids: [memoryId],
+        embeddings: [embedding],
+        documents: [content],
+        metadatas: [{
+          conversation_id: conversationId,
+          project_id: projectId,
+          timestamp: new Date().toISOString(),
+          ...metadata
+        }]
+      }, {
+        headers: this.getHeaders()
+      });
+      
+      logger.info(`✅ Added memory to ChromaDB collection: ${collectionName}`);
+    } catch (error: any) {
+      logger.error('Error adding memory:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+    }
+  }
+
+  async searchMemory(projectId: string, query: string, limit = 5): Promise<MemoryDocument[]> {
+    try {
+      const collectionName = `project_${projectId.replace(/-/g, '_')}`;
+      logger.info(`Searching in collection ${collectionName} for: "${query}"`);
+      
+      const embedding = await this.embeddingService.generateEmbedding(query);
+      
+      const response = await axios.post(`${this.getBaseUrl()}/collections/${collectionName}/query`, {
+        query_embeddings: [embedding],
+        n_results: limit,
+        include: ['documents', 'metadatas', 'distances']
+      }, {
+        headers: this.getHeaders()
+      });
+
+      const results = response.data;
+      const documents: MemoryDocument[] = [];
+
+      if (results.documents && results.documents[0]) {
+        for (let i = 0; i < results.documents[0].length; i++) {
+          const similarity = 1 - (results.distances[0][i] || 0);
+          documents.push({
+            id: results.ids[0][i],
+            content: results.documents[0][i],
+            metadata: results.metadatas[0][i] || {},
+            similarity: similarity
+          });
+        }
+      }
+
+      const filteredDocs = documents.filter(doc => (doc.similarity || 0) > 0.7);
+      logger.info(`Found ${documents.length} total memories, ${filteredDocs.length} above threshold`);
+      
+      return filteredDocs;
+    } catch (error: any) {
+      logger.error('Error searching memory:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      return [];
+    }
+  }
+
+  async searchAllProjects(query: string, limit = 10): Promise<MemoryDocument[]> {
+    try {
+      logger.info(`Searching ALL projects for: "${query}"`);
+      
+      // Obtener todas las colecciones
+      const collectionsResponse = await axios.get(`${this.getBaseUrl()}/collections`, {
+        headers: this.getHeaders()
+      });
+      
+      const allCollections = collectionsResponse.data || [];
+      const projectCollections = allCollections.filter((col: any) => 
+        col.name && col.name.startsWith('project_')
+      );
+
+      logger.info(`Found ${allCollections.length} total collections, ${projectCollections.length} project collections`);
+
+      if (projectCollections.length === 0) {
+        logger.info('No project collections found');
+        return [];
+      }
+
+      const embedding = await this.embeddingService.generateEmbedding(query);
+      const allDocuments: MemoryDocument[] = [];
+
+      // Buscar en cada colección de proyecto
+      for (const collection of projectCollections) {
+        try {
+          logger.info(`Searching collection: ${collection.name}`);
+          
+          const response = await axios.post(`${this.getBaseUrl()}/collections/${collection.name}/query`, {
+            query_embeddings: [embedding],
+            n_results: Math.ceil(limit / projectCollections.length),
+            include: ['documents', 'metadatas', 'distances']
+          }, {
+            headers: this.getHeaders()
+          });
+
+          const results = response.data;
+          if (results.documents && results.documents[0]) {
+            for (let i = 0; i < results.documents[0].length; i++) {
+              const similarity = 1 - (results.distances[0][i] || 0);
+              allDocuments.push({
+                id: results.ids[0][i],
+                content: results.documents[0][i],
+                metadata: {
+                  ...results.metadatas[0][i],
+                  source_collection: collection.name
+                },
+                similarity: similarity
+              });
+            }
+          }
+          
+          logger.info(`Collection ${collection.name}: found ${results.documents?.[0]?.length || 0} memories`);
+        } catch (collectionError: any) {
+          logger.warn(`Error searching collection ${collection.name}:`, collectionError.message);
+        }
+      }
+
+      const filteredDocs = allDocuments
+        .filter(doc => (doc.similarity || 0) > 0.7)
+        .sort((a, b) => (b.similarity || 0) - (a.similarity || 0))
+        .slice(0, limit);
+
+      logger.info(`Cross-project search: ${allDocuments.length} total, ${filteredDocs.length} above threshold`);
+      
+      return filteredDocs;
+
+    } catch (error: any) {
+      logger.error('Error searching all projects:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      return [];
+    }
+  }
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      const response = await axios.get(`${this.getBaseUrl()}/heartbeat`, {
+        headers: this.getHeaders()
+      });
+      logger.info('✅ ChromaDB health check successful');
+      return response.status === 200;
+    } catch (error: any) {
+      logger.warn('❌ ChromaDB health check failed:', {
+        status: error.response?.status,
+        message: error.message
+      });
+      return false;
+    }
+  }
+}

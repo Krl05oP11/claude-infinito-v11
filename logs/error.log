@@ -1,0 +1,190 @@
+2025-09-04T00:35:30.865Z [[31merror[39m]: [31mClaude API error: Request failed with status code 400[39m AxiosError: Request failed with status code 400
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:41:24)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:35:30.866Z [[31merror[39m]: [31mChat test error: Failed to communicate with Claude API[39m Error: Failed to communicate with Claude API
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:57:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:36:36.777Z [[31merror[39m]: [31mClaude API error: Request failed with status code 400[39m AxiosError: Request failed with status code 400
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:41:24)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:36:36.777Z [[31merror[39m]: [31mChat test error: Failed to communicate with Claude API[39m Error: Failed to communicate with Claude API
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:57:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:39:30.193Z [[31merror[39m]: [31mClaude API error details:[39m 
+2025-09-04T00:39:30.194Z [[31merror[39m]: [31mChat test error: Failed to communicate with Claude API[39m Error: Failed to communicate with Claude API
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:65:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T15:07:38.437Z [[31merror[39m]: [31mDatabase connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:07:38.437Z [[31merror[39m]: [31mDB connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:10.544Z [[31merror[39m]: [31mDatabase connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:10.544Z [[31merror[39m]: [31mDB connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:27.183Z [[31merror[39m]: [31mDatabase connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:27.183Z [[31merror[39m]: [31mDB connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T23:02:13.533Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.searchAllProjects (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:113:35)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:79:26
+2025-09-04T23:02:18.938Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:02:18.938Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:33:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:55:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:139:7
+2025-09-04T23:02:18.968Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:02:18.968Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:33:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:55:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:151:7
+2025-09-04T23:12:03.092Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.searchAllProjects (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:131:35)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:79:26
+2025-09-04T23:12:07.871Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:12:07.871Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:47:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:71:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:139:7
+2025-09-04T23:12:07.899Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:12:07.900Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:47:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:71:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:151:7
+2025-09-04T23:37:59.271Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 404[39m 
+2025-09-04T23:38:07.235Z [[31merror[39m]: [31mError creating collection: Request failed with status code 404[39m 
+2025-09-04T23:38:07.235Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m 
+2025-09-04T23:38:07.285Z [[31merror[39m]: [31mError creating collection: Request failed with status code 404[39m 
+2025-09-04T23:38:07.285Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m 
+2025-09-04T23:58:13.864Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 410[39m 
+2025-09-04T23:58:21.384Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-04T23:58:21.384Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-04T23:58:21.420Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-04T23:58:21.420Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-05T00:02:32.736Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 410[39m 
+2025-09-05T00:02:39.265Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-05T00:02:39.265Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-05T00:02:39.283Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-05T00:02:39.283Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 

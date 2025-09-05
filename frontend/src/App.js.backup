@@ -1,0 +1,206 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Container, 
+  Paper, 
+  TextField, 
+  Button, 
+  List, 
+  ListItem, 
+  ListItemText, 
+  Box,
+  Chip,
+  Divider
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import ChatIcon from '@mui/icons-material/Chat';
+import axios from 'axios';
+
+const API_BASE = 'http://localhost:3001/api';
+
+function App() {
+  const [conversations, setConversations] = useState([]);
+  const [currentConversation, setCurrentConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadConversations();
+  }, []);
+
+  const loadConversations = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}/conversations`);
+      setConversations(response.data.conversations);
+    } catch (error) {
+      console.error('Error loading conversations:', error);
+    }
+  };
+
+  const createConversation = async () => {
+    try {
+      const response = await axios.post(`${API_BASE}/conversations`, {
+        title: `Nueva conversación ${new Date().toLocaleString()}`
+      });
+      const newConv = response.data;
+      setConversations([newConv, ...conversations]);
+      setCurrentConversation(newConv);
+      setMessages([]);
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !currentConversation) return;
+
+    setLoading(true);
+    const tempMessage = { role: 'user', content: newMessage, timestamp: new Date() };
+    setMessages(prev => [...prev, tempMessage]);
+    
+    const messageToSend = newMessage;
+    setNewMessage('');
+
+    try {
+      const response = await axios.post(
+        `${API_BASE}/conversations/${currentConversation.id}/messages`,
+        { content: messageToSend }
+      );
+
+      setMessages(prev => [
+        ...prev.slice(0, -1),
+        response.data.user_message,
+        response.data.assistant_message
+      ]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <AppBar position="static">
+        <Toolbar>
+          <ChatIcon sx={{ mr: 2 }} />
+          <Typography variant="h6">Claude Infinito v1.1</Typography>
+          <Box sx={{ ml: 'auto' }}>
+            <Button color="inherit" onClick={createConversation}>
+              Nueva Conversación
+            </Button>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      <Box sx={{ display: 'flex', flexGrow: 1 }}>
+        {/* Sidebar */}
+        <Paper sx={{ width: 300, display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="h6" sx={{ p: 2 }}>
+            Conversaciones
+          </Typography>
+          <List sx={{ flexGrow: 1, overflow: 'auto' }}>
+            {conversations.map(conv => (
+              <ListItem
+                key={conv.id}
+                button
+                selected={currentConversation?.id === conv.id}
+                onClick={() => {
+                  setCurrentConversation(conv);
+                  setMessages([]);
+                }}
+              >
+                <ListItemText
+                  primary={conv.title}
+                  secondary={new Date(conv.updated_at).toLocaleString()}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+
+        {/* Chat Area */}
+        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+          {currentConversation ? (
+            <>
+              {/* Messages */}
+              <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
+                {messages.map((msg, index) => (
+                  <Box key={index} sx={{ mb: 2 }}>
+                    <Chip
+                      label={msg.role === 'user' ? 'Tú' : 'Claude'}
+                      color={msg.role === 'user' ? 'primary' : 'secondary'}
+                      size="small"
+                    />
+                    <Paper sx={{ p: 2, mt: 1, backgroundColor: msg.role === 'user' ? '#e3f2fd' : '#f5f5f5' }}>
+                      <Typography variant="body1">
+                        {msg.content}
+                      </Typography>
+                    </Paper>
+                  </Box>
+                ))}
+                {loading && (
+                  <Box sx={{ mb: 2 }}>
+                    <Chip label="Claude" color="secondary" size="small" />
+                    <Paper sx={{ p: 2, mt: 1 }}>
+                      <Typography variant="body1" color="text.secondary">
+                        Claude está escribiendo...
+                      </Typography>
+                    </Paper>
+                  </Box>
+                )}
+              </Box>
+
+              <Divider />
+
+              {/* Input */}
+              <Box sx={{ p: 2, display: 'flex', gap: 1 }}>
+                <TextField
+                  fullWidth
+                  placeholder="Escribe tu mensaje..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                  multiline
+                  maxRows={4}
+                  disabled={loading}
+                />
+                <Button
+                  variant="contained"
+                  onClick={sendMessage}
+                  disabled={loading || !newMessage.trim()}
+                  sx={{ minWidth: 'auto', px: 2 }}
+                >
+                  <SendIcon />
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <Box sx={{ 
+              flexGrow: 1, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              flexDirection: 'column'
+            }}>
+              <Typography variant="h4" color="text.secondary">
+                Claude Infinito v1.1
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                Selecciona una conversación o crea una nueva
+              </Typography>
+              <Button variant="contained" sx={{ mt: 3 }} onClick={createConversation}>
+                Crear Nueva Conversación
+              </Button>
+            </Box>
+          )}
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+export default App;

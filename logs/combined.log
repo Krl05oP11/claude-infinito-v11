@@ -1,0 +1,558 @@
+2025-09-03T19:48:29.311Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T19:48:29.312Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T19:48:29.312Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T19:48:29.312Z [[32minfo[39m]: [32mEnvironment: undefined[39m 
+2025-09-03T19:53:28.658Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T19:53:28.658Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T19:53:28.659Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T19:53:28.659Z [[32minfo[39m]: [32mEnvironment: undefined[39m 
+2025-09-03T19:56:26.195Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T19:56:26.196Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T19:56:26.196Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T19:56:26.196Z [[32minfo[39m]: [32mEnvironment: development[39m 
+2025-09-03T21:24:11.875Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T21:24:11.876Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T21:24:11.876Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T21:24:11.876Z [[32minfo[39m]: [32mEnvironment: development[39m 
+2025-09-03T21:36:43.089Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T21:36:43.089Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T21:36:43.090Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T21:36:43.090Z [[32minfo[39m]: [32mEnvironment: development[39m 
+2025-09-03T21:37:10.393Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T21:37:10.394Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T21:37:10.394Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T21:37:10.394Z [[32minfo[39m]: [32mEnvironment: development[39m 
+2025-09-03T23:49:21.842Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T23:49:21.843Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T23:49:21.843Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T23:49:21.843Z [[32minfo[39m]: [32mEnvironment: development[39m 
+2025-09-03T23:50:11.643Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-03T23:50:11.643Z [[32minfo[39m]: [32mHealth check: http://localhost:3001/api/health[39m 
+2025-09-03T23:50:11.644Z [[32minfo[39m]: [32mInfo: http://localhost:3001/api/info[39m 
+2025-09-03T23:50:11.644Z [[32minfo[39m]: [32mEnvironment: development[39m 
+2025-09-04T00:03:16.160Z [[33mwarn[39m]: [33mClaude API key not configured - using mock responses[39m 
+2025-09-04T00:03:16.165Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:11:29.453Z [[33mwarn[39m]: [33mClaude API key not configured - using mock responses[39m 
+2025-09-04T00:11:29.458Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:13:43.869Z [[33mwarn[39m]: [33mClaude API key not configured - using mock responses[39m 
+2025-09-04T00:13:43.874Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:16:20.730Z [[33mwarn[39m]: [33mClaude API key not configured - using mock responses[39m 
+2025-09-04T00:16:20.735Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:23:46.400Z [[33mwarn[39m]: [33mClaude API key not configured - using mock responses[39m 
+2025-09-04T00:23:46.405Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:30:44.145Z [[33mwarn[39m]: [33mClaude API key not configured - using mock responses[39m 
+2025-09-04T00:30:44.150Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:34:09.368Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T00:34:09.372Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:35:30.865Z [[31merror[39m]: [31mClaude API error: Request failed with status code 400[39m AxiosError: Request failed with status code 400
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:41:24)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:35:30.866Z [[31merror[39m]: [31mChat test error: Failed to communicate with Claude API[39m Error: Failed to communicate with Claude API
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:57:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:36:36.777Z [[31merror[39m]: [31mClaude API error: Request failed with status code 400[39m AxiosError: Request failed with status code 400
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:41:24)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:36:36.777Z [[31merror[39m]: [31mChat test error: Failed to communicate with Claude API[39m Error: Failed to communicate with Claude API
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:57:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T00:38:31.286Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T00:38:31.290Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:39:09.983Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T00:39:09.987Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T00:39:30.193Z [[31merror[39m]: [31mClaude API error details:[39m 
+2025-09-04T00:39:30.194Z [[31merror[39m]: [31mChat test error: Failed to communicate with Claude API[39m Error: Failed to communicate with Claude API
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:65:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/api/routes/chat.ts:18:22
+2025-09-04T01:42:54.862Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T01:42:54.867Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T14:56:09.236Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T14:56:09.240Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:04:04.004Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:04:04.001Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:04:23.283Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:04:23.280Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:06:19.976Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:06:19.973Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:07:38.427Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:07:38.424Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:07:38.437Z [[31merror[39m]: [31mDatabase connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:07:38.437Z [[31merror[39m]: [31mDB connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:10.534Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:08:10.531Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:08:10.544Z [[31merror[39m]: [31mDatabase connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:10.544Z [[31merror[39m]: [31mDB connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:27.173Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:08:27.171Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:08:27.183Z [[31merror[39m]: [31mDatabase connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:08:27.183Z [[31merror[39m]: [31mDB connection failed: password authentication failed for user "claude_user"[39m error: password authentication failed for user "claude_user"
+    at Parser.parseErrorMessage (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:187:21)
+    at Parser.parse (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/parser.ts:102:30)
+    at Socket.<anonymous> (/home/carlos/Projects/claude-infinito-v11/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:517:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Socket.Readable.push (node:internal/streams/readable:278:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+2025-09-04T15:16:49.884Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:16:49.881Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:16:49.892Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:23:38.356Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:23:38.352Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:23:38.363Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:24:11.559Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:24:11.556Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:24:11.566Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:24:34.592Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:26:31.999Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:31:40.341Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:31:40.338Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:31:40.350Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:32:15.523Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:32:15.520Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:32:15.531Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:37:25.787Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:37:25.746Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:37:25.795Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:47:10.333Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:47:10.330Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:47:10.340Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:49:32.269Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:49:32.266Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:49:32.276Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:50:19.601Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T15:50:19.599Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:50:19.609Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T15:57:07.212Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:57:48.012Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T15:58:36.874Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T17:19:01.536Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T17:19:01.533Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T17:19:01.544Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T17:20:35.938Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T17:34:17.179Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T17:47:06.499Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T18:34:12.714Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T18:34:12.711Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T18:34:12.722Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T18:37:01.777Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T18:37:01.774Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T18:37:01.784Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T18:38:51.109Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T19:26:12.638Z [[32minfo[39m]: [32mBackend running on port 3001[39m 
+2025-09-04T19:26:12.635Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T19:26:12.646Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T22:57:14.239Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-04T22:57:14.236Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T22:57:14.239Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-04T22:57:14.247Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T23:00:19.301Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-04T23:00:19.298Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:00:19.301Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-04T23:00:19.309Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T23:02:13.478Z [[32minfo[39m]: [32mProcessing message for conversation 9a536005-d45b-46d8-88e5-a4d5adc2efc5[39m 
+2025-09-04T23:02:13.489Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-04T23:02:13.533Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.searchAllProjects (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:113:35)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:79:26
+2025-09-04T23:02:13.533Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-04T23:02:13.534Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:02:13.534Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-04T23:02:18.938Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:02:18.938Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:33:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:55:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:139:7
+2025-09-04T23:02:18.968Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:02:18.968Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-04T23:02:18.968Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:33:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:55:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:151:7
+2025-09-04T23:02:18.968Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-04T23:10:31.531Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-04T23:10:31.528Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:10:31.531Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-04T23:10:31.539Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T23:12:03.035Z [[32minfo[39m]: [32mProcessing message for conversation 9a536005-d45b-46d8-88e5-a4d5adc2efc5[39m 
+2025-09-04T23:12:03.048Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-04T23:12:03.092Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.searchAllProjects (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:131:35)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:79:26
+2025-09-04T23:12:03.092Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-04T23:12:03.093Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:12:03.093Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-04T23:12:07.871Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:12:07.871Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:47:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:71:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:139:7
+2025-09-04T23:12:07.899Z [[31merror[39m]: [31mError creating collection:[39m 
+2025-09-04T23:12:07.900Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-04T23:12:07.900Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m AxiosError: Request failed with status code 404
+    at settle (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/settle.js:19:12)
+    at IncomingMessage.handleStreamEnd (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/adapters/http.js:599:11)
+    at IncomingMessage.emit (node:events:529:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1400:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at Axios.request (/home/carlos/Projects/claude-infinito-v11/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async RAGService.createCollection (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:47:7)
+    at async RAGService.addMemory (/home/carlos/Projects/claude-infinito-v11/backend/src/services/rag.service.ts:71:7)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:151:7
+2025-09-04T23:12:07.901Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-04T23:21:46.672Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-04T23:21:46.669Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:21:46.672Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-04T23:21:46.680Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T23:22:39.352Z [[32minfo[39m]: [32mProcessing message for conversation 9a536005-d45b-46d8-88e5-a4d5adc2efc5[39m 
+2025-09-04T23:22:39.364Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-04T23:22:39.364Z [[32minfo[39m]: [32m[BYPASS] Would search across ALL projects for: "Estamos desarrollando Claude Infinito v1.1"[39m 
+2025-09-04T23:22:39.365Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:22:39.364Z [[32minfo[39m]: [32mFound 1 relevant memories[39m 
+2025-09-04T23:22:39.364Z [[32minfo[39m]: [32mInjecting 223 characters of context[39m 
+2025-09-04T23:22:39.365Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-04T23:22:39.364Z [[32minfo[39m]: [32m[BYPASS] Simulating found memories for testing[39m 
+2025-09-04T23:22:46.318Z [[32minfo[39m]: [32m[BYPASS] Would store memory in project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980: "Estamos desarrollando Claude Infinito v1.1..."[39m 
+2025-09-04T23:22:46.319Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-04T23:22:46.319Z [[32minfo[39m]: [32m[BYPASS] Would store memory in project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980: "¡Perfecto! Ahora entiendo mejor. Veo que estamos trabajando en Claude Infinito v1.1, un sistema de c..."[39m 
+2025-09-04T23:22:46.321Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 1[39m 
+2025-09-04T23:24:00.197Z [[32minfo[39m]: [32mProcessing message for conversation 9a536005-d45b-46d8-88e5-a4d5adc2efc5[39m 
+2025-09-04T23:24:00.202Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-04T23:24:00.202Z [[32minfo[39m]: [32m[BYPASS] Would search across ALL projects for: "Claude, estoy  probando una característica de la memoria. ¿En qué proyecto estamos trabajando?"[39m 
+2025-09-04T23:24:00.202Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:24:00.202Z [[32minfo[39m]: [32mFound 1 relevant memories[39m 
+2025-09-04T23:24:00.202Z [[32minfo[39m]: [32mInjecting 223 characters of context[39m 
+2025-09-04T23:24:00.202Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-04T23:24:00.202Z [[32minfo[39m]: [32m[BYPASS] Simulating found memories for testing[39m 
+2025-09-04T23:24:06.132Z [[32minfo[39m]: [32m[BYPASS] Would store memory in project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980: "Claude, estoy  probando una característica de la memoria. ¿En qué proyecto estamos trabajando?..."[39m 
+2025-09-04T23:24:06.132Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-04T23:24:06.132Z [[32minfo[39m]: [32m[BYPASS] Would store memory in project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980: "Entiendo que mencionas estar desarrollando Claude Infinito v1.1, un sistema de chat con memoria pers..."[39m 
+2025-09-04T23:24:06.133Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 1[39m 
+2025-09-04T23:36:31.500Z [[32minfo[39m]: [32mChromaDB config: localhost:8001, token: configured[39m 
+2025-09-04T23:36:31.568Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-04T23:36:31.565Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:36:31.568Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-04T23:36:31.576Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T23:37:59.216Z [[32minfo[39m]: [32mProcessing message for conversation 9a536005-d45b-46d8-88e5-a4d5adc2efc5[39m 
+2025-09-04T23:37:59.228Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-04T23:37:59.229Z [[32minfo[39m]: [32mSearching ALL projects for: "Continuamos con Claude Infinito v1.1"[39m 
+2025-09-04T23:37:59.271Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 404[39m 
+2025-09-04T23:37:59.271Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-04T23:37:59.272Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:37:59.272Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-04T23:38:06.233Z [[32minfo[39m]: [32mGenerating embedding for content: "Continuamos con Claude Infinito v1.1..."[39m 
+2025-09-04T23:38:07.233Z [[32minfo[39m]: [32m✅ Generated embedding with 768 dimensions[39m 
+2025-09-04T23:38:07.233Z [[32minfo[39m]: [32mCreating ChromaDB collection: project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980[39m 
+2025-09-04T23:38:07.235Z [[31merror[39m]: [31mError creating collection: Request failed with status code 404[39m 
+2025-09-04T23:38:07.235Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m 
+2025-09-04T23:38:07.236Z [[32minfo[39m]: [32mGenerating embedding for content: "Entiendo que me estás invitando a participar en el desarrollo de "Claude Infinito v1.1", pero necesi..."[39m 
+2025-09-04T23:38:07.283Z [[32minfo[39m]: [32m✅ Generated embedding with 768 dimensions[39m 
+2025-09-04T23:38:07.283Z [[32minfo[39m]: [32mCreating ChromaDB collection: project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980[39m 
+2025-09-04T23:38:07.285Z [[31merror[39m]: [31mError creating collection: Request failed with status code 404[39m 
+2025-09-04T23:38:07.286Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-04T23:38:07.285Z [[31merror[39m]: [31mError adding memory: Request failed with status code 404[39m 
+2025-09-04T23:38:07.287Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-04T23:55:59.621Z [[32minfo[39m]: [32mChromaDB config: localhost:8001, token: configured[39m 
+2025-09-04T23:55:59.685Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-04T23:55:59.683Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:55:59.685Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-04T23:55:59.693Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-04T23:58:13.810Z [[32minfo[39m]: [32mProcessing message for conversation 9a536005-d45b-46d8-88e5-a4d5adc2efc5[39m 
+2025-09-04T23:58:13.822Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-04T23:58:13.822Z [[32minfo[39m]: [32mSearching ALL projects for: "Desarrollamos Claude Infinito v1.1 para disponer de un contexto de memoria ilimitada, casi infinita. De allí el nombre."[39m 
+2025-09-04T23:58:13.864Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 410[39m 
+2025-09-04T23:58:13.865Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-04T23:58:13.865Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-04T23:58:13.865Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-04T23:58:20.369Z [[32minfo[39m]: [32mGenerating embedding for content: "Desarrollamos Claude Infinito v1.1 para disponer de un contexto de memoria ilimitada, casi infinita...."[39m 
+2025-09-04T23:58:21.382Z [[32minfo[39m]: [32m✅ Generated embedding with 768 dimensions[39m 
+2025-09-04T23:58:21.382Z [[32minfo[39m]: [32mCreating ChromaDB collection: project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980[39m 
+2025-09-04T23:58:21.384Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-04T23:58:21.384Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-04T23:58:21.384Z [[32minfo[39m]: [32mGenerating embedding for content: "Entiendo que mencionas estar desarrollando Claude Infinito v1.1, pero necesito aclarar algunas cosas..."[39m 
+2025-09-04T23:58:21.418Z [[32minfo[39m]: [32m✅ Generated embedding with 768 dimensions[39m 
+2025-09-04T23:58:21.418Z [[32minfo[39m]: [32mCreating ChromaDB collection: project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980[39m 
+2025-09-04T23:58:21.420Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-04T23:58:21.420Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-04T23:58:21.421Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-04T23:58:21.420Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-05T00:02:32.729Z [[32minfo[39m]: [32mProcessing message for conversation 9a536005-d45b-46d8-88e5-a4d5adc2efc5[39m 
+2025-09-05T00:02:32.734Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T00:02:32.734Z [[32minfo[39m]: [32mSearching ALL projects for: "¿Recuerdas qué sistema estoy desarrollando y al cual te estoy invitando a participar?"[39m 
+2025-09-05T00:02:32.736Z [[31merror[39m]: [31mError searching all projects: Request failed with status code 410[39m 
+2025-09-05T00:02:32.736Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T00:02:32.736Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T00:02:32.737Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T00:02:39.210Z [[32minfo[39m]: [32mGenerating embedding for content: "¿Recuerdas qué sistema estoy desarrollando y al cual te estoy invitando a participar?..."[39m 
+2025-09-05T00:02:39.262Z [[32minfo[39m]: [32m✅ Generated embedding with 768 dimensions[39m 
+2025-09-05T00:02:39.262Z [[32minfo[39m]: [32mCreating ChromaDB collection: project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980[39m 
+2025-09-05T00:02:39.265Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-05T00:02:39.265Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-05T00:02:39.265Z [[32minfo[39m]: [32mGenerating embedding for content: "Entiendo que mencionas el desarrollo de "Claude Infinito v1.1", pero necesito aclarar algunas cosas ..."[39m 
+2025-09-05T00:02:39.280Z [[32minfo[39m]: [32m✅ Generated embedding with 768 dimensions[39m 
+2025-09-05T00:02:39.280Z [[32minfo[39m]: [32mCreating ChromaDB collection: project_9faaa827_70a2_40ff_bd5a_fbcf66b5a980[39m 
+2025-09-05T00:02:39.283Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
+2025-09-05T00:02:39.283Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T00:02:39.283Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-05T00:02:39.283Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T01:59:46.024Z [[33mwarn[39m]: [33m❌ ChromaDB health check failed: Request failed with status code 410[39m 
+2025-09-05T02:37:05.200Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T02:37:05.197Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T02:37:05.200Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T02:37:05.208Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T04:00:06.998Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T04:00:06.995Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T04:00:06.998Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T04:00:07.006Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T15:51:15.976Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T15:51:15.973Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T15:51:15.976Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T15:51:15.984Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T16:04:21.499Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T16:04:21.496Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T16:04:21.499Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T16:04:21.509Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T16:10:06.371Z [[32minfo[39m]: [32mProcessing message for conversation f25a79c4-9c8f-4b0c-ab29-cc8d717e6bd3[39m 
+2025-09-05T16:10:06.381Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T16:10:06.385Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T16:10:06.386Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T16:10:06.386Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T16:10:15.125Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T16:10:15.126Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T16:16:48.519Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T16:16:48.516Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T16:16:48.519Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T16:16:48.526Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T16:17:03.559Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T16:17:03.556Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T16:17:03.559Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T16:17:03.570Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T16:18:13.978Z [[32minfo[39m]: [32mProcessing message for conversation f25a79c4-9c8f-4b0c-ab29-cc8d717e6bd3[39m 
+2025-09-05T16:18:13.989Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T16:18:15.026Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T16:18:15.026Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T16:18:15.027Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T16:18:22.195Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T16:18:22.198Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T17:36:45.176Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T17:36:45.173Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T17:36:45.176Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T17:36:45.184Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T17:38:59.691Z [[32minfo[39m]: [32mProcessing message for conversation f25a79c4-9c8f-4b0c-ab29-cc8d717e6bd3[39m 
+2025-09-05T17:38:59.703Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T17:39:00.725Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T17:39:00.725Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T17:39:00.725Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T17:39:05.339Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T17:39:05.341Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T17:39:36.791Z [[32minfo[39m]: [32mProcessing message for conversation f25a79c4-9c8f-4b0c-ab29-cc8d717e6bd3[39m 
+2025-09-05T17:39:36.796Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T17:39:36.840Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T17:39:36.841Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T17:39:36.841Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T17:39:43.158Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T17:39:43.159Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T17:40:23.525Z [[32minfo[39m]: [32mProcessing message for conversation f25a79c4-9c8f-4b0c-ab29-cc8d717e6bd3[39m 
+2025-09-05T17:40:23.529Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T17:40:23.571Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T17:40:23.572Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T17:40:23.572Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T17:40:31.207Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T17:40:31.208Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T17:47:40.844Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T17:47:40.841Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T17:47:40.844Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T17:47:40.852Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T17:47:56.395Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T17:47:56.392Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T17:47:56.395Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T17:47:56.404Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T17:48:40.833Z [[32minfo[39m]: [32mProcessing message for conversation f25a79c4-9c8f-4b0c-ab29-cc8d717e6bd3[39m 
+2025-09-05T17:48:40.843Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T17:48:41.837Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T17:48:41.838Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T17:48:41.838Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T17:48:46.199Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T17:48:46.201Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T19:21:53.906Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T19:21:53.903Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T19:21:53.906Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T19:21:53.916Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T19:22:13.142Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T19:22:13.139Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T19:22:13.142Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T19:22:13.152Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T19:23:02.331Z [[32minfo[39m]: [32mProcessing message for conversation 7eab54f3-40d3-4766-935a-45dd22b100ea[39m 
+2025-09-05T19:23:02.338Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T19:23:03.357Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T19:23:03.357Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T19:23:03.357Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T19:23:09.420Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T19:23:09.420Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T19:49:00.957Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T19:49:00.954Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T19:49:00.957Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T19:49:00.965Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T19:50:12.225Z [[32minfo[39m]: [32mProcessing message for conversation 7eab54f3-40d3-4766-935a-45dd22b100ea[39m 
+2025-09-05T19:50:12.237Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T19:50:13.237Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T19:50:13.237Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T19:50:13.237Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T19:50:22.109Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T19:50:22.112Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T20:00:45.113Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T20:00:45.111Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:00:45.114Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T20:00:45.123Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T20:04:19.575Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T20:04:19.572Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:04:19.575Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T20:04:19.583Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T20:06:55.251Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T20:06:55.248Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:06:55.251Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T20:06:55.261Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T20:07:21.997Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T20:07:21.994Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:07:21.997Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T20:07:22.005Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T20:08:52.245Z [[32minfo[39m]: [32mProcessing message for conversation 7eab54f3-40d3-4766-935a-45dd22b100ea[39m 
+2025-09-05T20:08:52.258Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T20:08:53.252Z [[32minfo[39m]: [32mNo relevant historical context found[39m 
+2025-09-05T20:08:53.252Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:08:53.252Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T20:08:59.909Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T20:08:59.912Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0[39m 
+2025-09-05T20:26:21.452Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T20:26:21.449Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:26:21.452Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T20:26:21.461Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T20:27:29.004Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T20:27:29.001Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:27:29.004Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T20:27:29.012Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T20:27:45.280Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-05T20:27:45.277Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:27:45.280Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-05T20:27:45.289Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-05T20:28:20.083Z [[32minfo[39m]: [32mProcessing message for conversation 7eab54f3-40d3-4766-935a-45dd22b100ea[39m 
+2025-09-05T20:28:20.096Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-05T20:28:21.085Z [[32minfo[39m]: [32mFound 2 relevant memories[39m 
+2025-09-05T20:28:21.085Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-05T20:28:21.085Z [[32minfo[39m]: [32mInjecting 1251 characters of context[39m 
+2025-09-05T20:28:21.085Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-05T20:28:28.915Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-05T20:28:28.918Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 2[39m 

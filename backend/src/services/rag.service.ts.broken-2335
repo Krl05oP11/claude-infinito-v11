@@ -1,0 +1,302 @@
+import axios from 'axios';
+import { EmbeddingService } from './embedding.service';
+
+interface ChromaDBCollection {
+  id: string;
+  name: string;
+  metadata?: any;
+}
+
+interface MemorySearchResult {
+  ids: string[][];
+  distances: number[][];
+  documents: string[][];
+  metadatas: any[][];
+}
+
+interface Memory {
+  id: string;
+  content: string;
+  metadata: {
+    conversation_id: string;
+    project_id: string;
+    timestamp: string;
+    user_message?: string;
+    assistant_response?: string;
+  };
+}
+
+export class RAGService {
+  private chromaDbUrl: string;
+  private embeddingService: EmbeddingService;
+  private similarityThreshold: number = 0.7;
+
+  constructor() {
+    this.chromaDbUrl = process.env.CHROMA_DB_URL || 'http://localhost:8001';
+    this.embeddingService = new EmbeddingService();
+    console.log(`ChromaDB config: ${this.chromaDbUrl} (API v2)`);
+  }
+
+  private getHeaders(): any {
+    return {
+      'Content-Type': 'application/json'
+    };
+    // Sin autenticación por ahora para simplificar
+  }
+
+  private getApiUrl(endpoint: string): string {
+    return `${this.chromaDbUrl}/api/v2${endpoint}`;
+  }
+
+  // Obtener todas las colecciones
+  async getAllCollections(): Promise<ChromaDBCollection[]> {
+    try {
+      const response = await axios.get(
+        this.getApiUrl('/collections'),
+        { headers: this.getHeaders() }
+      );
+      return response.data || [];
+    } catch (error: any) {
+      console.error('Error getting collections:', error.response?.data || error.message);
+      return [];
+    }
+  }
+
+  // Obtener colecciones de proyecto específico
+  async getProjectCollections(): Promise<ChromaDBCollection[]> {
+    const allCollections = await this.getAllCollections();
+    return allCollections.filter(col => col.name.startsWith('project_'));
+  }
+
+  // Crear colección para un proyecto
+  async createProjectCollection(projectId: string): Promise<boolean> {
+    const collectionName = `project_${projectId}`;
+    
+    try {
+      const response = await axios.post(
+        this.getApiUrl('/collections'),
+        {
+          name: collectionName,
+          metadata: {
+            project_id: projectId,
+            created_at: new Date().toISOString(),
+            description: 'RAG memory collection for Claude Infinito'
+          }
+        },
+        { headers: this.getHeaders() }
+      );
+      
+      console.log(`✅ Created collection: ${collectionName}`);
+      return true;
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        console.log(`Collection ${collectionName} already exists`);
+        return true;
+      }
+      console.error('Error creating collection:', error.response?.data || error.message);
+      return false;
+    }
+  }
+
+  // Buscar en colección específica
+  async searchInCollection(collectionName: string, query: string, limit: number = 5): Promise<Memory[]> {
+    try {
+      const embedding = await this.embeddingService.generateEmbedding(query);
+      
+      const response = await axios.post(
+        this.getApiUrl(`/collections/${collectionName}/query`),
+        {
+          query_embeddings: [embedding],
+          n_results: limit,
+          include: ['documents', 'metadatas', 'distances']
+        },
+        { headers: this.getHeaders() }
+      );
+
+      const results: MemorySearchResult = response.data;
+      
+      if (!results.ids || !results.ids[0] || results.ids[0].length === 0) {
+        return [];
+      }
+
+      const memories: Memory[] = [];
+      for (let i = 0; i < results.ids[0].length; i++) {
+        const distance = results.distances[0][i];
+        const similarity = 1 - distance;
+        
+        if (similarity >= this.similarityThreshold) {
+          memories.push({
+            id: results.ids[0][i],
+            content: results.documents[0][i],
+            metadata: {
+              ...results.metadatas[0][i],
+              similarity: similarity
+            }
+          });
+        }
+      }
+      
+      return memories;
+    } catch (error: any) {
+      console.error(`Error searching collection ${collectionName}:`, error.response?.data || error.message);
+      return [];
+    }
+  }
+
+  // Buscar en todas las colecciones de proyecto
+  async searchAllProjects(query: string, limit: number = 10): Promise<Memory[]> {
+    try {
+      console.log(`Searching ALL projects for: "${query.substring(0, 50)}..."`);
+      
+      const projectCollections = await this.getProjectCollections();
+      console.log(`Found ${projectCollections.length} total collections, ${projectCollections.length} project collections`);
+      
+      const allMemories: Memory[] = [];
+      
+      for (const collection of projectCollections) {
+        console.log(`Collection ${collection.name}: searching...`);
+        const memories = await this.searchInCollection(collection.name, query, limit);
+        console.log(`Collection ${collection.name}: found ${memories.length} memories`);
+        allMemories.push(...memories);
+      }
+      
+      // Ordenar por similitud y limitar resultados
+      const sortedMemories = allMemories
+        .sort((a, b) => (b.metadata.similarity || 0) - (a.metadata.similarity || 0))
+        .slice(0, limit);
+      
+      const relevantMemories = sortedMemories.filter(m => (m.metadata.similarity || 0) >= this.similarityThreshold);
+      
+      console.log(`Cross-project search: ${allMemories.length} total, ${relevantMemories.length} above threshold`);
+      
+      return relevantMemories;
+    } catch (error: any) {
+      console.error('Error searching all projects:', error.response?.data || error.message);
+      return [];
+    }
+  }
+
+  // Agregar memoria a colección
+  async addMemory(projectId: string, memory: Memory): Promise<boolean> {
+    const collectionName = `project_${projectId}`;
+    
+    try {
+      // Asegurar que la colección existe
+      await this.createProjectCollection(projectId);
+      
+      // Generar embedding del contenido
+      const embedding = await this.embeddingService.generateEmbedding(memory.content);
+      
+      const response = await axios.post(
+        this.getApiUrl(`/collections/${collectionName}/add`),
+        {
+          ids: [memory.id],
+          embeddings: [embedding],
+          documents: [memory.content],
+          metadatas: [memory.metadata]
+        },
+        { headers: this.getHeaders() }
+      );
+      
+      console.log(`✅ Added memory to ChromaDB collection: ${collectionName}`);
+      return true;
+    } catch (error: any) {
+      console.error('Error adding memory:', error.response?.data || error.message);
+      return false;
+    }
+  }
+
+  // Inyectar contexto relevante en prompt
+  injectContextIntoPrompt(originalPrompt: string, memories: Memory[]): string {
+    if (memories.length === 0) {
+      return originalPrompt;
+    }
+
+    const contextSection = memories
+      .map(memory => `[Memory: ${memory.content.substring(0, 150)}...]`)
+      .join('\n');
+    
+    const totalContextLength = contextSection.length;
+    console.log(`Injecting ${totalContextLength} characters of context`);
+
+    return `Context from previous conversations:
+${contextSection}
+
+Current question: ${originalPrompt}`;
+  }
+
+  // Método principal para buscar contexto
+  async searchRelevantContext(query: string, projectId?: string, limit: number = 5): Promise<Memory[]> {
+    if (projectId) {
+      // Buscar solo en el proyecto específico
+      const collectionName = `project_${projectId}`;
+      return await this.searchInCollection(collectionName, query, limit);
+    } else {
+      // Buscar en todos los proyectos
+      return await this.searchAllProjects(query, limit);
+    }
+  }
+// Método de compatibilidad con index.ts (4 parámetros: projectId, conversationId, content, metadata)
+  async addMemory(
+    projectId: string, 
+    conversationId: string, 
+    content: string, 
+    metadata: any
+  ): Promise<boolean> {
+    const memory: Memory = {
+      id: `memory_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      content: content,
+      metadata: {
+        conversation_id: conversationId,
+        project_id: projectId,
+        timestamp: new Date().toISOString(),
+        ...metadata
+      }
+    };
+    
+    return await this.addMemoryObject(projectId, memory);
+  }
+  // Método interno con objeto Memory
+  private async addMemoryObject(projectId: string, memory: Memory): Promise<boolean> {
+    const collectionName = `project_${projectId}`;
+    
+    try {
+      // Asegurar que la colección existe
+      await this.createProjectCollection(projectId);
+      
+      // Generar embedding del contenido
+      const embedding = await this.embeddingService.generateEmbedding(memory.content);
+      
+      const response = await axios.post(
+        this.getApiUrl(`/collections/${collectionName}/add`),
+        {
+          ids: [memory.id],
+          embeddings: [embedding],
+          documents: [memory.content],
+          metadatas: [memory.metadata]
+        },
+        { headers: this.getHeaders() }
+      );
+      
+      console.log(`✅ Added memory to ChromaDB collection: ${collectionName}`);
+      return true;
+    } catch (error: any) {
+      console.error('Error adding memory:', error.response?.data || error.message);
+      return false;
+    }
+  }
+
+  // Health check para compatibilidad con index.ts
+  async healthCheck(): Promise<boolean> {
+    try {
+      const response = await axios.get(
+        this.getApiUrl('/heartbeat'),
+        { headers: this.getHeaders() }
+      );
+      return response.status === 200;
+    } catch (error) {
+      console.error('ChromaDB health check failed:', error);
+      return false;
+    }
+  }
+}
