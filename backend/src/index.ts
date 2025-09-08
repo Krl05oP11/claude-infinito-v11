@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { createLogger } from './utils/logger';
 import { DatabaseService } from './services/database.service';
 import { RAGService } from './services/rag.service';
+import uploadRoutes from './api/routes/upload';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use('/api/upload', uploadRoutes);
 
 // Chat routes
 app.use('/api/chat', require('./api/routes/chat').default);
@@ -78,24 +80,92 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       logger.info('Searching for relevant context across all projects...');
       relevantMemories = await ragService.searchAllProjects(content, 8);
       
-      if (relevantMemories.length > 0) {
-        logger.info(`Found ${relevantMemories.length} relevant memories`);
-        
-        // Build structured context
-        const contextParts = relevantMemories.map(memory => {
-          const similarity = ((memory.similarity || 0) * 100).toFixed(1);
-          const source = memory.metadata.source_collection || 'unknown';
-          const timestamp = memory.metadata.timestamp || 'unknown';
-          
-          return `[${similarity}% relevance | ${source} | ${timestamp}]\n${memory.content}`;
-        });
-        
-        contextualMemory = `\n\n--- CONTEXTO HISTÓRICO RELEVANTE ---\n${contextParts.join('\n\n---\n\n')}\n--- FIN CONTEXTO ---\n\n`;
-        
-        logger.info(`Injecting ${contextualMemory.length} characters of context`);
-      } else {
-        logger.info('No relevant historical context found');
-      }
+// REPLACE the memory filtering section in index.ts
+// Find this around line 85-120 and replace with:
+
+if (relevantMemories.length > 0) {
+  logger.info(`Found ${relevantMemories.length} relevant memories`);
+  
+  // DEBUG: Log all memories to see what we're working with
+  logger.info('🔍 All memories found:');
+  relevantMemories.forEach((memory, index) => {
+    logger.info(`Memory ${index + 1}: source_type="${memory.metadata?.source_type}", file_name="${memory.metadata?.file_name}", content_start="${memory.content.substring(0, 50)}..."`);
+  });
+  
+  // CORRECTED: Separate file content from conversation history
+  const fileMemories = relevantMemories.filter(memory => {
+    // Check multiple possible indicators for file content
+    const isFileUpload = memory.metadata?.source_type === 'file_upload';
+    const hasFileName = memory.metadata?.file_name || memory.metadata?.filename;
+    const hasFileType = memory.metadata?.fileType;
+    
+    return isFileUpload || hasFileName || hasFileType;
+  });
+  
+  const conversationMemories = relevantMemories.filter(memory => {
+    // Anything that's NOT a file is conversation
+    const isFileUpload = memory.metadata?.source_type === 'file_upload';
+    const hasFileName = memory.metadata?.file_name || memory.metadata?.filename;
+    const hasFileType = memory.metadata?.fileType;
+    
+    return !(isFileUpload || hasFileName || hasFileType);
+  });
+  
+  logger.info(`Found ${fileMemories.length} file memories`);
+  logger.info(`Found ${conversationMemories.length} conversation memories`);
+  
+  // Log specific file details for verification
+  if (fileMemories.length > 0) {
+    fileMemories.forEach((memory, index) => {
+      const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'unknown_file';
+      const projectId = memory.metadata?.project_id || 'unknown_project';
+      const similarity = ((memory.similarity || 0) * 100).toFixed(1);
+      logger.info(`📄 File ${index + 1}: ${fileName} (project: ${projectId.substring(0, 8)}..., similarity: ${similarity}%)`);
+    });
+  }
+  
+  let contextSections: string[] = [];
+  
+  // ADD FILE CONTENT FIRST (highest priority)
+  if (fileMemories.length > 0) {
+    const fileParts = fileMemories.map((memory, index) => {
+      const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
+      const section = memory.metadata?.section || 'contenido';
+      const similarity = ((memory.similarity || 0) * 100).toFixed(1);
+      const chunkInfo = memory.metadata?.chunkIndex !== undefined ? 
+        ` (parte ${memory.metadata.chunkIndex + 1}/${memory.metadata.totalChunks})` : '';
+      const projectInfo = memory.metadata?.project_id ? 
+        ` [proyecto: ${memory.metadata.project_id.substring(0, 8)}...]` : '';
+      
+      return `**📄 ${fileName}** ${chunkInfo}${projectInfo}\n📝 Sección: ${section}\n🔍 Relevancia: ${similarity}%\n\n${memory.content}`;
+    });
+    
+    contextSections.push(`--- 📁 ARCHIVOS SUBIDOS (${fileMemories.length} encontrados) ---\n${fileParts.join('\n\n───────────\n\n')}`);
+  }
+  
+  // ADD CONVERSATION HISTORY SECOND (for context)
+  if (conversationMemories.length > 0) {
+    const conversationParts = conversationMemories.map(memory => {
+      const similarity = ((memory.similarity || 0) * 100).toFixed(1);
+      const source = memory.metadata?.source_collection || 'conversación';
+      const timestamp = memory.metadata?.timestamp || 'tiempo desconocido';
+      
+      return `[${similarity}% similitud | ${source} | ${timestamp}]\n${memory.content}`;
+    });
+    
+    contextSections.push(`--- 💬 CONTEXTO CONVERSACIONAL (${conversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
+  }
+  
+  // BUILD FINAL CONTEXT with clear instructions
+  if (contextSections.length > 0) {
+    contextualMemory = `\n\n${contextSections.join('\n\n═══════════════════════════════════════\n\n')}\n\n--- FIN INFORMACIÓN DISPONIBLE ---\n\n`;
+    
+    logger.info(`📤 Injecting ${contextualMemory.length} characters of context`);
+    logger.info(`🎯 Final summary: ${fileMemories.length} archivos, ${conversationMemories.length} conversaciones`);
+  }
+} else {
+  logger.info('❌ No relevant context found in any project');
+}
     } catch (ragError) {
       logger.warn('RAG search failed, continuing without context:', ragError);
     }
@@ -106,11 +176,20 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       content: msg.content
     }));
 
-    // 6. Inject context into the last user message if exists
+    // 6. IMPROVED: Inject context with clear instructions to Claude
     if (claudeMessages.length > 0 && contextualMemory) {
       const lastUserIndex = claudeMessages.length - 1;
       if (claudeMessages[lastUserIndex].role === 'user') {
-        claudeMessages[lastUserIndex].content = contextualMemory + claudeMessages[lastUserIndex].content;
+        // Check if we have file content to prioritize
+        const hasFileContent = relevantMemories.some(memory => 
+          memory.metadata.source_type === 'file_upload'
+        );
+        
+        const instruction = hasFileContent 
+          ? `${contextualMemory}\n🎯 INSTRUCCIÓN IMPORTANTE: Tienes acceso a archivos que el usuario ha subido (marcados con 📄). Usa PRIORITARIAMENTE la información de estos archivos para responder la siguiente pregunta. Si la pregunta se refiere a contenido de archivos, cita específicamente de qué archivo proviene la información.\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`
+          : `${contextualMemory}\nBasándote en el contexto conversacional anterior, responde:\n\n${claudeMessages[lastUserIndex].content}`;
+        
+        claudeMessages[lastUserIndex].content = instruction;
       }
     }
 
@@ -201,7 +280,7 @@ app.get('/api/info', (req, res) => {
   res.json({
     name: 'Claude Infinito v1.1 Backend',
     version: '1.1.0',
-    features: ['RAG Integration', 'Persistent Memory', 'Cross-Project Context']
+    features: ['RAG Integration', 'Persistent Memory', 'Cross-Project Context', 'File Upload Support']
   });
 });
 
@@ -215,6 +294,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   logger.info(`🚀 Claude Infinito Backend running on port ${port}`);
   logger.info('🧠 RAG-enabled memory system active');
+  logger.info('📁 File upload integration enabled');
 });
 
 export default app;

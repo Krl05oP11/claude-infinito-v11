@@ -1,3 +1,4 @@
+import FileUploader from './components/FileUploader';
 import React, { useState, useEffect } from 'react';
 import { 
   AppBar, 
@@ -12,7 +13,9 @@ import {
   ListItemText, 
   Box,
   Chip,
-  Divider
+  Divider,
+  createTheme,
+  ThemeProvider
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -20,12 +23,116 @@ import axios from 'axios';
 
 const API_BASE = 'http://localhost:3001/api';
 
+// Tema oscuro y cálido para fotofobia
+const warmDarkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#8D6E63', // Marrón cálido
+      light: '#A1887F',
+      dark: '#5D4037',
+      contrastText: '#F5F5DC' // Beige claro
+    },
+    secondary: {
+      main: '#A1887F', // Marrón gris
+      light: '#BCAAA4',
+      dark: '#6D4C41',
+      contrastText: '#F5F5DC'
+    },
+    background: {
+      default: '#2E2E2E', // Gris oscuro cálido
+      paper: '#3E3E3E'     // Gris medio
+    },
+    surface: {
+      main: '#4E4E4E'      // Gris claro
+    },
+    text: {
+      primary: '#F5F5DC',   // Beige claro
+      secondary: '#D7CCC8'  // Beige grisáceo
+    },
+    divider: '#5D4037',     // Marrón oscuro
+    action: {
+      hover: '#4E342E',     // Marrón muy oscuro
+      selected: '#6D4C41'   // Marrón oscuro
+    }
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#3E2723', // Marrón muy oscuro
+          color: '#F5F5DC'
+        }
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#4A4A4A', // Gris cálido
+          color: '#F5F5DC'
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: '#5A5A5A',
+            '& fieldset': {
+              borderColor: '#8D6E63'
+            },
+            '&:hover fieldset': {
+              borderColor: '#A1887F'
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#BCAAA4'
+            }
+          },
+          '& .MuiInputBase-input': {
+            color: '#F5F5DC'
+          }
+        }
+      }
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            backgroundColor: '#6D4C41',
+            '&:hover': {
+              backgroundColor: '#5D4037'
+            }
+          },
+          '&:hover': {
+            backgroundColor: '#4E342E'
+          }
+        }
+      }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          '&.MuiChip-colorPrimary': {
+            backgroundColor: '#8D6E63',
+            color: '#F5F5DC'
+          },
+          '&.MuiChip-colorSecondary': {
+            backgroundColor: '#A1887F',
+            color: '#2E2E2E'
+          }
+        }
+      }
+    }
+  }
+});
+
 function App() {
   const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showUploader, setShowUploader] = useState(false);
 
   useEffect(() => {
     loadConversations();
@@ -83,123 +190,377 @@ function App() {
   };
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppBar position="static">
-        <Toolbar>
-          <ChatIcon sx={{ mr: 2 }} />
-          <Typography variant="h6">Claude Infinito v1.1</Typography>
-          <Box sx={{ ml: 'auto' }}>
-            <Button color="inherit" onClick={createConversation}>
-              Nueva Conversación
-            </Button>
-          </Box>
-        </Toolbar>
-      </AppBar>
-
-      <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        {/* Sidebar */}
-        <Paper sx={{ width: 300, display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="h6" sx={{ p: 2 }}>
-            Conversaciones
-          </Typography>
-          <List sx={{ flexGrow: 1, overflow: 'auto' }}>
-            {conversations.map(conv => (
-              <ListItem
-                key={conv.id}
-                button
-                selected={currentConversation?.id === conv.id}
-                onClick={() => {
-                  setCurrentConversation(conv);
-                  setMessages([]);
+    <ThemeProvider theme={warmDarkTheme}>
+      <Box sx={{ 
+        height: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        backgroundColor: '#2E2E2E' // Fondo principal oscuro y cálido
+      }}>
+        {/* HEADER MEJORADO CON BOTÓN DE UPLOAD */}
+        <AppBar position="static">
+          <Toolbar>
+            <ChatIcon sx={{ mr: 2, color: '#F5F5DC' }} />
+            <Typography variant="h6" sx={{ color: '#F5F5DC' }}>
+              Claude Infinito v1.1
+            </Typography>
+            
+            {/* BOTÓN UPLOAD MOVIDO AL HEADER */}
+            {currentConversation && (
+              <Button 
+                onClick={() => setShowUploader(!showUploader)}
+                variant="contained"
+                sx={{
+                  backgroundColor: '#e53e3e',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '#c53030'
+                  },
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  minWidth: 'auto',
+                  px: 2,
+                  ml: 2
                 }}
               >
-                <ListItemText
-                  primary={conv.title}
-                  secondary={new Date(conv.updated_at).toLocaleString()}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-
-        {/* Chat Area */}
-        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-          {currentConversation ? (
-            <>
-              {/* Messages */}
-              <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
-                {messages.map((msg, index) => (
-                  <Box key={index} sx={{ mb: 2 }}>
-                    <Chip
-                      label={msg.role === 'user' ? 'Tú' : 'Claude'}
-                      color={msg.role === 'user' ? 'primary' : 'secondary'}
-                      size="small"
-                    />
-                    <Paper sx={{ p: 2, mt: 1, backgroundColor: msg.role === 'user' ? '#e3f2fd' : '#f5f5f5' }}>
-                      <Typography variant="body1">
-                        {msg.content}
-                      </Typography>
-                    </Paper>
-                  </Box>
-                ))}
-                {loading && (
-                  <Box sx={{ mb: 2 }}>
-                    <Chip label="Claude" color="secondary" size="small" />
-                    <Paper sx={{ p: 2, mt: 1 }}>
-                      <Typography variant="body1" color="text.secondary">
-                        Claude está escribiendo...
-                      </Typography>
-                    </Paper>
-                  </Box>
-                )}
-              </Box>
-
-              <Divider />
-
-              {/* Input */}
-              <Box sx={{ p: 2, display: 'flex', gap: 1 }}>
-                <TextField
-                  fullWidth
-                  placeholder="Escribe tu mensaje..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-                  multiline
-                  maxRows={4}
-                  disabled={loading}
-                />
-                <Button
-                  variant="contained"
-                  onClick={sendMessage}
-                  disabled={loading || !newMessage.trim()}
-                  sx={{ minWidth: 'auto', px: 2 }}
-                >
-                  <SendIcon />
-                </Button>
-              </Box>
-            </>
-          ) : (
-            <Box sx={{ 
-              flexGrow: 1, 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              flexDirection: 'column'
-            }}>
-              <Typography variant="h4" color="text.secondary">
-                Claude Infinito v1.1
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 2 }}>
-                Selecciona una conversación o crea una nueva
-              </Typography>
-              <Button variant="contained" sx={{ mt: 3 }} onClick={createConversation}>
-                Crear Nueva Conversación
+                {showUploader ? '✖️ Cerrar' : '📄 Archivos'}
+              </Button>
+            )}
+            
+            <Box sx={{ ml: 'auto' }}>
+              <Button 
+                color="inherit" 
+                onClick={createConversation}
+                sx={{ 
+                  color: '#F5F5DC',
+                  '&:hover': {
+                    backgroundColor: 'rgba(245, 245, 220, 0.1)'
+                  }
+                }}
+              >
+                Nueva Conversación
               </Button>
             </Box>
-          )}
+          </Toolbar>
+        </AppBar>
+
+        {/* PANEL UPLOAD MEJORADO */}
+        {showUploader && currentConversation && (
+          <Paper sx={{
+            position: 'absolute',
+            top: '70px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '500px',
+            background: '#1a202c',
+            border: '1px solid #4a5568',
+            borderRadius: '12px',
+            padding: '20px',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
+            zIndex: 1001
+          }}>
+            <FileUploader
+              projectId={currentConversation.id}  {/* ✅ FIX CRÍTICO - USA CONVERSATION ID COMO PROJECT ID */}
+              conversationId={currentConversation.id}
+              onUploadComplete={(result) => {
+                console.log('Upload completed:', result);
+                alert(`Archivo procesado: ${result.chunksProcessed} chunks almacenados`);
+                setShowUploader(false); // Cerrar uploader tras completar
+              }}
+            />
+          </Paper>
+        )}
+
+        <Box sx={{ display: 'flex', flexGrow: 1 }}>
+          {/* SIDEBAR CON SCROLL MEJORADO */}
+          <Paper sx={{ 
+            width: 300, 
+            display: 'flex', 
+            flexDirection: 'column',
+            backgroundColor: '#4A4A4A',
+            borderRight: '1px solid #6D4C41'
+          }}>
+            <Typography variant="h6" sx={{ p: 2, color: '#F5F5DC' }}>
+              Conversaciones
+            </Typography>
+            
+            {/* CONTENEDOR CON SCROLL PARA CONVERSACIONES */}
+            <Box sx={{ 
+              flexGrow: 1, 
+              overflow: 'auto',
+              maxHeight: 'calc(100vh - 200px)' // Espacio para monitores
+            }}>
+              <List>
+                {conversations.map(conv => (
+                  <ListItem
+                    key={conv.id}
+                    button
+                    selected={currentConversation?.id === conv.id}
+                    onClick={() => {
+                      setCurrentConversation(conv);
+                      setMessages([]);
+                    }}
+                    sx={{
+                      color: '#F5F5DC',
+                      '&.Mui-selected': {
+                        backgroundColor: '#6D4C41',
+                        '&:hover': {
+                          backgroundColor: '#5D4037'
+                        }
+                      },
+                      '&:hover': {
+                        backgroundColor: '#4E342E'
+                      }
+                    }}
+                  >
+                    <ListItemText
+                      primary={conv.title}
+                      secondary={new Date(conv.updated_at).toLocaleString()}
+                      sx={{
+                        '& .MuiListItemText-primary': {
+                          color: '#F5F5DC',
+                          fontSize: '0.9rem'
+                        },
+                        '& .MuiListItemText-secondary': {
+                          color: '#D7CCC8',
+                          fontSize: '0.75rem'
+                        }
+                      }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+
+            {/* ÁREA PARA MONITORES DE ESTADO */}
+            <Box sx={{ 
+              p: 2, 
+              borderTop: '1px solid #6D4C41',
+              backgroundColor: '#3A3A3A'
+            }}>
+              <Typography variant="subtitle2" sx={{ color: '#F5F5DC', mb: 1 }}>
+                Estado del Sistema
+              </Typography>
+              
+              {/* MONITOR GPU */}
+              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ 
+                  width: 8, 
+                  height: 8, 
+                  borderRadius: '50%', 
+                  backgroundColor: '#4CAF50',  // Verde = OK
+                  mr: 1 
+                }} />
+                <Typography variant="caption" sx={{ color: '#D7CCC8' }}>
+                  GPU: RTX 5070 Ti
+                </Typography>
+              </Box>
+
+              {/* MONITOR CLAUDE API */}
+              <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ 
+                  width: 8, 
+                  height: 8, 
+                  borderRadius: '50%', 
+                  backgroundColor: '#4CAF50',  // Verde = OK
+                  mr: 1 
+                }} />
+                <Typography variant="caption" sx={{ color: '#D7CCC8' }}>
+                  Claude API: Conectado
+                </Typography>
+              </Box>
+
+              {/* MONITOR BACKEND */}
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ 
+                  width: 8, 
+                  height: 8, 
+                  borderRadius: '50%', 
+                  backgroundColor: '#4CAF50',  // Verde = OK
+                  mr: 1 
+                }} />
+                <Typography variant="caption" sx={{ color: '#D7CCC8' }}>
+                  Backend: Operativo
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+
+          {/* ÁREA DE CHAT */}
+          <Box sx={{ 
+            flexGrow: 1, 
+            display: 'flex', 
+            flexDirection: 'column'
+          }}>
+            {currentConversation ? (
+              <>
+                {/* Messages con fondo uniforme */}
+                <Box sx={{ 
+                  flexGrow: 1, 
+                  overflow: 'auto', 
+                  p: 2,
+                  backgroundColor: '#C9B99B' // FONDO UNIFORME BEIGE OSCURO
+                }}>
+                  {messages.map((msg, index) => (
+                    <Box key={index} sx={{ mb: 2 }}>
+                      <Chip
+                        label={msg.role === 'user' ? 'Tú' : 'Claude'}
+                        color={msg.role === 'user' ? 'primary' : 'secondary'}
+                        size="small"
+                        sx={{
+                          mb: 1,
+                          '&.MuiChip-colorPrimary': {
+                            backgroundColor: '#8D6E63',
+                            color: '#F5F5DC'
+                          },
+                          '&.MuiChip-colorSecondary': {
+                            backgroundColor: '#A1887F',
+                            color: '#2E2E2E'
+                          }
+                        }}
+                      />
+                      <Paper sx={{ 
+                        p: 2, 
+                        mt: 1, 
+                        backgroundColor: msg.role === 'user' ? '#6D4C41' : '#5A5A5A',
+                        border: `1px solid ${msg.role === 'user' ? '#8D6E63' : '#A1887F'}`
+                      }}>
+                        <Typography 
+                          variant="body1" 
+                          sx={{ 
+                            color: '#F5F5DC',
+                            lineHeight: 1.6
+                          }}
+                        >
+                          {msg.content}
+                        </Typography>
+                      </Paper>
+                    </Box>
+                  ))}
+                  {loading && (
+                    <Box sx={{ mb: 2 }}>
+                      <Chip 
+                        label="Claude" 
+                        color="secondary" 
+                        size="small"
+                        sx={{ mb: 1 }}
+                      />
+                      <Paper sx={{ 
+                        p: 2, 
+                        mt: 1,
+                        backgroundColor: '#5A5A5A',
+                        border: '1px solid #A1887F'
+                      }}>
+                        <Typography 
+                          variant="body1" 
+                          sx={{ 
+                            color: '#D7CCC8',
+                            fontStyle: 'italic'
+                          }}
+                        >
+                          Claude está escribiendo...
+                        </Typography>
+                      </Paper>
+                    </Box>
+                  )}
+                </Box>
+
+                <Divider sx={{ backgroundColor: '#6D4C41' }} />
+
+                {/* Input con fondo que coincide */}
+                <Box sx={{ 
+                  p: 2, 
+                  display: 'flex', 
+                  gap: 1,
+                  backgroundColor: '#C9B99B' // MISMO COLOR QUE ÁREA DE MENSAJES
+                }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Escribe tu mensaje..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                    multiline
+                    maxRows={4}
+                    disabled={loading}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#C9B99B', // MISMO COLOR
+                        '& fieldset': {
+                          borderColor: '#8D6E63'
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#A1887F'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#6D4C41'
+                        }
+                      },
+                      '& .MuiInputBase-input': {
+                        color: '#3E2723'
+                      },
+                      '& .MuiInputBase-input::placeholder': {
+                        color: '#8D6E63',
+                        opacity: 0.7
+                      }
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={sendMessage}
+                    disabled={loading || !newMessage.trim()}
+                    sx={{ 
+                      minWidth: 'auto', 
+                      px: 2,
+                      backgroundColor: '#8D6E63',
+                      color: '#F5F5DC',
+                      '&:hover': {
+                        backgroundColor: '#6D4C41'
+                      },
+                      '&:disabled': {
+                        backgroundColor: '#BCAAA4',
+                        color: '#8D6E63'
+                      }
+                    }}
+                  >
+                    <SendIcon />
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <Box sx={{ 
+                flexGrow: 1, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                flexDirection: 'column',
+                backgroundColor: '#C9B99B' // Mismo color beige oscuro
+              }}>
+                <Typography variant="h4" sx={{ color: '#3E2723', mb: 2 }}>
+                  Claude Infinito v1.1
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#6D4C41', mb: 3 }}>
+                  Selecciona una conversación o crea una nueva
+                </Typography>
+                <Button 
+                  variant="contained" 
+                  onClick={createConversation}
+                  sx={{
+                    backgroundColor: '#8D6E63',
+                    color: '#F5F5DC',
+                    '&:hover': {
+                      backgroundColor: '#6D4C41'
+                    }
+                  }}
+                >
+                  Crear Nueva Conversación
+                </Button>
+              </Box>
+            )}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }
 

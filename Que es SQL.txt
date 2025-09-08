@@ -1,0 +1,38 @@
+¿Qué es SQL?
+SQL significa Structured Query Language (Lenguaje de consulta estructurado). SQL se utiliza para comunicarse con una base de datos y SQL es el lenguaje estándar para los sistemas de gestión de bases de datos relacionales. Las sentencias SQL se utilizan para realizar tareas como actualizar datos o recuperar datos de una base de datos. Los sistemas comunes de gestión de bases de datos relacionales que utilizan SQL son: Oracle, Sybase, Microsoft SQL Server, Access, Ingres, etc. Leer más
+
+Tutorial de SQL
+Comandos SQL estándar fáciles de aprender como "Select", "Insert", "Update", "Delete", "Create" y "Drop" pueden utilizarse para realizar casi todo lo que necesitarás hacer con una base de datos. Este tutorial de SQL te proporcionará las instrucciones básicas de cada uno de estos comandos y te permitirá ponerlos en práctica utilizando el intérprete de SQL.
+
+¿Qué puede hacer SQL?
+ejecutar consultas contra una base de datos
+recuperar datos de una base de datos
+insertar registros en una base de datos
+actualizar registros en una base de datos
+eliminar registros de una base de datos
+crear nuevas bases de datos
+crear nuevas tablas en una base de datos
+puede crear procedimientos almacenados en una base de datos
+puede crear vistas en una base de datos
+puede establecer permisos sobre tablas, procedimientos y vistas
+Los comandos SQL más importantes
+SELECT - extrae datos de una base de datos
+UPDATE - actualiza los datos en una base de datos
+DELETE - borra datos de una base de datos
+INSERT INTO - inserta nuevos datos en una base de datos
+CREATE DATABASE - crea una nueva base de datos
+ALTER DATABASE - modifica una base de datos
+CREATE TABLE - crea una nueva tabla
+ALTER TABLE - modifica una tabla
+DROP TABLE - borra una tabla
+CREATE INDEX - crea un índice (clave de búsqueda)
+DROP INDEX - borra un índice
+¿Por qué debería aprender SQL?
+SQL es un requisitio increíblemente importante y valioso que los empleadores desean cada vez más. Puedes ganar mucho dinero, los programadores SQL tienen mucha demanda. A medida que las organizaciones buscan hacer más con sus datos, necesitarán más individuos con las habilidades para acceder y analizar esos datos. SQL es la habilidad que te permite hacer precisamente eso.
+
+El aprendizaje de SQL te permitirá extraer datos con mayor eficiencia, ya que las consultas SQL se pueden guardar y reutilizar fácilmente en cualquier momento. Puedes realizar manipulaciones de datos, combinar datos de múltiples fuentes y gestionar grandes grupos de datos. Y ya no tendrás que lidiar con un Excel gigantesco.
+
+¿Se volverá obsoleto el SQL?
+Creo que no. Las empresas y especialmente las pequeñas empresas continuarán organizando los datos de manera relacional, independientemente de la tecnología subyacente de almacenamiento y procesamiento de datos.
+
+
