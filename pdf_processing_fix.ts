@@ -1,10 +1,10 @@
-// backend/src/services/file-processor.service.ts - CORRECTED VERSION
+// backend/src/services/file-processor.service.ts - COMPLETE FIXED VERSION
 
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
 import { RAGService } from './rag.service';
-const pdfParse = require('pdf-parse'); // PDF parsing library
+const pdfParse = require('pdf-parse'); // NEW: PDF parsing library
 
 interface FileChunk {
   id: string;
@@ -71,7 +71,7 @@ export class FileProcessorService {
       
       switch (fileExtension) {
         case '.pdf':
-          // FIXED: Handle PDFs with proper text extraction and metadata
+          // NEW: Handle PDFs with proper text extraction
           chunks = await this.processPDFFile(file.buffer, file.originalname);
           break;
         case '.docx':
@@ -150,7 +150,7 @@ export class FileProcessorService {
     }
   }
 
-  // FIXED: Process PDF files with proper text extraction and ChromaDB-compatible metadata
+  // NEW: Process PDF files with proper text extraction
   private async processPDFFile(buffer: Buffer, filename: string): Promise<FileChunk[]> {
     console.log(`📄 Processing PDF: ${filename}`);
     
@@ -172,11 +172,7 @@ export class FileProcessorService {
             section: 'Empty PDF',
             language: 'text',
             pages: data.numpages || 0,
-            // FIXED: Only primitive values for ChromaDB
-            pdfTitle: (data.info && data.info.Title) ? String(data.info.Title) : '',
-            pdfAuthor: (data.info && data.info.Author) ? String(data.info.Author) : '',
-            pdfSubject: (data.info && data.info.Subject) ? String(data.info.Subject) : '',
-            pdfCreator: (data.info && data.info.Creator) ? String(data.info.Creator) : ''
+            pdfInfo: data.info || {}
           }
         }];
       }
@@ -188,15 +184,8 @@ export class FileProcessorService {
       const maxChunkSize = 1500;
       const textChunks = this.chunkText(extractedText, maxChunkSize);
       
-      // FIXED: Extract only primitive values from PDF info
-      const pdfTitle = (data.info && data.info.Title) ? String(data.info.Title) : '';
-      const pdfAuthor = (data.info && data.info.Author) ? String(data.info.Author) : '';
-      const pdfSubject = (data.info && data.info.Subject) ? String(data.info.Subject) : '';
-      const pdfCreator = (data.info && data.info.Creator) ? String(data.info.Creator) : '';
-      const totalPages = data.numpages || 0;
-      
       textChunks.forEach((chunk, i) => {
-        const estimatedPage = Math.floor((i / textChunks.length) * totalPages) + 1;
+        const estimatedPage = Math.floor((i / textChunks.length) * (data.numpages || 1)) + 1;
         
         chunks.push({
           id: `${filename}_pdf_chunk_${i}`,
@@ -208,18 +197,14 @@ export class FileProcessorService {
             totalChunks: textChunks.length,
             section: `Page ~${estimatedPage}`,
             language: 'text',
-            pages: totalPages,
+            pages: data.numpages || 0,
             estimatedPage: estimatedPage,
-            // FIXED: Only primitive values - no complex objects
-            pdfTitle: pdfTitle,
-            pdfAuthor: pdfAuthor,
-            pdfSubject: pdfSubject,
-            pdfCreator: pdfCreator
+            pdfInfo: data.info || {}
           }
         });
       });
 
-      console.log(`📊 PDF processed: ${chunks.length} chunks generated from ${totalPages} pages`);
+      console.log(`📊 PDF processed: ${chunks.length} chunks generated from ${data.numpages} pages`);
       return chunks;
 
     } catch (error: any) {
@@ -236,7 +221,6 @@ export class FileProcessorService {
           totalChunks: 1,
           section: 'PDF Error',
           language: 'text',
-          pages: 0,
           error: error.message
         }
       }];

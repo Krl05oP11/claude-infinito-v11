@@ -158,6 +158,10 @@ async createProjectCollection(projectId: string): Promise<string | null> {
 }
 
   // ✅ CORREGIDO: Búsqueda con similitud COSENO
+// backend/src/services/rag.service.ts - COMPLETE FIXED VERSION
+// Replace the entire searchInCollection method with this corrected version
+
+  // ✅ FIXED: Search with proper metadata recovery
   async searchInCollection(collectionId: string, query: string, limit: number = 5): Promise<Memory[]> {
     try {
       console.log(`🔍 SEARCH DEBUG: Starting search in COSINE collection ${collectionId}`);
@@ -190,28 +194,48 @@ async createProjectCollection(projectId: string): Promise<string | null> {
       const memories: Memory[] = [];
       for (let i = 0; i < results.ids[0].length; i++) {
         const distance = results.distances[0][i];
-        
-        // ⭐ CÁLCULO COSENO CORRECTO
         const similarity = 1 - distance;
-        
         const content = results.documents[0][i];
-        const metadata = results.metadatas[0][i];
+        const rawMetadata = results.metadatas[0][i];
         
+        // ✅ DEBUG: Log raw metadata to see what's actually coming from ChromaDB
         console.log(`\n--- MEMORY ${i + 1} (COSINE) ---`);
         console.log(`Distance: ${distance.toFixed(4)}`);
         console.log(`Similarity: ${similarity.toFixed(4)}`);
         console.log(`Threshold: ${this.similarityThreshold}`);
         console.log(`Content preview: "${content.substring(0, 100)}..."`);
+        console.log(`🔍 RAW METADATA DEBUG:`, JSON.stringify(rawMetadata, null, 2));
+        
+        // ✅ FIXED: Ensure metadata is properly structured
+        const processedMetadata = {
+          conversation_id: rawMetadata?.conversation_id || 'unknown',
+          project_id: rawMetadata?.project_id || 'unknown',
+          timestamp: rawMetadata?.timestamp || new Date().toISOString(),
+          // ✅ CRITICAL: Preserve file-related metadata
+          source_type: rawMetadata?.source_type,
+          file_name: rawMetadata?.file_name || rawMetadata?.filename,
+          filename: rawMetadata?.filename || rawMetadata?.file_name,
+          fileType: rawMetadata?.fileType,
+          // ✅ Include all other metadata fields
+          ...rawMetadata,
+          // ✅ Add calculated similarity
+          similarity: similarity
+        };
+        
+        console.log(`🔍 PROCESSED METADATA:`, JSON.stringify({
+          source_type: processedMetadata.source_type,
+          file_name: processedMetadata.file_name,
+          filename: processedMetadata.filename,
+          fileType: processedMetadata.fileType
+        }, null, 2));
         
         if (similarity >= this.similarityThreshold) {
           console.log(`✅ MEMORY ${i + 1}: ABOVE threshold, adding to results`);
+          
           memories.push({
             id: results.ids[0][i],
             content: content,
-            metadata: {
-              ...metadata,
-              similarity: similarity
-            }
+            metadata: processedMetadata
           });
         } else {
           console.log(`❌ MEMORY ${i + 1}: BELOW threshold (${similarity.toFixed(4)} < ${this.similarityThreshold})`);
@@ -219,6 +243,30 @@ async createProjectCollection(projectId: string): Promise<string | null> {
       }
       
       console.log(`\n🎯 SEARCH DEBUG: Final results: ${memories.length} memories above threshold`);
+      
+      // ✅ ADDITIONAL DEBUG: Log file detection results
+      const fileMemoriesFound = memories.filter(m => 
+        m.metadata?.source_type === 'file_upload' || 
+        m.metadata?.file_name || 
+        m.metadata?.filename || 
+        m.metadata?.fileType
+      );
+      const conversationMemoriesFound = memories.filter(m => 
+        !(m.metadata?.source_type === 'file_upload' || 
+          m.metadata?.file_name || 
+          m.metadata?.filename || 
+          m.metadata?.fileType)
+      );
+      
+      console.log(`🔍 DETECTION RESULTS: ${fileMemoriesFound.length} files, ${conversationMemoriesFound.length} conversations`);
+      
+      if (fileMemoriesFound.length > 0) {
+        console.log(`📄 FILES DETECTED:`);
+        fileMemoriesFound.forEach((mem, idx) => {
+          console.log(`📄 File ${idx + 1}: ${mem.metadata?.file_name || mem.metadata?.filename} (type: ${mem.metadata?.source_type})`);
+        });
+      }
+      
       return memories;
     } catch (error: any) {
       console.error(`❌ SEARCH ERROR: Failed to search collection ${collectionId}`);
@@ -227,7 +275,6 @@ async createProjectCollection(projectId: string): Promise<string | null> {
       return [];
     }
   }
-
   // ✅ REQUERIDO: Buscar en todas las colecciones (usado por index.ts)
   async searchAllProjects(query: string, limit: number = 10): Promise<Memory[]> {
     try {

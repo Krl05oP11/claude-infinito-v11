@@ -691,3 +691,922 @@
 2025-09-08T02:36:00.217Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
 2025-09-08T02:36:08.442Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
 2025-09-08T02:36:08.444Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T21:53:17.734Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-09T21:53:17.732Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T21:53:17.734Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-09T21:53:17.734Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-09T21:53:17.743Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-09T21:55:18.584Z [[32minfo[39m]: [32mProcessing message for conversation 366ebc2b-a429-429f-ab45-294ba1bcea24[39m 
+2025-09-09T21:55:18.594Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T21:55:20.279Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Hemos estado desarrollando juntos el proyecto Clau..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Quiero saber si en el texto que procesaste (1383 c..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Entiendo que mencionas que hemos estado trabajando..."[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T21:55:20.278Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T21:55:20.279Z [[32minfo[39m]: [32m📤 Injecting 3907 characters of context[39m 
+2025-09-09T21:55:20.279Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T21:55:20.279Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T21:55:31.282Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T21:55:31.283Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T21:57:47.340Z [[32minfo[39m]: [32mProcessing message for conversation 366ebc2b-a429-429f-ab45-294ba1bcea24[39m 
+2025-09-09T21:57:47.344Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T21:57:47.462Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T21:57:47.464Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T21:57:47.462Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T21:57:47.462Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="hola Claude. Explícame que son los núcleos CUDA de..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mMemory 2: source_type="file_upload", file_name="Que es SQL.txt", content_start="Puedes realizar manipulaciones de datos, combinar ..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Hola! Te explico qué son los núcleos CUDA de las t..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Acabas de proceasr el libro "Machine LEarning Syst..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Hemos estado desarrollando juntos el proyecto Clau..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mMemory 6: source_type="file_upload", file_name="Que es SQL.txt", content_start="¿Qué es SQL. SQL significa Structured Query Langua..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mFound 2 file memories[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32mFound 6 conversation memories[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32m📄 File 1: Que es SQL.txt (project: 4ab029c7..., similarity: 0.0%)[39m 
+2025-09-09T21:57:47.463Z [[32minfo[39m]: [32m📄 File 2: Que es SQL.txt (project: 4ab029c7..., similarity: 0.0%)[39m 
+2025-09-09T21:57:47.464Z [[32minfo[39m]: [32m📤 Injecting 5603 characters of context[39m 
+2025-09-09T21:57:47.464Z [[32minfo[39m]: [32m🎯 Final summary: 2 archivos, 6 conversaciones[39m 
+2025-09-09T21:57:47.464Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T21:58:01.243Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T21:58:01.243Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T22:00:52.223Z [[32minfo[39m]: [32mProcessing message for conversation 366ebc2b-a429-429f-ab45-294ba1bcea24[39m 
+2025-09-09T22:00:52.227Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T22:00:52.336Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="hola Claude. Explícame que son los núcleos CUDA de..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Quiero saber si en el texto que procesaste (1383 c..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Acabas de proceasr el libro "Machine LEarning Syst..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 4: source_type="file_upload", file_name="Que es SQL.txt", content_start="Puedes realizar manipulaciones de datos, combinar ..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Exacto, tienes razón. Hay claramente un problema t..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T22:00:52.335Z [[32minfo[39m]: [32mFound 1 file memories[39m 
+2025-09-09T22:00:52.336Z [[32minfo[39m]: [32mFound 7 conversation memories[39m 
+2025-09-09T22:00:52.336Z [[32minfo[39m]: [32m📄 File 1: Que es SQL.txt (project: 4ab029c7..., similarity: 0.0%)[39m 
+2025-09-09T22:00:52.336Z [[32minfo[39m]: [32m📤 Injecting 5358 characters of context[39m 
+2025-09-09T22:00:52.336Z [[32minfo[39m]: [32m🎯 Final summary: 1 archivos, 7 conversaciones[39m 
+2025-09-09T22:00:52.336Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T22:01:13.791Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T22:01:13.792Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T22:04:09.872Z [[32minfo[39m]: [32mProcessing message for conversation 366ebc2b-a429-429f-ab45-294ba1bcea24[39m 
+2025-09-09T22:04:09.877Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="hola Claude. Explícame que son los núcleos CUDA de..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Te proporciono una explicación detallada de los **..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Hemos estado desarrollando juntos el proyecto Clau..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Dame una explicación más profunda de los Streaming..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Entiendo que mencionas que hemos estado trabajando..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32m📤 Injecting 6503 characters of context[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T22:04:09.967Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T22:04:41.777Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T22:04:41.778Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T22:08:21.328Z [[32minfo[39m]: [32mProcessing message for conversation 366ebc2b-a429-429f-ab45-294ba1bcea24[39m 
+2025-09-09T22:08:21.333Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T22:08:21.435Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:08:21.435Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T22:08:21.435Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="¿Puedes hacerme un diagrama de la arquitectura de ..."[39m 
+2025-09-09T22:08:21.435Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Dame una explicación más profunda de los Streaming..."[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="hola Claude. Explícame que son los núcleos CUDA de..."[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Exacto, tienes razón. Hay claramente un problema t..."[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Entiendo que mencionas que hemos estado trabajando..."[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32m📤 Injecting 5084 characters of context[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T22:08:21.436Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T22:08:41.192Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T22:08:41.193Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T22:35:24.676Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-09T22:35:24.674Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:35:24.676Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-09T22:35:24.676Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-09T22:35:24.685Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-09T22:35:36.752Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-09T22:35:36.749Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:35:36.752Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-09T22:35:36.752Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-09T22:35:36.760Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-09T22:37:44.479Z [[32minfo[39m]: [32mProcessing message for conversation 366ebc2b-a429-429f-ab45-294ba1bcea24[39m 
+2025-09-09T22:37:44.491Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T22:37:45.511Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Exacto, tienes razón. Hay claramente un problema t..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="No, **NO puedo ver ningún otro archivo de texto di..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Quiero saber si en el texto que procesaste (1383 c..."[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T22:37:45.510Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T22:37:45.511Z [[32minfo[39m]: [32m📤 Injecting 5295 characters of context[39m 
+2025-09-09T22:37:45.511Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T22:37:45.511Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T22:37:56.848Z [[32minfo[39m]: [32m📄 Processing uploaded file: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (6503454 bytes)[39m 
+2025-09-09T22:38:05.813Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T22:38:05.815Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T22:39:03.120Z [[32minfo[39m]: [32mProcessing message for conversation 366ebc2b-a429-429f-ab45-294ba1bcea24[39m 
+2025-09-09T22:39:03.125Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T22:39:03.239Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="No, **NO puedo ver ningún otro archivo de texto di..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Ok, quizá no me expresé bien. Necesito un diagrama..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Nope! hace unos segundos subí otro archivo de text..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Hemos estado desarrollando juntos el proyecto Clau..."[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32m📤 Injecting 4377 characters of context[39m 
+2025-09-09T22:39:03.238Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T22:39:03.239Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T22:39:26.060Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T22:39:26.060Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T22:58:41.068Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-09T22:58:41.065Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T22:58:41.068Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-09T22:58:41.068Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-09T22:58:41.076Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-09T23:07:17.105Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-09T23:07:17.102Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:07:17.105Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-09T23:07:17.105Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-09T23:07:17.113Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-09T23:13:39.895Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-09T23:13:39.893Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:13:39.895Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-09T23:13:39.895Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-09T23:13:39.903Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-09T23:15:28.041Z [[32minfo[39m]: [32m📄 Processing uploaded file: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (6503454 bytes)[39m 
+2025-09-09T23:16:23.890Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:16:23.898Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T23:16:24.057Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Acabas de proceasr el libro "Machine LEarning Syst..."[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T23:16:24.055Z [[32minfo[39m]: [32mMemory 7: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="An Introduction to Genetic Algorithms[39m
+[32mMitchell Mel..."[39m 
+2025-09-09T23:16:24.056Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Hemos estado desarrollando juntos el proyecto Clau..."[39m 
+2025-09-09T23:16:24.056Z [[32minfo[39m]: [32mFound 1 file memories[39m 
+2025-09-09T23:16:24.056Z [[32minfo[39m]: [32mFound 7 conversation memories[39m 
+2025-09-09T23:16:24.056Z [[32minfo[39m]: [32m📄 File 1: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 0.0%)[39m 
+2025-09-09T23:16:24.056Z [[32minfo[39m]: [32m📤 Injecting 3769 characters of context[39m 
+2025-09-09T23:16:24.056Z [[32minfo[39m]: [32m🎯 Final summary: 1 archivos, 7 conversaciones[39m 
+2025-09-09T23:16:24.057Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:16:31.111Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:16:31.112Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T23:17:27.017Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:17:27.022Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T23:17:27.147Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Nope! hace unos segundos subí otro archivo de text..."[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="No, **NO puedo ver ningún otro archivo de texto di..."[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-09T23:17:27.146Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Quiero saber si en el texto que procesaste (1383 c..."[39m 
+2025-09-09T23:17:27.147Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:17:27.147Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T23:17:27.147Z [[32minfo[39m]: [32m📤 Injecting 3326 characters of context[39m 
+2025-09-09T23:17:27.147Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T23:17:27.147Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:17:35.685Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:17:35.685Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T23:19:00.319Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:19:00.325Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Basándome en la información que tengo del archivo ..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="¿sabes cuál  es la última edición de este texto?..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="No, **NO puedo ver ningún otro archivo de texto di..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32m📤 Injecting 4659 characters of context[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T23:19:00.447Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:19:07.266Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:19:07.267Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T23:20:33.674Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:20:33.679Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:20:33.801Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="No, **NO puedo ver ningún otro archivo de texto di..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="voy a pasarte un archivo PDF para probar las modif..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32m📤 Injecting 5149 characters of context[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T23:20:33.802Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:20:41.165Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:20:41.166Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T23:22:01.868Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:22:01.872Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T23:22:01.996Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Ok, entonces te pregunto si puedes acceder complet..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="¿conoces un libro de Melanie Mitchell?..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32m📤 Injecting 3124 characters of context[39m 
+2025-09-09T23:22:01.995Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T23:22:01.996Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:22:10.771Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:22:10.772Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T23:25:08.098Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:25:08.103Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:25:08.217Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="¿conoces un libro de Melanie Mitchell?..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No, ..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No t..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="¿sabes cuál  es la última edición de este texto?..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32m📤 Injecting 4853 characters of context[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T23:25:08.218Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:25:12.429Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:25:12.429Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T23:27:31.779Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:27:31.784Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mFound 8 relevant memories[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No, ..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Ok, entonces te pregunto si puedes acceder complet..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No t..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No, ..."[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32m📤 Injecting 5121 characters of context[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 8 conversaciones[39m 
+2025-09-09T23:27:31.890Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:27:39.168Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:27:39.169Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8[39m 
+2025-09-09T23:54:38.168Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-09T23:54:38.165Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:54:38.168Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-09T23:54:38.168Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-09T23:54:38.176Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-09T23:55:37.250Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:55:37.262Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:55:38.338Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-09T23:55:38.340Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Ok, entonces te pregunto si puedes acceder complet..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Quiero saber si en el texto que procesaste (1383 c..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-09T23:55:38.339Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No, ..."[39m 
+2025-09-09T23:55:38.340Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:55:38.340Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-09T23:55:38.340Z [[32minfo[39m]: [32m📤 Injecting 633 characters of context[39m 
+2025-09-09T23:55:38.340Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-09T23:55:38.340Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:55:38.340Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:55:48.903Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:55:48.904Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-09T23:56:04.157Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-09T23:56:04.162Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Ok, entonces te pregunto si puedes acceder complet..."[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-09T23:56:04.257Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Quiero saber si en el texto que procesaste (1383 c..."[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32m📤 Injecting 667 characters of context[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-09T23:56:04.258Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-09T23:56:09.711Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-09T23:56:09.711Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T00:18:25.936Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-10T00:18:25.934Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T00:18:25.936Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-10T00:18:25.936Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-10T00:18:25.944Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-10T00:19:48.679Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-10T00:19:48.690Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T00:19:49.753Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T00:19:49.755Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T00:19:49.753Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Ok, entonces te pregunto si puedes acceder complet..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Quiero saber si en el texto que procesaste (1383 c..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No t..."[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32m📤 Injecting 666 characters of context[39m 
+2025-09-10T00:19:49.754Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T00:19:49.755Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T00:19:49.755Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T00:19:55.241Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T00:19:55.242Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T00:23:41.519Z [[32minfo[39m]: [32mProcessing message for conversation dd9f5dba-4b23-43a4-b073-81e40d87fedb[39m 
+2025-09-10T00:23:41.525Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 1: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="1.9 TWO BRIEF EXAMPLES[39m
+[32mAs warmups to more extensiv..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 2: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="These criticisms and the new approaches to GA[39m
+[32mtheo..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 3: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="If the game is iterated (that is, if the two playe..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 4: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="It is clear that the notion of gene usage in the S..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 5: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="Emergent computation: Self−organizing, collective,..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 6: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="Simulation of biological evolution and machine lea..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 7: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="Chapter 3: Genetic Algorithms in Scientific Models..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 8: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="The weights on the evaluation network are constant..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 9: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="Forrest, ed., Proceedings of the[39m
+[32mFifth Internation..."[39m 
+2025-09-10T00:23:41.638Z [[32minfo[39m]: [32mMemory 10: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="497) explained these phenomena by speculating that..."[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32mMemory 11: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="Before doing these experiments, it[39m
+[32mmight be helpfu..."[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32mMemory 12: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="The goal, then, is to find a way to measure the de..."[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32mMemory 13: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="E., and Vose, M. D. 1990. Representational issues ..."[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32mMemory 14: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="Bedau and Packard denned "evolution" in terms of A..."[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32mMemory 15: source_type="file_upload", file_name="An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf", content_start="Chalmers suggested that it is unlikely that evolut..."[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32mFound 15 file memories[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32mFound 0 conversation memories[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32m📄 File 1: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 70.6%)[39m 
+2025-09-10T00:23:41.639Z [[32minfo[39m]: [32m📄 File 2: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 69.0%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 3: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 67.8%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 4: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 67.5%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 5: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 66.4%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 6: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 66.2%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 7: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 66.0%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 8: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 65.6%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 9: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 65.5%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 10: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 65.3%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 11: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 65.3%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 12: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 65.1%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 13: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 65.0%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 14: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 64.9%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📄 File 15: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (project: dd9f5dba..., similarity: 64.7%)[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m📤 Injecting 9705 characters of context[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32m🎯 Final summary: 15 archivos, 0 conversaciones[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T00:23:41.640Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T00:23:49.834Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T00:23:49.835Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:12:27.190Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-10T01:12:27.187Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:12:27.190Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-10T01:12:27.190Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-10T01:12:27.200Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-10T01:14:11.041Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:14:11.048Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="¿conoces un libro de Melanie Mitchell?..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Claude, vamos de nuevo. Responde directamente la s..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No t..."[39m 
+2025-09-10T01:14:12.112Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No, ..."[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No, ..."[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32m📤 Injecting 453 characters of context[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:14:12.113Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:14:19.835Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:14:19.836Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:15:53.861Z [[32minfo[39m]: [32m📄 Processing uploaded file: An-Introduction-to-GeneticAlgorithms-MelanieMitchell.pdf (6503454 bytes)[39m 
+2025-09-10T01:16:50.762Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:16:50.767Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:16:50.934Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:16:50.936Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:16:50.934Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:16:50.934Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Basándome en el contexto conversacional que veo, p..."[39m 
+2025-09-10T01:16:50.934Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Claude, ¿hay alguna referencia al Dilema del Prisi..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Claude, vamos de nuevo. Responde directamente la s..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Veo que acabas de subir un archivo, pero tengo el ..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Nope! hace unos segundos subí otro archivo de text..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32m📤 Injecting 1074 characters of context[39m 
+2025-09-10T01:16:50.935Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:16:50.936Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:16:50.936Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:16:55.668Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:16:55.669Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:18:59.165Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:18:59.170Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:18:59.328Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Exacto, tienes razón. Hay claramente un problema t..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Ahora veo el problema claramente. Los logs del bac..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Veo que hay información de contexto sobre nuestro ..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Hemos estado desarrollando juntos el proyecto Clau..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="No, **NO puedo ver ningún otro archivo de texto di..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Veo que acabas de subir un archivo, pero tengo el ..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Entiendo que mencionas que hemos estado trabajando..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Veo que ya te proporcioné una explicación detallad..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="¡**SÍ, ahora puedo ver el nuevo archivo que acabas..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="voy a pasarte un archivo PDF para probar las modif..."[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32m📤 Injecting 2496 characters of context[39m 
+2025-09-10T01:18:59.327Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:18:59.328Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:18:59.328Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:19:15.147Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:19:15.147Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:20:13.901Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:20:13.906Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Claude, ¿hay alguna referencia al Dilema del Prisi..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="¿conoces un libro de Melanie Mitchell?..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Basándome en el contexto conversacional que veo, p..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Me disculpo, pero no veo que hayas subido el archi..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Listo, ya te lo subí nuevamente. ¿puedes contestar..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Claude, vamos de nuevo. Responde directamente la s..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="Perfecto, ahora veo que el archivo se procesó corr..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No, ..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Tienes razón, me disculpo por la confusión. **No t..."[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32m📤 Injecting 337 characters of context[39m 
+2025-09-10T01:20:14.053Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:20:14.054Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:20:14.054Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:20:24.088Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:20:24.088Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:22:28.610Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:22:28.615Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Ok, entonces te pregunto si puedes acceder complet..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Hola Claude. Ayer te pasé un documento en PDF. ¿re..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="voy a pasarte un archivo PDF para probar las modif..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-10T01:22:28.763Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Basándome en el contexto conversacional que veo, p..."[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="Me disculpo, pero no veo que hayas subido el archi..."[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="No, el libro no puede decir si hay nuevas edicione..."[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32m📤 Injecting 375 characters of context[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:22:28.764Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:22:37.490Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:22:37.490Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:23:05.788Z [[32minfo[39m]: [32m📄 Processing uploaded file: machine-learning-projects-python.pdf (2103755 bytes)[39m 
+2025-09-10T01:24:58.325Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:24:58.330Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Basándome en el contexto conversacional que veo, p..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Me disculpo, pero no veo que hayas subido el archi..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Claude, vamos de nuevo. Responde directamente la s..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Claude, ¿hay alguna referencia al Dilema del Prisi..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="Ok, entonces te pregunto si puedes acceder complet..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Bien, veo que has podido recuperar data del libro...."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Tienes razón, disculpa la confusión. [39m
+
+[32mNo, **no pu..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32m📤 Injecting 1085 characters of context[39m 
+2025-09-10T01:24:58.456Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:24:58.457Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:24:58.457Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:25:06.792Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:25:06.793Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:28:17.903Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:28:17.907Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:28:18.054Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:28:18.054Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:28:18.054Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="No. Olvida, por el momento, las preguntas referida..."[39m 
+2025-09-10T01:28:18.054Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Me disculpo, pero no veo que hayas subido el archi..."[39m 
+2025-09-10T01:28:18.054Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T01:28:18.054Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Basándome en el contexto conversacional que veo, p..."[39m 
+2025-09-10T01:28:18.054Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Claude, ¿hay alguna referencia al Dilema del Prisi..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="¿conoces un libro de Melanie Mitchell?..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Claude, vamos de nuevo. Responde directamente la s..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Perfecto, veo que el archivo PDF del libro de Mela..."[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32m📤 Injecting 1115 characters of context[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:28:18.055Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:28:25.967Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:28:25.968Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T01:38:27.624Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-10T01:38:27.629Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mFound 15 relevant memories[39m 
+2025-09-10T01:38:28.704Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32m🔍 All memories found:[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 1: source_type="undefined", file_name="undefined", content_start="Perfecto, ahora veo que el archivo se procesó corr..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 2: source_type="undefined", file_name="undefined", content_start="Exacto, tienes razón. Hay claramente un problema t..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 3: source_type="undefined", file_name="undefined", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 4: source_type="undefined", file_name="undefined", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 5: source_type="undefined", file_name="undefined", content_start="Ahora veo el problema claramente. Los logs del bac..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 6: source_type="undefined", file_name="undefined", content_start="Según la información disponible, **NO puedo ver el..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 7: source_type="undefined", file_name="undefined", content_start="Ok. Veo que hay otro problema. Ya te subí el archi..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 8: source_type="undefined", file_name="undefined", content_start="Tienes razón, veo que hay un problema técnico. Seg..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 9: source_type="undefined", file_name="undefined", content_start="voy a pasarte un archivo PDF para probar las modif..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 10: source_type="undefined", file_name="undefined", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 11: source_type="undefined", file_name="undefined", content_start="No, **NO puedo ver ningún otro archivo de texto di..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 12: source_type="undefined", file_name="undefined", content_start="Olvídate de Melanie Mitchell y sus libros. Te subí..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 13: source_type="undefined", file_name="undefined", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 14: source_type="undefined", file_name="undefined", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mMemory 15: source_type="undefined", file_name="undefined", content_start="Claude, vamos de nuevo. Responde directamente la s..."[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32mFound 15 conversation memories[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32m📤 Injecting 2501 characters of context[39m 
+2025-09-10T01:38:28.703Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 15 conversaciones[39m 
+2025-09-10T01:38:28.704Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T01:38:28.704Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T01:38:38.066Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T01:38:38.067Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 15[39m 
+2025-09-10T02:44:29.613Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-10T02:44:29.611Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:44:29.614Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-10T02:44:29.614Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-10T02:44:29.623Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-10T02:48:51.213Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-10T02:48:51.211Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:48:51.213Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-10T02:48:51.214Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-10T02:48:51.221Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-10T02:53:30.486Z [[32minfo[39m]: [32mProcessing message for conversation ff8c079b-beda-45a2-af04-50ef1d2cea13[39m 
+2025-09-10T02:53:30.494Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-10T02:53:31.567Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mFound 18 memories in CURRENT project (9faaa827...)[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mFound 2 memories in OTHER projects[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32m🎯 PRIORITIZED: 18 from current project, 3 from other projects[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32m🔍 All memories selected:[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mMemory 1: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Acabas de proceasr el libro "Machine LEarning Syst..."[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mMemory 2: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="No, no he procesado ningún texto de 1383 chunks ni..."[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mMemory 3: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Hola. Revisando el contexto histórico disponible, ..."[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mMemory 4: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Claude, mira este log del procesamietno del archiv..."[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mMemory 5: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mMemory 6: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Exacto, tienes razón. Hay claramente un problema t..."[39m 
+2025-09-10T02:53:31.565Z [[32minfo[39m]: [32mMemory 7: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Tienes razón, veo que hay un problema técnico. Seg..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mMemory 8: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, ahora entiendo que el archivo fue proces..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mMemory 9: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, veo que el archivo PDF del libro de Mela..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mMemory 10: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Tienes razón, veo que el archivo fue procesado y a..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mMemory 11: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Tienes razón, me disculpo por la confusión. **No t..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mMemory 12: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Tienes razón, me disculpo por la confusión. **No t..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mMemory 13: 🔄 OTHER | source_type="file_upload", file_name="machine-learning-projects-python.pdf", project="07310364...", content_start="This work is licensed under a Creative Commons Att..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mMemory 14: 🔄 OTHER | source_type="file_upload", file_name="machine-learning-projects-python.pdf", project="07310364...", content_start="Because  machine  learning  is  a  field  that  is..."[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mFound 2 file memories[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32m📄 File 1: machine-learning-projects-python.pdf 🔄 OTHER (project: 07310364..., similarity: 66.6%)[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32m📄 File 2: machine-learning-projects-python.pdf 🔄 OTHER (project: 07310364..., similarity: 66.0%)[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32m📤 Injecting 4121 characters of context[39m 
+2025-09-10T02:53:31.566Z [[32minfo[39m]: [32m🎯 Final summary: 2 archivos, 12 conversaciones[39m 
+2025-09-10T02:53:31.567Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:53:31.567Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T02:53:38.419Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T02:53:38.419Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 14[39m 
+2025-09-10T02:54:54.385Z [[32minfo[39m]: [32mProcessing message for conversation ff8c079b-beda-45a2-af04-50ef1d2cea13[39m 
+2025-09-10T02:54:54.391Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-10T02:54:54.551Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mFound 19 memories in CURRENT project (9faaa827...)[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mFound 1 memories in OTHER projects[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32m🎯 PRIORITIZED: 19 from current project, 3 from other projects[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32m🔍 All memories selected:[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 1: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Bien, ¿puedes ver el documento de texto que subí r..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 2: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="¿qué dice el archivo que acabo de subir?..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 3: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="OK. Gracias, evidentemente hay un problema ya que ..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 4: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Nope! hace unos segundos subí otro archivo de text..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 5: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Listo, ya te lo subí nuevamente. ¿puedes contestar..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 6: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 7: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 8: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="No. Olvida, por el momento, las preguntas referida..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 9: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Olvídate de Melanie Mitchell y sus libros. Te subí..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 10: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Me disculpo, pero no veo que hayas subido el archi..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 11: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Ok, te preguntaré algo sobre el libro de Mitchell ..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 12: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Sí, **ahora puedo ver el documento de texto que ac..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mMemory 13: 🔄 OTHER | source_type="file_upload", file_name="test_upload.txt", project="cd76bd43...", content_start="Este es un test para verificar que el RAG funciona..."[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mFound 1 file memories[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32m📄 File 1: test_upload.txt 🔄 OTHER (project: cd76bd43..., similarity: 57.4%)[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32m📤 Injecting 593 characters of context[39m 
+2025-09-10T02:54:54.550Z [[32minfo[39m]: [32m🎯 Final summary: 1 archivos, 12 conversaciones[39m 
+2025-09-10T02:54:54.551Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:54:54.551Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T02:54:57.360Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T02:54:57.361Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 13[39m 
+2025-09-10T02:55:05.469Z [[32minfo[39m]: [32m📄 Processing uploaded file: Building Machine Learning Systems with Python 2013.pdf (6488688 bytes)[39m 
+2025-09-10T02:57:37.980Z [[32minfo[39m]: [32mProcessing message for conversation ff8c079b-beda-45a2-af04-50ef1d2cea13[39m 
+2025-09-10T02:57:37.986Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-10T02:57:38.167Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project (9faaa827...)[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32m🎯 PRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32m🔍 All memories selected:[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 1: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="¿que dice sobre clustering el libro "Building Mach..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 2: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, estoy listo para recibir el libro "Build..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 3: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Olvídate de Melanie Mitchell y sus libros. Te subí..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 4: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Basándome en los archivos disponibles, no encuentr..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 5: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Parece que no fui claro. ¿puedes actualmente acced..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 6: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Exacto, tienes razón. Hay claramente un problema t..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 7: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="No. Olvida, por el momento, las preguntas referida..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 8: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Sí, según el archivo PDF que acabas de subir, pued..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 9: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Bien, veo que has podido recuperar data del libro...."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 10: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Tienes razón, veo que hay un problema técnico. Seg..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 11: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Me disculpo, pero no veo que hayas subido el archi..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mMemory 12: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="¿puedes ver el documento PDF que acabo de subir?..."[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T02:57:38.166Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-10T02:57:38.167Z [[32minfo[39m]: [32m📤 Injecting 595 characters of context[39m 
+2025-09-10T02:57:38.167Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 12 conversaciones[39m 
+2025-09-10T02:57:38.167Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T02:57:38.167Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T02:57:48.363Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T02:57:48.364Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 12[39m 
+2025-09-10T02:59:59.914Z [[32minfo[39m]: [32mProcessing message for conversation ff8c079b-beda-45a2-af04-50ef1d2cea13[39m 
+2025-09-10T02:59:59.920Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T03:00:00.100Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:00:00.100Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project (9faaa827...)[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32m🎯 PRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32m🔍 All memories selected:[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 1: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, ahora puedo revisar el contenido del lib..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 2: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="¿que dice sobre clustering el libro "Building Mach..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 3: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, estoy listo para recibir el libro "Build..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 4: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Muy bien, ya está subido, procesado por ChromaDB y..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 5: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Acabas de proceasr el libro "Machine LEarning Syst..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 6: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Basándome en los archivos disponibles, no encuentr..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 7: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, ahora entiendo que el archivo fue proces..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 8: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Tienes razón, veo que el archivo fue procesado y a..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 9: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, veo que el archivo PDF del libro de Mela..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 10: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 11: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Claude, vamos de nuevo. Responde directamente la s..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mMemory 12: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Responde directamente la siguiente pregunta referi..."[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32m📤 Injecting 2043 characters of context[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 12 conversaciones[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:00:00.101Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T03:00:05.655Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T03:00:05.655Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 12[39m 
+2025-09-10T03:00:37.623Z [[32minfo[39m]: [32mProcessing message for conversation ff8c079b-beda-45a2-af04-50ef1d2cea13[39m 
+2025-09-10T03:00:37.628Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project (9faaa827...)[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32m🎯 PRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32m🔍 All memories selected:[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32mMemory 1: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="sí, comenta qué se dice en ese libro sobre el Elbo..."[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32mMemory 2: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, ahora puedo revisar el contenido del lib..."[39m 
+2025-09-10T03:00:37.781Z [[32minfo[39m]: [32mMemory 3: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, ahora puedo revisar el contenido del lib..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 4: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="¿que dice sobre clustering el libro "Building Mach..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 5: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, estoy listo para recibir el libro "Build..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 6: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Muy bien, ya está subido, procesado por ChromaDB y..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 7: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Acabas de proceasr el libro "Machine LEarning Syst..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 8: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Basándome en los archivos disponibles, no encuentr..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 9: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, ahora entiendo que el archivo fue proces..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 10: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Tienes razón, veo que el archivo fue procesado y a..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 11: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Perfecto, veo que el archivo PDF del libro de Mela..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mMemory 12: 🎯 CURRENT | source_type="undefined", file_name="undefined", project="9faaa827...", content_start="Claude, olvídate de la búsqueda en la web. Ahora e..."[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32m📤 Injecting 2043 characters of context[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32m🎯 Final summary: 0 archivos, 12 conversaciones[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:00:37.782Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T03:00:46.022Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T03:00:46.023Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 12[39m 
+2025-09-10T03:16:57.790Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-10T03:16:57.788Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:16:57.790Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-10T03:16:57.790Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-10T03:16:57.790Z [[32minfo[39m]: [32m🎯 Intelligent context management enabled[39m 
+2025-09-10T03:16:57.801Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-10T03:20:18.682Z [[32minfo[39m]: [32m🚀 Claude Infinito Backend running on port 3001[39m 
+2025-09-10T03:20:18.679Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:20:18.682Z [[32minfo[39m]: [32m🧠 RAG-enabled memory system active[39m 
+2025-09-10T03:20:18.682Z [[32minfo[39m]: [32m📁 File upload integration enabled[39m 
+2025-09-10T03:20:18.682Z [[32minfo[39m]: [32m🎯 Intelligent context management enabled[39m 
+2025-09-10T03:20:18.692Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-10T03:23:14.841Z [[32minfo[39m]: [32mProcessing message for conversation a074c79f-091b-4e80-b17f-c64d79debef3[39m 
+2025-09-10T03:23:14.848Z [[32minfo[39m]: [32m📊 Context Analysis: isFileQuestion=true, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=true[39m 
+2025-09-10T03:23:14.849Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-10T03:23:15.962Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:23:15.962Z [[32minfo[39m]: [32mFound 18 memories in CURRENT project[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32mFound 2 memories in OTHER projects[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32m🎯 PRIORITIZED: 18 from current project, 3 from other projects[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32mFound 2 file memories[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32m📄 File 1: Building Machine Learning Systems with Python 2013.pdf 🔄 OTHER (similarity: 69.7%)[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32m📄 File 2: Building Machine Learning Systems with Python 2013.pdf 🔄 OTHER (similarity: 69.2%)[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32m📤 Injecting 3905 characters of context (strategy: full)[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32m🎯 Final summary: 2 archivos, 12 conversaciones[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32m🎯 Applied context injection strategy: full[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:23:15.963Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T03:23:26.672Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T03:23:26.672Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 14, Strategy: full[39m 
+2025-09-10T03:24:51.482Z [[32minfo[39m]: [32mProcessing message for conversation a074c79f-091b-4e80-b17f-c64d79debef3[39m 
+2025-09-10T03:24:51.487Z [[32minfo[39m]: [32m📊 Context Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-10T03:24:51.488Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:24:51.488Z [[32minfo[39m]: [32mℹ️ Non-file question, skipping file context search[39m 
+2025-09-10T03:24:51.488Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:24:51.488Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T03:24:58.113Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T03:24:58.113Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none[39m 
+2025-09-10T03:27:40.731Z [[32minfo[39m]: [32mProcessing message for conversation a074c79f-091b-4e80-b17f-c64d79debef3[39m 
+2025-09-10T03:27:40.736Z [[32minfo[39m]: [32m📊 Context Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-10T03:27:40.737Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:27:40.736Z [[32minfo[39m]: [32mℹ️ Non-file question, skipping file context search[39m 
+2025-09-10T03:27:40.737Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:27:40.737Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T03:27:53.206Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T03:27:53.207Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none[39m 
+2025-09-10T03:32:45.419Z [[32minfo[39m]: [32mProcessing message for conversation a074c79f-091b-4e80-b17f-c64d79debef3[39m 
+2025-09-10T03:32:45.425Z [[32minfo[39m]: [32m📊 Context Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-10T03:32:45.425Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:32:45.425Z [[32minfo[39m]: [32mℹ️ Non-file question, skipping file context search[39m 
+2025-09-10T03:32:45.425Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-10T03:32:45.425Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-10T03:32:57.506Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-10T03:32:57.507Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none[39m 

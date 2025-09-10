@@ -25,7 +25,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/upload', uploadRoutes); // NUEVO AGREGADO¿?
+app.use('/api/upload', uploadRoutes);
 
 // Chat routes
 app.use('/api/chat', require('./api/routes/chat').default);
@@ -71,71 +71,214 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     // 2. Get recent messages from current conversation
     const recentMessages = await dbService.getMessages(conversationId, 5);
     
-    // 3. Initialize variables for RAG
+    // 3. Get conversation info to determine current project
+    const conversation = await dbService.getConversationById(conversationId);
+    const currentProjectId = conversation?.project_id || conversationId; // Use conversationId as fallback project ID
+    
+    // 4. Initialize variables for RAG
     let relevantMemories: any[] = [];
     let contextualMemory: string = '';
     
-    // 4. Search for semantic context across ALL projects
+    // 5. Search for semantic context with PROJECT PRIORITIZATION
     try {
       logger.info('Searching for relevant context across all projects...');
-      relevantMemories = await ragService.searchAllProjects(content, 8);
-      
-      if (relevantMemories.length > 0) {
-        logger.info(`Found ${relevantMemories.length} relevant memories`);
+      const allMemories = await ragService.searchAllProjects(content, 20); // Increased to get more candidates
+
+      if (allMemories.length > 0) {
+        logger.info(`Found ${allMemories.length} total memories across all projects`);
         
-        // Build structured context
-        const contextParts = relevantMemories.map(memory => {
-          const similarity = ((memory.similarity || 0) * 100).toFixed(1);
-          const source = memory.metadata.source_collection || 'unknown';
-          const timestamp = memory.metadata.timestamp || 'unknown';
-          
-          return `[${similarity}% relevance | ${source} | ${timestamp}]\n${memory.content}`;
+        // ✅ FIXED: Separate current project from other projects
+        const currentProjectMemories = allMemories.filter(memory => {
+          const memoryProjectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
+          return memoryProjectId === currentProjectId;
         });
         
-        contextualMemory = `\n\n--- CONTEXTO HISTÓRICO RELEVANTE ---\n${contextParts.join('\n\n---\n\n')}\n--- FIN CONTEXTO ---\n\n`;
+        const otherProjectsMemories = allMemories.filter(memory => {
+          const memoryProjectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
+          return memoryProjectId !== currentProjectId;
+        });
         
-        logger.info(`Injecting ${contextualMemory.length} characters of context`);
+        logger.info(`Found ${currentProjectMemories.length} memories in CURRENT project (${currentProjectId.substring(0, 8)}...)`);
+        logger.info(`Found ${otherProjectsMemories.length} memories in OTHER projects`);
+        
+        // ✅ PRIORITIZATION LOGIC: Current project FIRST, then other projects if needed
+        let finalMemories: any[] = [];
+        
+        if (currentProjectMemories.length > 0) {
+          // We have content in current project - prioritize it heavily
+          finalMemories = [...currentProjectMemories.slice(0, 12)]; // Up to 12 from current project
+          
+          // Add a few from other projects only if we have space and they're very relevant
+          const remainingSlots = Math.max(15 - finalMemories.length, 0);
+          if (remainingSlots > 0 && otherProjectsMemories.length > 0) {
+            finalMemories = [...finalMemories, ...otherProjectsMemories.slice(0, Math.min(3, remainingSlots))];
+          }
+          
+          logger.info(`🎯 PRIORITIZED: ${currentProjectMemories.length} from current project, ${Math.min(3, Math.max(15 - currentProjectMemories.slice(0, 12).length, 0))} from other projects`);
+        } else {
+          // No content in current project - use cross-project search as fallback
+          finalMemories = otherProjectsMemories.slice(0, 15);
+          logger.info(`🔄 FALLBACK: Using ${finalMemories.length} memories from other projects (no content in current project)`);
+        }
+        
+        relevantMemories = finalMemories;
+        
+        // DEBUG: Log all memories to see what we're working with
+        logger.info('🔍 All memories selected:');
+        relevantMemories.forEach((memory, index) => {
+          const sourceType = memory.metadata?.source_type || 'undefined';
+          const fileName = memory.metadata?.file_name || 'undefined';
+          const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'undefined';
+          const isCurrent = projectId === currentProjectId ? '🎯 CURRENT' : '🔄 OTHER';
+          const contentPreview = memory.content.substring(0, 50) + '...';
+          logger.info(`Memory ${index + 1}: ${isCurrent} | source_type="${sourceType}", file_name="${fileName}", project="${projectId.substring(0, 8)}...", content_start="${contentPreview}"`);
+        });
+        
+        // ✅ FIXED: Separate file content from conversation history with robust filtering
+        const fileMemories = relevantMemories.filter(memory => {
+          const sourceType = memory.metadata?.source_type;
+          const fileName = memory.metadata?.file_name || memory.metadata?.filename;
+          const fileType = memory.metadata?.fileType;
+          
+          // Multiple ways to detect file content
+          return sourceType === 'file_upload' || fileName || fileType;
+        });
+        
+        const conversationMemories = relevantMemories.filter(memory => {
+          const sourceType = memory.metadata?.source_type;
+          const fileName = memory.metadata?.file_name || memory.metadata?.filename;
+          const fileType = memory.metadata?.fileType;
+          
+          // Anything NOT detected as file content is conversation
+          return !(sourceType === 'file_upload' || fileName || fileType);
+        });
+        
+        logger.info(`Found ${fileMemories.length} file memories`);
+        logger.info(`Found ${conversationMemories.length} conversation memories`);
+        
+        // ✅ LOG: File details for debugging
+        if (fileMemories.length > 0) {
+          fileMemories.forEach((memory, index) => {
+            const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'unknown_file';
+            const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown_project';
+            const isCurrent = projectId === currentProjectId ? '🎯 CURRENT' : '🔄 OTHER';
+            const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+            logger.info(`📄 File ${index + 1}: ${fileName} ${isCurrent} (project: ${projectId.substring(0, 8)}..., similarity: ${similarity}%)`);
+          });
+        }
+        
+        // ✅ NEW PRIORITY LOGIC: Files first, then conversations
+        let contextSections: string[] = [];
+        
+        // PRIORITY 1: File content (up to 6 memories)
+        if (fileMemories.length > 0) {
+          const priorityFileMemories = fileMemories.slice(0, 6);
+          const fileParts = priorityFileMemories.map((memory, index) => {
+            const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
+            const section = memory.metadata?.section || 'contenido';
+            const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+            const chunkInfo = memory.metadata?.chunkIndex !== undefined ? 
+              ` (parte ${memory.metadata.chunkIndex + 1}/${memory.metadata.totalChunks})` : '';
+            const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown';
+            const isCurrent = projectId === currentProjectId ? '🎯 PROYECTO ACTUAL' : '🔄 OTRO PROYECTO';
+            const projectInfo = ` [${isCurrent}: ${projectId.substring(0, 8)}...]`;
+            
+            return `**📄 ${fileName}** ${chunkInfo}${projectInfo}\n🔍 Sección: ${section}\n🎯 Relevancia: ${similarity}%\n\n${memory.content}`;
+          });
+          
+          contextSections.push(`--- 📁 ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n─────────────\n\n')}`);
+        }
+        
+        // PRIORITY 2: Conversation context (remaining slots, max 2)
+        const maxTotalMemories = 8;
+        const usedSlots = Math.min(fileMemories.length, 6);
+        const conversationSlots = Math.min(Math.max(maxTotalMemories - usedSlots, 0), 2);
+        
+        if (conversationMemories.length > 0 && conversationSlots > 0) {
+          const priorityConversationMemories = conversationMemories.slice(0, conversationSlots);
+          const conversationParts = priorityConversationMemories.map(memory => {
+            const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+            const timestamp = memory.metadata?.timestamp || 'tiempo desconocido';
+            const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown';
+            const isCurrent = projectId === currentProjectId ? '🎯 ACTUAL' : '🔄 OTRO';
+            
+            return `[${similarity}% similitud | ${isCurrent} | ${timestamp}]\n${memory.content}`;
+          });
+          
+          contextSections.push(`--- 💬 CONTEXTO CONVERSACIONAL (${priorityConversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
+        }
+        
+        // BUILD FINAL CONTEXT with clear prioritization
+        if (contextSections.length > 0) {
+          contextualMemory = `\n\n${contextSections.join('\n\n════════════════════════════════════════\n\n')}\n\n--- FIN INFORMACIÓN DISPONIBLE ---\n\n`;
+          
+          logger.info(`📤 Injecting ${contextualMemory.length} characters of context`);
+          logger.info(`🎯 Final summary: ${fileMemories.length} archivos, ${conversationMemories.length} conversaciones`);
+        }
       } else {
-        logger.info('No relevant historical context found');
+        logger.info('❌ No relevant context found in any project');
       }
     } catch (ragError) {
       logger.warn('RAG search failed, continuing without context:', ragError);
     }
 
-    // 5. Build messages for Claude with injected context
+    // 6. Build messages for Claude with injected context
     const claudeMessages = recentMessages.map(msg => ({
       role: msg.role as 'user' | 'assistant',
       content: msg.content
     }));
 
-    // 6. Inject context into the last user message if exists
+    // 7. ✅ IMPROVED: Inject context with clear file prioritization
     if (claudeMessages.length > 0 && contextualMemory) {
       const lastUserIndex = claudeMessages.length - 1;
       if (claudeMessages[lastUserIndex].role === 'user') {
-        claudeMessages[lastUserIndex].content = contextualMemory + claudeMessages[lastUserIndex].content;
+        // Check if we have file content to prioritize
+        const hasFileContent = relevantMemories.some(memory => 
+          memory.metadata?.source_type === 'file_upload' || 
+          memory.metadata?.file_name || 
+          memory.metadata?.fileType
+        );
+        
+        // Check if the file content is from current project
+        const hasCurrentProjectFiles = relevantMemories.some(memory => {
+          const isFile = memory.metadata?.source_type === 'file_upload' || memory.metadata?.file_name || memory.metadata?.fileType;
+          const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
+          return isFile && projectId === currentProjectId;
+        });
+        
+        let instruction: string;
+        if (hasCurrentProjectFiles) {
+          instruction = `${contextualMemory}\n🎯 INSTRUCCIÓN IMPORTANTE: Tienes acceso a archivos que el usuario ha subido al PROYECTO ACTUAL (marcados con 🎯 PROYECTO ACTUAL). USA PRIORITARIAMENTE la información de estos archivos del proyecto actual para responder. Si la pregunta se refiere a contenido de archivos, cita específicamente de qué archivo del proyecto actual proviene la información.\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
+        } else if (hasFileContent) {
+          instruction = `${contextualMemory}\n📄 INFORMACIÓN: Tienes acceso a archivos subidos (algunos pueden ser de otros proyectos, marcados con 🔄 OTRO PROYECTO). Si la pregunta se refiere específicamente a archivos del proyecto actual y no encuentras esa información, menciona que no tienes acceso a archivos en este proyecto específico.\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
+        } else {
+          instruction = `${contextualMemory}\nBasándote en el contexto conversacional anterior, responde:\n\n${claudeMessages[lastUserIndex].content}`;
+        }
+        
+        claudeMessages[lastUserIndex].content = instruction;
       }
     }
 
-    // 7. Send to Claude API
+    // 8. Send to Claude API
     const { ClaudeService } = require('./services/claude.service');
     const claudeService = new ClaudeService();
     
+    logger.info('API Key status: CONFIGURED');
     logger.info('Sending to Claude API with context...');
     const claudeResponse = await claudeService.sendMessage(claudeMessages);
     const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
 
-    // 8. Save Claude's response
+    // 9. Save Claude's response
     const assistantMessage = await dbService.addMessage(conversationId, 'assistant', assistantContent, { 
       model: claudeResponse.model,
       usage: claudeResponse.usage,
       context_used: relevantMemories?.length || 0
     });
 
-    // 9. Store new messages in ChromaDB for future searches
+    // 10. Store new messages in ChromaDB for future searches
     try {
-      // Use project_id if exists, otherwise use 'general'
-      const conversation = await dbService.getConversationById(conversationId);
-      const projectId = conversation?.project_id || 'general';
+      // Use project_id if exists, otherwise use conversationId as project ID
+      const projectId = conversation?.project_id || conversationId;
       
       // Store user message
       await ragService.addMemory(
@@ -167,7 +310,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       logger.warn('Failed to store in ChromaDB:', storageError);
     }
 
-    // 10. Respond to frontend
+    // 11. Respond to frontend
     res.json({
       user_message: userMessage,
       assistant_message: assistantMessage,
@@ -203,7 +346,7 @@ app.get('/api/info', (req, res) => {
   res.json({
     name: 'Claude Infinito v1.1 Backend',
     version: '1.1.0',
-    features: ['RAG Integration', 'Persistent Memory', 'Cross-Project Context']
+    features: ['RAG Integration', 'Persistent Memory', 'Cross-Project Context', 'File Upload Support']
   });
 });
 
@@ -217,6 +360,8 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   logger.info(`🚀 Claude Infinito Backend running on port ${port}`);
   logger.info('🧠 RAG-enabled memory system active');
+  logger.info('📁 File upload integration enabled');
 });
 
 export default app;
+
