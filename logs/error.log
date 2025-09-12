@@ -188,3 +188,36 @@
 2025-09-05T00:02:39.265Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
 2025-09-05T00:02:39.283Z [[31merror[39m]: [31mError creating collection: Request failed with status code 405[39m 
 2025-09-05T00:02:39.283Z [[31merror[39m]: [31mError adding memory: Request failed with status code 405[39m 
+2025-09-10T19:15:15.115Z [[31merror[39m]: [31mError getting Claude config: claudeService.getPromptTemplates is not a function[39m TypeError: claudeService.getPromptTemplates is not a function
+    at /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:433:32
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+    at /home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:280:10)
+    at urlencodedParser (/home/carlos/Projects/claude-infinito-v11/node_modules/body-parser/lib/types/urlencoded.js:94:7)
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+2025-09-10T19:15:29.079Z [[31merror[39m]: [31mError getting Claude config: claudeService.getPromptTemplates is not a function[39m TypeError: claudeService.getPromptTemplates is not a function
+    at /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:433:32
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+    at /home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:280:10)
+    at urlencodedParser (/home/carlos/Projects/claude-infinito-v11/node_modules/body-parser/lib/types/urlencoded.js:94:7)
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+2025-09-10T19:24:58.135Z [[31merror[39m]: [31mError getting Claude config: claudeAPI.getPromptTemplates is not a function[39m TypeError: claudeAPI.getPromptTemplates is not a function
+    at /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:433:28
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+    at /home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:280:10)
+    at urlencodedParser (/home/carlos/Projects/claude-infinito-v11/node_modules/body-parser/lib/types/urlencoded.js:94:7)
+    at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)

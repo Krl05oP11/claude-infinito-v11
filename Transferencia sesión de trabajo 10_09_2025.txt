@@ -1,0 +1,2555 @@
+﻿Continuación de la sesión de trabajo con Claude. - 10 de septiembre de 2025.
+
+Carlos:
+Hola Claude. Seguimos con el proyecto Claude Infinito Coder v1.1 y lo planificado para hoy es:
+PRÓXIMOS PASOS OPCIONALES:
+1. Ajuste de temperatura (5 mins)
+2. UI improvements (footer, monitoring)
+3. Desktop launcher (auto-start script)
+4. DOCX support (adicional)
+
+Claude:
+Buenos días Carlos. Continuamos con Claude Infinito v1.1 donde lo dejamos ayer.
+Revisando el Transfer Document V1.4, el sistema está completamente funcional con el breakthrough de Intelligent Context Management resuelto. Procedamos con los pasos opcionales planificados.
+1. AJUSTE DE TEMPERATURA (5 mins)
+Empecemos con el ajuste más rápido. Necesitamos modificar el claude.service.ts para reducir la temperatura y mejorar la consistencia de respuestas.
+
+Comencemos con el ajuste de temperatura. Necesitamos modificar el archivo claude.service.ts para reducir las inconsistencias.
+📋 PASO 1: AJUSTE DE TEMPERATURA: código para insertar en claude.service.ts
+
+import axios from 'axios';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger();
+
+export interface ClaudeMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface ClaudeResponse {
+  content: Array<{
+    type: string;
+    text: string;
+  }>;
+  model: string;
+  usage: {
+    input_tokens: number;
+    output_tokens: number;
+  };
+}
+
+export class ClaudeService {
+  private apiKey: string;
+  private model: string;
+  private maxTokens: number;
+  private temperature: number; // ✅ NEW: Temperature control
+  private baseUrl: string;
+
+  constructor() {
+    this.apiKey = process.env.CLAUDE_API_KEY || '';
+    this.model = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+    this.maxTokens = parseInt(process.env.CLAUDE_MAX_TOKENS || '4000');
+    
+    // ✅ TEMPERATURE TUNING: Reduced for better consistency
+    this.temperature = parseFloat(process.env.CLAUDE_TEMPERATURE || '0.3'); // Reduced from default 1.0
+    
+    this.baseUrl = 'https://api.anthropic.com/v1/messages';
+
+    if (!this.apiKey) {
+      throw new Error('CLAUDE_API_KEY environment variable is required');
+    }
+
+    logger.info(`Claude Service initialized: model=${this.model}, maxTokens=${this.maxTokens}, temperature=${this.temperature}`);
+  }
+
+  async sendMessage(messages: ClaudeMessage[]): Promise<ClaudeResponse> {
+    try {
+      const requestBody = {
+        model: this.model,
+        max_tokens: this.maxTokens,
+        temperature: this.temperature, // ✅ ADDED: Temperature control for consistency
+        messages: messages.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }))
+      };
+
+      logger.info(`Sending request to Claude API: ${messages.length} messages, temperature: ${this.temperature}`);
+      
+      const response = await axios.post(this.baseUrl, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': this.apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        timeout: 60000 // 60 second timeout
+      });
+
+      const claudeResponse: ClaudeResponse = response.data;
+      
+      logger.info(`Claude API response received: ${claudeResponse.usage.input_tokens} input tokens, ${claudeResponse.usage.output_tokens} output tokens`);
+      
+      return claudeResponse;
+
+    } catch (error: any) {
+      if (error.response) {
+        logger.error('Claude API error:', {
+          status: error.response.status,
+          data: error.response.data,
+          temperature: this.temperature
+        });
+        throw new Error(`Claude API error: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
+      } else if (error.request) {
+        logger.error('Claude API network error:', error.message);
+        throw new Error('Claude API network error: No response received');
+      } else {
+        logger.error('Claude API unexpected error:', error.message);
+        throw new Error(`Claude API unexpected error: ${error.message}`);
+      }
+    }
+  }
+
+  // ✅ NEW: Method to adjust temperature dynamically if needed
+  setTemperature(temperature: number): void {
+    if (temperature < 0 || temperature > 1) {
+      throw new Error('Temperature must be between 0 and 1');
+    }
+    this.temperature = temperature;
+    logger.info(`Temperature adjusted to: ${this.temperature}`);
+  }
+
+  // ✅ NEW: Get current configuration
+  getConfig(): { model: string; maxTokens: number; temperature: number } {
+    return {
+      model: this.model,
+      maxTokens: this.maxTokens,
+      temperature: this.temperature
+    };
+  }
+
+  // Health check method
+  async healthCheck(): Promise<boolean> {
+    try {
+      // Simple test message to check if Claude API is responding
+      const testMessages: ClaudeMessage[] = [
+        { role: 'user', content: 'Test connection. Respond with "OK".' }
+      ];
+
+      await this.sendMessage(testMessages);
+      return true;
+    } catch (error) {
+      logger.error('Claude service health check failed:', error);
+      return false;
+    }
+  }
+}
+
+export default ClaudeService;
+
+------------------------------------------------
+CAMBIOS IMPLEMENTADOS EN TEMPERATURA
+Modificaciones principales:
+
+Temperatura reducida: De 1.0 (default) a 0.3 para mayor consistencia
+Variable de entorno: CLAUDE_TEMPERATURE=0.3 configurable
+Logging mejorado: Incluye temperatura en logs
+Métodos adicionales:
+
+setTemperature(): Ajuste dinámico
+getConfig(): Ver configuración actual
+
+
+
+Pasos para aplicar:
+cd ~/Projects/claude-infinito-v11
+
+# 1. Reemplazar claude.service.ts
+cp backend/src/services/claude.service.ts backend/src/services/claude.service.ts.backup
+# Copiar el contenido del artifact al archivo
+
+# 2. Agregar variable de entorno (opcional)
+echo "CLAUDE_TEMPERATURE=0.3" >> .env
+
+# 3. Reiniciar backend
+pkill -f "npm run dev"
+cd backend && npm run dev
+
+Test de verificación:
+En los logs del backend deberías ver:
+Claude Service initialized: model=claude-sonnet-4-20250514, maxTokens=4000, temperature=0.3
+Sending request to Claude API: X messages, temperature: 0.3
+📋 SIGUIENTE PASO: UI IMPROVEMENTS
+¿Aplicamos primero el ajuste de temperatura y luego continuamos con las mejoras de UI (footer positioning, monitoring display)?
+O prefieres que prepare directamente el siguiente item mientras aplicas este cambio?
+
+Carlos:
+Tengo 2 inquietudes:
+1. ¿tiene sentido poder manejar el ajuste de temperatura desde la UI, por ejemplo con una lista dropdown? ¿crees que podría traer algún beneficio el poder manejar mása precisión o más creatividad según el problema a resolver?
+2. En el mismo sentido, ¿tendría algún beneficio poder modificar el prompt principal que le da contexto a las respuestas de Claude desde algún lugar de la UI? Por ejemplo, actualmente, las respuestas son sumamente escuetas y no profundizan en los temas tratados, ¿eso se podría mejorar? si quisiera cambiar eso, debería meterme en el código y no lo veo práctico. Se me ocurre que podría lograr una adaptación dinámica al contexto. ¿qué opinas?
+
+Claude:
+Ambas inquietudes son técnicamente muy acertadas y agregarían valor significativo al sistema:
+1. CONTROL DE TEMPERATURA DESDE UI
+Beneficios reales:
+
+Precisión técnica (0.1-0.3): Para análisis de documentos, programación, respuestas factuales
+Creatividad balanceada (0.4-0.6): Para explicaciones, redacción, brainstorming
+Exploración creativa (0.7-1.0): Para ideas nuevas, soluciones innovadoras
+
+Casos de uso específicos:
+
+Análisis de PDFs técnicos → temperatura baja
+Explicaciones didácticas → temperatura media
+Generación de ideas → temperatura alta
+
+2. PROMPT ENGINEERING DESDE UI
+Problema identificado correctamente: Los prompts actuales son genéricos y producen respuestas escuetas.
+Beneficios de control de prompts:
+
+Personalización del estilo: Detallado vs conciso
+Adaptación al dominio: Técnico, académico, divulgativo
+Control de formato: Estructurado, narrativo, bullet points
+Profundidad: Superficial vs análisis profundo
+
+PROPUESTA DE IMPLEMENTACIÓN. Artifact interactivo (paleta de azules)
+
+import React, { useState, useEffect } from 'react';
+
+const AdvancedControls = ({ onSettingsChange, darkMode = true }) => {
+  const [temperature, setTemperature] = useState(0.3);
+  const [selectedPrompt, setSelectedPrompt] = useState('balanced');
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  // Predefined prompt templates
+  const promptTemplates = {
+    'precise': {
+      name: 'Preciso y Técnico',
+      description: 'Respuestas exactas, técnicas y concisas',
+      template: 'Responde de manera precisa y técnica. Usa terminología específica. Sé conciso pero completo. Si citas fuentes, menciona específicamente de qué archivo proviene la información.',
+      recommended_temp: 0.2
+    },
+    'balanced': {
+      name: 'Balanceado',
+      description: 'Respuestas equilibradas entre detalle y claridad',
+      template: 'Proporciona respuestas balanceadas que combinen precisión técnica con claridad explicativa. Incluye ejemplos cuando sea útil. Si la información proviene de archivos subidos, cita la fuente específica.',
+      recommended_temp: 0.4
+    },
+    'detailed': {
+      name: 'Detallado y Didáctico',
+      description: 'Explicaciones profundas y educativas',
+      template: 'Proporciona explicaciones detalladas y didácticas. Incluye contexto, ejemplos prácticos y razonamiento paso a paso. Desarrolla los conceptos en profundidad. Cuando uses información de archivos, explica cómo se relaciona con el contexto general.',
+      recommended_temp: 0.5
+    },
+    'creative': {
+      name: 'Creativo y Exploratorio',
+      description: 'Enfoque innovador y generación de ideas',
+      template: 'Adopta un enfoque creativo y exploratorio. Genera ideas innovadoras, conexiones inesperadas y soluciones originales. Explora múltiples perspectivas y posibilidades. Usa la información de archivos como punto de partida para desarrollar ideas nuevas.',
+      recommended_temp: 0.7
+    },
+    'custom': {
+      name: 'Personalizado',
+      description: 'Prompt completamente personalizable',
+      template: '',
+      recommended_temp: 0.4
+    }
+  };
+
+  // Temperature presets
+  const temperaturePresets = [
+    { value: 0.1, label: 'Muy Preciso', description: 'Respuestas muy consistentes y factuales' },
+    { value: 0.3, label: 'Preciso', description: 'Buena precisión con algo de variación' },
+    { value: 0.5, label: 'Balanceado', description: 'Equilibrio entre precisión y creatividad' },
+    { value: 0.7, label: 'Creativo', description: 'Más variación y enfoques creativos' },
+    { value: 0.9, label: 'Muy Creativo', description: 'Máxima creatividad y exploración' }
+  ];
+
+  useEffect(() => {
+    // When prompt template changes, update recommended temperature
+    if (selectedPrompt !== 'custom') {
+      const newTemp = promptTemplates[selectedPrompt].recommended_temp;
+      setTemperature(newTemp);
+    }
+  }, [selectedPrompt]);
+
+  useEffect(() => {
+    // Notify parent component of changes
+    const currentPrompt = selectedPrompt === 'custom' 
+      ? customPrompt 
+      : promptTemplates[selectedPrompt].template;
+      
+    onSettingsChange({
+      temperature,
+      prompt: currentPrompt,
+      promptType: selectedPrompt
+    });
+  }, [temperature, selectedPrompt, customPrompt, onSettingsChange]);
+
+  const getTemperatureColor = (temp) => {
+    if (temp <= 0.3) return 'text-blue-400';
+    if (temp <= 0.5) return 'text-green-400';
+    if (temp <= 0.7) return 'text-yellow-400';
+    return 'text-red-400';
+  };
+
+  const getTemperatureLabel = (temp) => {
+    const preset = temperaturePresets.find(p => Math.abs(p.value - temp) < 0.05);
+    return preset ? preset.label : temp.toFixed(1);
+  };
+
+  return (
+    <div className={`${darkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'} rounded-lg shadow-lg p-4 mb-4`}>
+      {/* Header with toggle */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold flex items-center">
+          <span className="mr-2">⚙️</span>
+          Configuración Avanzada
+        </h3>
+        <button
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className={`px-3 py-1 rounded text-sm ${
+            showAdvanced 
+              ? 'bg-blue-600 text-white' 
+              : darkMode 
+                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          } transition-colors`}
+        >
+          {showAdvanced ? 'Ocultar' : 'Mostrar'}
+        </button>
+      </div>
+
+      {showAdvanced && (
+        <div className="space-y-6">
+          {/* Temperature Control */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="font-medium text-sm">
+                🌡️ Temperatura: <span className={`font-bold ${getTemperatureColor(temperature)}`}>
+                  {getTemperatureLabel(temperature)}
+                </span>
+              </label>
+              <span className="text-xs text-gray-400">
+                {temperature.toFixed(1)}
+              </span>
+            </div>
+            
+            <input
+              type="range"
+              min="0.1"
+              max="1.0"
+              step="0.1"
+              value={temperature}
+              onChange={(e) => setTemperature(parseFloat(e.target.value))}
+              className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+            />
+            
+            <div className="flex justify-between text-xs text-gray-400 mt-1">
+              <span>Preciso</span>
+              <span>Creativo</span>
+            </div>
+            
+            {/* Temperature description */}
+            <p className="text-xs text-gray-400 mt-2">
+              {temperaturePresets.find(p => Math.abs(p.value - temperature) < 0.05)?.description || 
+               'Personalizado: Ajusta la aleatoriedad de las respuestas'}
+            </p>
+          </div>
+
+          {/* Prompt Template Selection */}
+          <div>
+            <label className="block font-medium text-sm mb-2">
+              📝 Estilo de Respuesta
+            </label>
+            
+            <select
+              value={selectedPrompt}
+              onChange={(e) => setSelectedPrompt(e.target.value)}
+              className={`w-full p-2 rounded text-sm border ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+            >
+              {Object.entries(promptTemplates).map(([key, template]) => (
+                <option key={key} value={key}>
+                  {template.name}
+                </option>
+              ))}
+            </select>
+            
+            <p className="text-xs text-gray-400 mt-1">
+              {promptTemplates[selectedPrompt].description}
+            </p>
+          </div>
+
+          {/* Custom Prompt Input */}
+          {selectedPrompt === 'custom' && (
+            <div>
+              <label className="block font-medium text-sm mb-2">
+                ✏️ Prompt Personalizado
+              </label>
+              <textarea
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder="Escribe aquí cómo quieres que Claude responda..."
+                rows={4}
+                className={`w-full p-3 rounded text-sm border resize-none ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' 
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+              />
+            </div>
+          )}
+
+          {/* Current Prompt Preview */}
+          {selectedPrompt !== 'custom' && (
+            <div>
+              <label className="block font-medium text-sm mb-2">
+                👀 Vista Previa del Prompt
+              </label>
+              <div className={`p-3 rounded text-sm ${
+                darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+              }`}>
+                {promptTemplates[selectedPrompt].template}
+              </div>
+            </div>
+          )}
+
+          {/* Quick Presets */}
+          <div>
+            <label className="block font-medium text-sm mb-2">
+              🚀 Configuraciones Rápidas
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => {
+                  setSelectedPrompt('precise');
+                  setTemperature(0.2);
+                }}
+                className="p-2 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+              >
+                📊 Análisis Técnico
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedPrompt('detailed');
+                  setTemperature(0.5);
+                }}
+                className="p-2 text-xs rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
+              >
+                📚 Explicación Didáctica
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedPrompt('creative');
+                  setTemperature(0.7);
+                }}
+                className="p-2 text-xs rounded bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+              >
+                💡 Brainstorming
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedPrompt('balanced');
+                  setTemperature(0.4);
+                }}
+                className="p-2 text-xs rounded bg-gray-600 text-white hover:bg-gray-700 transition-colors"
+              >
+                ⚖️ Por Defecto
+              </button>
+            </div>
+          </div>
+
+          {/* Current Settings Summary */}
+          <div className={`p-3 rounded border-l-4 border-blue-500 ${
+            darkMode ? 'bg-blue-900/20' : 'bg-blue-50'
+          }`}>
+            <div className="text-sm">
+              <strong>Configuración Actual:</strong>
+              <br />
+              • Temperatura: {temperature} ({getTemperatureLabel(temperature)})
+              <br />
+              • Estilo: {promptTemplates[selectedPrompt].name}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Example integration component showing how to use the advanced controls
+const ChatInterface = () => {
+  const [chatSettings, setChatSettings] = useState({
+    temperature: 0.3,
+    prompt: '',
+    promptType: 'balanced'
+  });
+
+  const handleSettingsChange = (settings) => {
+    setChatSettings(settings);
+    console.log('Settings updated:', settings);
+    // Here you would send these settings to your backend
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-4 bg-gray-900 min-h-screen">
+      <h1 className="text-2xl font-bold text-white mb-6">
+        Claude Infinito v1.1 - Configuración Avanzada
+      </h1>
+      
+      <AdvancedControls onSettingsChange={handleSettingsChange} darkMode={true} />
+      
+      {/* Example chat area */}
+      <div className="bg-gray-800 rounded-lg p-4 text-gray-100">
+        <h3 className="font-semibold mb-2">💬 Área de Chat</h3>
+        <p className="text-sm text-gray-400">
+          Configuración actual se aplicará a las próximas respuestas de Claude.
+        </p>
+        
+        {/* Debug info */}
+        <div className="mt-4 p-2 bg-gray-700 rounded text-xs">
+          <strong>Debug - Configuración Activa:</strong>
+          <br />
+          Temperature: {chatSettings.temperature}
+          <br />
+          Prompt Type: {chatSettings.promptType}
+          <br />
+          Prompt Length: {chatSettings.prompt.length} caracteres
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChatInterface;
+
+------------------------------------------------------------------------------
+
+RESPUESTAS A TUS INQUIETUDES
+1. CONTROL DE TEMPERATURA - SÍ, TIENE MUCHO SENTIDO
+Beneficios reales por tipo de tarea:
+
+Análisis de PDFs técnicos → 0.1-0.3 (máxima precisión)
+Explicaciones educativas → 0.4-0.6 (balance)
+Brainstorming de soluciones → 0.7-0.9 (creatividad)
+
+2. CONTROL DE PROMPTS - COMPLETAMENTE VÁLIDO
+Problema actual identificado: Los prompts son genéricos y producen respuestas escuetas.
+Solución propuesta: Templates personalizables que cambien:
+
+Estilo: Técnico vs divulgativo
+Profundidad: Conciso vs detallado
+Formato: Estructurado vs narrativo
+
+IMPLEMENTACIÓN TÉCNICA
+
+Backend Changes Needed:
+
+// En index.ts, agregar soporte para configuración dinámica
+const { temperature, customPrompt } = req.body.settings || {};
+
+// Modificar instrucción base según template seleccionado
+const baseInstruction = customPrompt || defaultPrompts[promptType];
+const finalInstruction = `${contextualMemory}\n${baseInstruction}\n\nPregunta: ${content}`;
+
+Frontend Integration:
+
+// Agregar el componente AdvancedControls al chat
+const [chatSettings, setChatSettings] = useState({
+  temperature: 0.3,
+  prompt: promptTemplates.balanced.template,
+  promptType: 'balanced'
+});
+
+// Enviar configuración con cada mensaje
+fetch('/api/conversations/:id/messages', {
+  method: 'POST',
+  body: JSON.stringify({
+    content: userMessage,
+    settings: chatSettings  // ← Nuevo
+  })
+});
+
+VENTAJAS CLARAS
+
+Adaptación contextual: Precisión para análisis, creatividad para ideas
+Control de profundidad: Respuestas detalladas vs concisas según necesidad
+Personalización: Cada usuario puede ajustar según su estilo preferido
+Templates predefinidos: Configuraciones rápidas para casos comunes
+
+PROPUESTA DE IMPLEMENTACIÓN
+¿Quieres que implemente esta funcionalidad completa? Incluiría:
+
+Backend: Soporte para temperatura y prompts dinámicos
+Frontend: El componente de configuración avanzada
+Integration: Conexión entre UI y backend
+Templates: Prompts predefinidos optimizados
+
+Es una mejora significativa que elevaría mucho la calidad del sistema. ¿Procedemos con la implementación completa?
+Carlos:
+Ok. Hagámoslo junto con las mejoras planificadas y recuerda mi condición de fotofóbico. Actualmente la UI de la aplicación tiene una paleta de colores marrones, muy cálida que evita los azules y otros colores que, luego de varias horas de trabajo, irritan los ojos del usuario. Por lo tanto te pido que toda mejora que implementes al código tenga en consideración esto de la gama de colores marrones, por favor.
+
+Claude:
+Perfecto. Implementaré todas las mejoras respetando la paleta de colores marrones y cálidos para tu condición fotofóbica.
+PLAN DE IMPLEMENTACIÓN COMPLETA
+
+Backend: Temperatura y prompts dinámicos
+Frontend: Configuración avanzada con paleta marrón
+UI Improvements: Footer, monitoring, colores cálidos
+Desktop Launcher: Auto-start script
+
+1. BACKEND - CLAUDE SERVICE CON CONFIGURACIÓN DINÁMICA: claude.service.ts
+
+import axios from 'axios';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger();
+
+export interface ClaudeMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface ClaudeSettings {
+  temperature?: number;
+  prompt?: string;
+  promptType?: string;
+  maxTokens?: number;
+}
+
+export interface ClaudeResponse {
+  content: Array<{
+    type: string;
+    text: string;
+  }>;
+  model: string;
+  usage: {
+    input_tokens: number;
+    output_tokens: number;
+  };
+}
+
+export class ClaudeService {
+  private apiKey: string;
+  private model: string;
+  private defaultMaxTokens: number;
+  private defaultTemperature: number;
+  private baseUrl: string;
+
+  // Prompt templates for different use cases
+  private promptTemplates = {
+    precise: {
+      name: 'Preciso y Técnico',
+      template: 'Responde de manera precisa y técnica. Usa terminología específica. Sé conciso pero completo. Si citas fuentes, menciona específicamente de qué archivo proviene la información.',
+      temperature: 0.2
+    },
+    balanced: {
+      name: 'Balanceado',
+      template: 'Proporciona respuestas balanceadas que combinen precisión técnica con claridad explicativa. Incluye ejemplos cuando sea útil. Si la información proviene de archivos subidos, cita la fuente específica.',
+      temperature: 0.4
+    },
+    detailed: {
+      name: 'Detallado y Didáctico',
+      template: 'Proporciona explicaciones detalladas y didácticas. Incluye contexto, ejemplos prácticos y razonamiento paso a paso. Desarrolla los conceptos en profundidad. Cuando uses información de archivos, explica cómo se relaciona con el contexto general.',
+      temperature: 0.5
+    },
+    creative: {
+      name: 'Creativo y Exploratorio',
+      template: 'Adopta un enfoque creativo y exploratorio. Genera ideas innovadoras, conexiones inesperadas y soluciones originales. Explora múltiples perspectivas y posibilidades. Usa la información de archivos como punto de partida para desarrollar ideas nuevas.',
+      temperature: 0.7
+    }
+  };
+
+  constructor() {
+    this.apiKey = process.env.CLAUDE_API_KEY || '';
+    this.model = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+    this.defaultMaxTokens = parseInt(process.env.CLAUDE_MAX_TOKENS || '4000');
+    this.defaultTemperature = parseFloat(process.env.CLAUDE_TEMPERATURE || '0.3');
+    this.baseUrl = 'https://api.anthropic.com/v1/messages';
+
+    if (!this.apiKey) {
+      throw new Error('CLAUDE_API_KEY environment variable is required');
+    }
+
+    logger.info(`Claude Service initialized: model=${this.model}, defaultTemp=${this.defaultTemperature}, defaultMaxTokens=${this.defaultMaxTokens}`);
+  }
+
+  async sendMessage(messages: ClaudeMessage[], settings: ClaudeSettings = {}): Promise<ClaudeResponse> {
+    try {
+      // Use provided settings or defaults
+      const temperature = settings.temperature ?? this.defaultTemperature;
+      const maxTokens = settings.maxTokens ?? this.defaultMaxTokens;
+      
+      // Apply prompt template if specified
+      let processedMessages = [...messages];
+      if (settings.promptType && this.promptTemplates[settings.promptType]) {
+        const template = this.promptTemplates[settings.promptType];
+        // Merge template with last user message
+        const lastMessage = processedMessages[processedMessages.length - 1];
+        if (lastMessage && lastMessage.role === 'user') {
+          const templateInstruction = template.template;
+          lastMessage.content = `${templateInstruction}\n\n${lastMessage.content}`;
+        }
+      } else if (settings.prompt) {
+        // Use custom prompt
+        const lastMessage = processedMessages[processedMessages.length - 1];
+        if (lastMessage && lastMessage.role === 'user') {
+          lastMessage.content = `${settings.prompt}\n\n${lastMessage.content}`;
+        }
+      }
+
+      const requestBody = {
+        model: this.model,
+        max_tokens: maxTokens,
+        temperature: temperature,
+        messages: processedMessages.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }))
+      };
+
+      logger.info(`Sending request to Claude: temp=${temperature}, tokens=${maxTokens}, promptType=${settings.promptType || 'none'}, messages=${messages.length}`);
+      
+      const response = await axios.post(this.baseUrl, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': this.apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        timeout: 60000
+      });
+
+      const claudeResponse: ClaudeResponse = response.data;
+      
+      logger.info(`Claude response: ${claudeResponse.usage.input_tokens} input tokens, ${claudeResponse.usage.output_tokens} output tokens`);
+      
+      return claudeResponse;
+
+    } catch (error: any) {
+      if (error.response) {
+        logger.error('Claude API error:', {
+          status: error.response.status,
+          data: error.response.data,
+          settings: settings
+        });
+        throw new Error(`Claude API error: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
+      } else if (error.request) {
+        logger.error('Claude API network error:', error.message);
+        throw new Error('Claude API network error: No response received');
+      } else {
+        logger.error('Claude API unexpected error:', error.message);
+        throw new Error(`Claude API unexpected error: ${error.message}`);
+      }
+    }
+  }
+
+  // Get available prompt templates
+  getPromptTemplates() {
+    return this.promptTemplates;
+  }
+
+  // Get default settings
+  getDefaultSettings(): ClaudeSettings {
+    return {
+      temperature: this.defaultTemperature,
+      maxTokens: this.defaultMaxTokens,
+      promptType: 'balanced'
+    };
+  }
+
+  // Validate settings
+  validateSettings(settings: ClaudeSettings): { valid: boolean; errors: string[] } {
+    const errors: string[] = [];
+    
+    if (settings.temperature !== undefined) {
+      if (settings.temperature < 0 || settings.temperature > 1) {
+        errors.push('Temperature must be between 0 and 1');
+      }
+    }
+    
+    if (settings.maxTokens !== undefined) {
+      if (settings.maxTokens < 100 || settings.maxTokens > 8000) {
+        errors.push('Max tokens must be between 100 and 8000');
+      }
+    }
+    
+    if (settings.promptType && !this.promptTemplates[settings.promptType]) {
+      errors.push('Invalid prompt type');
+    }
+    
+    return {
+      valid: errors.length === 0,
+      errors
+    };
+  }
+
+  // Health check
+  async healthCheck(): Promise<boolean> {
+    try {
+      const testMessages: ClaudeMessage[] = [
+        { role: 'user', content: 'Test connection. Respond with "OK".' }
+      ];
+
+      await this.sendMessage(testMessages, { temperature: 0.1, maxTokens: 10 });
+      return true;
+    } catch (error) {
+      logger.error('Claude service health check failed:', error);
+      return false;
+    }
+  }
+}
+
+export default ClaudeService;
+
+---------------------------------------------------------------------------------
+
+2. BACKEND - INDEX.TS CON SOPORTE DE CONFIGURACIÓN DINÁMICA: index.ts
+
+// [Mantener todo el código anterior hasta la línea 60 aproximadamente...]
+
+// Messages endpoint with RAG integration and DYNAMIC CONFIGURATION SUPPORT
+app.post('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const conversationId = req.params.id;
+    const { content, settings } = req.body; // ✅ ADDED: settings support
+
+    if (!content) {
+      res.status(400).json({ error: 'Message content required' });
+      return;
+    }
+
+    // ✅ NEW: Extract and validate dynamic settings
+    const claudeSettings = settings || {};
+    
+    logger.info(`Processing message for conversation ${conversationId}`);
+    if (settings) {
+      logger.info(`Using dynamic settings: temp=${claudeSettings.temperature || 'default'}, promptType=${claudeSettings.promptType || 'none'}`);
+    }
+
+    // 1. Save user message
+    const userMessage = await dbService.addMessage(conversationId, 'user', content);
+    
+    // 2. Get recent messages from current conversation
+    const recentMessages = await dbService.getMessages(conversationId, 10);
+    
+    // 3. Get conversation info to determine current project
+    const conversation = await dbService.getConversationById(conversationId);
+    const currentProjectId = conversation?.project_id || conversationId;
+    
+    // 4. Smart context detection and analysis
+    const isCurrentFileQuestion = isFileRelatedQuestion(content);
+    const previousFileQuestions = recentMessages.filter(msg => 
+      msg.role === 'user' && isFileRelatedQuestion(msg.content)
+    ).length;
+    
+    const hasEstablishedFileContext = previousFileQuestions > 0;
+    const isFirstFileQuestion = previousFileQuestions <= 1 && isCurrentFileQuestion;
+    
+    logger.info(`Context Analysis: isFileQuestion=${isCurrentFileQuestion}, previousFileQuestions=${previousFileQuestions}, hasEstablishedContext=${hasEstablishedFileContext}, isFirstFileQuestion=${isFirstFileQuestion}`);
+    
+    // 5. Initialize variables for RAG
+    let relevantMemories: any[] = [];
+    let contextualMemory: string = '';
+    let contextStrategy: string = 'none';
+    
+    // 6. Search for semantic context with INTELLIGENT STRATEGY
+    if (isCurrentFileQuestion) {
+      try {
+        logger.info('Searching for relevant context across all projects...');
+        const allMemories = await ragService.searchAllProjects(content, 20);
+
+        if (allMemories.length > 0) {
+          logger.info(`Found ${allMemories.length} total memories across all projects`);
+          
+          // [Mantener toda la lógica de priorización de proyectos...]
+          // Separate current project from other projects
+          const currentProjectMemories = allMemories.filter(memory => {
+            const memoryProjectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
+            return memoryProjectId === currentProjectId;
+          });
+          
+          const otherProjectsMemories = allMemories.filter(memory => {
+            const memoryProjectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
+            return memoryProjectId !== currentProjectId;
+          });
+          
+          logger.info(`Found ${currentProjectMemories.length} memories in CURRENT project`);
+          logger.info(`Found ${otherProjectsMemories.length} memories in OTHER projects`);
+          
+          // PRIORITIZATION LOGIC: Current project FIRST
+          let finalMemories: any[] = [];
+          
+          if (currentProjectMemories.length > 0) {
+            finalMemories = [...currentProjectMemories.slice(0, 12)];
+            const remainingSlots = Math.max(15 - finalMemories.length, 0);
+            if (remainingSlots > 0 && otherProjectsMemories.length > 0) {
+              finalMemories = [...finalMemories, ...otherProjectsMemories.slice(0, Math.min(3, remainingSlots))];
+            }
+            logger.info(`PRIORITIZED: ${currentProjectMemories.length} from current project, ${Math.min(3, Math.max(15 - currentProjectMemories.slice(0, 12).length, 0))} from other projects`);
+          } else {
+            finalMemories = otherProjectsMemories.slice(0, 15);
+            logger.info(`FALLBACK: Using ${finalMemories.length} memories from other projects`);
+          }
+          
+          relevantMemories = finalMemories;
+          
+          // SMART CONTEXT FILTERING for subsequent questions
+          if (hasEstablishedFileContext && !isFirstFileQuestion) {
+            const questionKeywords = extractQuestionKeywords(content);
+            logger.info(`FILTERING by keywords: ${questionKeywords.join(', ')}`);
+            
+            const keywordFilteredMemories = relevantMemories.filter(memory => {
+              const memoryText = memory.content.toLowerCase();
+              return questionKeywords.some(keyword => memoryText.includes(keyword));
+            });
+            
+            if (keywordFilteredMemories.length > 0) {
+              relevantMemories = keywordFilteredMemories.slice(0, 8);
+              contextStrategy = 'filtered';
+              logger.info(`FILTERED to ${relevantMemories.length} relevant memories for specific question`);
+            } else {
+              relevantMemories = relevantMemories.slice(0, 5);
+              contextStrategy = 'minimal';
+              logger.info(`No keyword matches, using minimal context (${relevantMemories.length} memories)`);
+            }
+          } else {
+            contextStrategy = isFirstFileQuestion ? 'full' : 'standard';
+          }
+          
+          // [Mantener toda la lógica de construcción de contexto...]
+          // Separate file content from conversation history
+          const fileMemories = relevantMemories.filter(memory => {
+            const sourceType = memory.metadata?.source_type;
+            const fileName = memory.metadata?.file_name || memory.metadata?.filename;
+            const fileType = memory.metadata?.fileType;
+            return sourceType === 'file_upload' || fileName || fileType;
+          });
+          
+          const conversationMemories = relevantMemories.filter(memory => {
+            const sourceType = memory.metadata?.source_type;
+            const fileName = memory.metadata?.file_name || memory.metadata?.filename;
+            const fileType = memory.metadata?.fileType;
+            return !(sourceType === 'file_upload' || fileName || fileType);
+          });
+          
+          logger.info(`Found ${fileMemories.length} file memories`);
+          logger.info(`Found ${conversationMemories.length} conversation memories`);
+          
+          // Build context sections based on strategy
+          let contextSections: string[] = [];
+          
+          if (contextStrategy === 'full' || contextStrategy === 'standard') {
+            // FULL CONTEXT for first question or standard follow-ups
+            if (fileMemories.length > 0) {
+              const priorityFileMemories = fileMemories.slice(0, 6);
+              const fileParts = priorityFileMemories.map((memory, index) => {
+                const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
+                const section = memory.metadata?.section || 'contenido';
+                const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+                const chunkInfo = memory.metadata?.chunkIndex !== undefined ? 
+                  ` (parte ${memory.metadata.chunkIndex + 1}/${memory.metadata.totalChunks})` : '';
+                const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown';
+                const isCurrent = projectId === currentProjectId ? 'PROYECTO ACTUAL' : 'OTRO PROYECTO';
+                const projectInfo = ` [${isCurrent}]`;
+                
+                return `**${fileName}** ${chunkInfo}${projectInfo}\nSeccion: ${section}\nRelevancia: ${similarity}%\n\n${memory.content}`;
+              });
+              
+              contextSections.push(`--- ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n─────────────\n\n')}`);
+            }
+            
+            // Add conversation context if needed
+            const maxTotalMemories = 8;
+            const usedSlots = Math.min(fileMemories.length, 6);
+            const conversationSlots = Math.min(Math.max(maxTotalMemories - usedSlots, 0), 2);
+            
+            if (conversationMemories.length > 0 && conversationSlots > 0) {
+              const priorityConversationMemories = conversationMemories.slice(0, conversationSlots);
+              const conversationParts = priorityConversationMemories.map(memory => {
+                const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+                const timestamp = memory.metadata?.timestamp || 'tiempo desconocido';
+                return `[${similarity}% similitud | ${timestamp}]\n${memory.content}`;
+              });
+              
+              contextSections.push(`--- CONTEXTO CONVERSACIONAL (${priorityConversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
+            }
+          } else if (contextStrategy === 'filtered' || contextStrategy === 'minimal') {
+            // FOCUSED CONTEXT for specific follow-up questions
+            if (fileMemories.length > 0) {
+              const focusedMemories = fileMemories.slice(0, 3);
+              const fileParts = focusedMemories.map(memory => {
+                const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
+                const section = memory.metadata?.section || 'contenido';
+                return `**${fileName}** - ${section}\n\n${memory.content}`;
+              });
+              
+              contextSections.push(`--- CONTENIDO RELEVANTE ---\n${fileParts.join('\n\n---\n\n')}`);
+            }
+          }
+          
+          // Build final context
+          if (contextSections.length > 0) {
+            contextualMemory = `\n\n${contextSections.join('\n\n════════════════════════════════════════\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
+            
+            logger.info(`Injecting ${contextualMemory.length} characters of context (strategy: ${contextStrategy})`);
+            logger.info(`Final summary: ${fileMemories.length} archivos, ${conversationMemories.length} conversaciones`);
+          }
+        } else {
+          logger.info('No relevant context found in any project');
+        }
+      } catch (ragError) {
+        logger.warn('RAG search failed, continuing without context:', ragError);
+      }
+    } else {
+      logger.info('Non-file question, skipping file context search');
+    }
+
+    // 7. Build messages for Claude
+    const claudeMessages = recentMessages.map(msg => ({
+      role: msg.role as 'user' | 'assistant',
+      content: msg.content
+    }));
+
+    // 8. ✅ ENHANCED: Context injection with DYNAMIC PROMPT SUPPORT
+    if (claudeMessages.length > 0) {
+      const lastUserIndex = claudeMessages.length - 1;
+      if (claudeMessages[lastUserIndex].role === 'user') {
+        let baseInstruction = '';
+        
+        // Build base instruction based on context strategy and settings
+        if (isCurrentFileQuestion && contextualMemory) {
+          if (contextStrategy === 'full') {
+            baseInstruction = `${contextualMemory}\nINSTRUCCION IMPORTANTE: Tienes acceso a archivos que el usuario ha subido al PROYECTO ACTUAL. USA PRIORITARIAMENTE la informacion de estos archivos del proyecto actual para responder. Si la pregunta se refiere a contenido de archivos, cita especificamente de que archivo del proyecto actual proviene la informacion.`;
+          } else if (contextStrategy === 'filtered') {
+            baseInstruction = `${contextualMemory}\nINSTRUCCION: Ya tienes el contexto del archivo. La pregunta especifica del usuario se refiere a: "${content}". Enfocate en responder especificamente esta nueva pregunta basandote en el contenido mas relevante del archivo.`;
+          } else if (contextStrategy === 'minimal') {
+            baseInstruction = `${contextualMemory}\nINSTRUCCION: Responde la nueva pregunta especifica del usuario basandote en el archivo que ya conoces del contexto de la conversacion.`;
+          } else {
+            baseInstruction = `${contextualMemory}\nINFORMACION: Tienes acceso a archivos subidos. Responde basandote en el contenido disponible.`;
+          }
+        }
+        
+        // ✅ NEW: Apply custom prompt/template if provided
+        let finalInstruction = baseInstruction;
+        if (claudeSettings.prompt) {
+          finalInstruction = `${baseInstruction}\n\n--- INSTRUCCIONES ADICIONALES ---\n${claudeSettings.prompt}`;
+        }
+        
+        finalInstruction += `\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
+        claudeMessages[lastUserIndex].content = finalInstruction;
+        
+        logger.info(`Applied context injection strategy: ${contextStrategy}${claudeSettings.promptType ? `, promptType: ${claudeSettings.promptType}` : ''}`);
+      }
+    }
+
+    // 9. ✅ ENHANCED: Send to Claude API with dynamic settings
+    const { ClaudeService } = require('./services/claude.service');
+    const claudeService = new ClaudeService();
+    
+    // Validate settings before sending
+    const validation = claudeService.validateSettings(claudeSettings);
+    if (!validation.valid) {
+      logger.warn('Invalid Claude settings provided:', validation.errors);
+      res.status(400).json({ error: 'Invalid settings', details: validation.errors });
+      return;
+    }
+    
+    logger.info('API Key status: CONFIGURED');
+    logger.info('Sending to Claude API with context...');
+    const claudeResponse = await claudeService.sendMessage(claudeMessages, claudeSettings);
+    const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
+
+    // 10. Save Claude's response with settings metadata
+    const assistantMessage = await dbService.addMessage(conversationId, 'assistant', assistantContent, { 
+      model: claudeResponse.model,
+      usage: claudeResponse.usage,
+      context_used: relevantMemories?.length || 0,
+      context_strategy: contextStrategy,
+      settings_used: claudeSettings // ✅ NEW: Store settings used
+    });
+
+    // 11. Store new messages in ChromaDB for future searches
+    try {
+      const projectId = conversation?.project_id || conversationId;
+      
+      // Store user message
+      await ragService.addMemory(
+        projectId, 
+        conversationId, 
+        content,
+        { 
+          role: 'user',
+          timestamp: new Date().toISOString(),
+          conversation_title: conversation?.title || 'Untitled'
+        }
+      );
+
+      // Store assistant response
+      await ragService.addMemory(
+        projectId, 
+        conversationId, 
+        assistantContent,
+        { 
+          role: 'assistant',
+          timestamp: new Date().toISOString(),
+          conversation_title: conversation?.title || 'Untitled',
+          model: claudeResponse.model
+        }
+      );
+
+      logger.info('Stored messages in ChromaDB for future context');
+    } catch (storageError) {
+      logger.warn('Failed to store in ChromaDB:', storageError);
+    }
+
+    // 12. ✅ ENHANCED: Respond with configuration info
+    res.json({
+      user_message: userMessage,
+      assistant_message: assistantMessage,
+      usage: claudeResponse.usage,
+      context_memories_used: relevantMemories?.length || 0,
+      context_strategy: contextStrategy,
+      settings_applied: claudeSettings // ✅ NEW: Return applied settings
+    });
+
+    logger.info(`Message processed successfully. Context memories used: ${relevantMemories?.length || 0}, Strategy: ${contextStrategy}, Settings: ${JSON.stringify(claudeSettings)}`);
+
+  } catch (error) {
+    logger.error('Error processing message:', error);
+    res.status(500).json({ error: 'Failed to process message' });
+  }
+});
+
+// ✅ NEW: Endpoint to get available Claude configuration options
+app.get('/api/claude/config', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const { ClaudeService } = require('./services/claude.service');
+    const claudeService = new ClaudeService();
+    
+    res.json({
+      templates: claudeService.getPromptTemplates(),
+      defaults: claudeService.getDefaultSettings(),
+      limits: {
+        temperature: { min: 0, max: 1, step: 0.1 },
+        maxTokens: { min: 100, max: 8000, step: 100 }
+      }
+    });
+  } catch (error) {
+    logger.error('Error getting Claude config:', error);
+    res.status(500).json({ error: 'Failed to get configuration' });
+  }
+});
+
+// [Mantener todo el resto del código original…]
+
+---------------------------------------------------------------------------------------
+
+3. FRONTEND - CONFIGURACIÓN AVANZADA CON PALETA FOTOFÓBICA: AdvancedControls.js
+
+import React, { useState, useEffect } from 'react';
+
+const AdvancedControls = ({ onSettingsChange, className = '' }) => {
+  const [temperature, setTemperature] = useState(0.3);
+  const [selectedPrompt, setSelectedPrompt] = useState('balanced');
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fotophobic-friendly color palette - warm browns and beiges
+  const colors = {
+    background: '#2d2823',      // Dark warm brown
+    surface: '#3d342c',         // Medium brown
+    surfaceLight: '#4a4037',    // Lighter brown
+    text: '#e8dcc6',           // Warm cream
+    textSecondary: '#c4b896',   // Muted cream
+    accent: '#8b6914',         // Warm gold
+    accentHover: '#a67c00',    // Brighter gold
+    success: '#4a5d23',        // Warm green
+    warning: '#8b4513',        // Saddle brown
+    danger: '#722f37',         // Deep burgundy
+    border: '#5a4d42'          // Brown border
+  };
+
+  // Predefined prompt templates
+  const promptTemplates = {
+    'precise': {
+      name: 'Preciso y Técnico',
+      description: 'Respuestas exactas, técnicas y concisas',
+      icon: '🎯',
+      template: 'Responde de manera precisa y técnica. Usa terminología específica. Sé conciso pero completo. Si citas fuentes, menciona específicamente de qué archivo proviene la información.',
+      recommended_temp: 0.2,
+      color: colors.accent
+    },
+    'balanced': {
+      name: 'Balanceado',
+      description: 'Respuestas equilibradas entre detalle y claridad',
+      icon: '⚖️',
+      template: 'Proporciona respuestas balanceadas que combinen precisión técnica con claridad explicativa. Incluye ejemplos cuando sea útil. Si la información proviene de archivos subidos, cita la fuente específica.',
+      recommended_temp: 0.4,
+      color: colors.success
+    },
+    'detailed': {
+      name: 'Detallado y Didáctico',
+      description: 'Explicaciones profundas y educativas',
+      icon: '📚',
+      template: 'Proporciona explicaciones detalladas y didácticas. Incluye contexto, ejemplos prácticos y razonamiento paso a paso. Desarrolla los conceptos en profundidad. Cuando uses información de archivos, explica cómo se relaciona con el contexto general.',
+      recommended_temp: 0.5,
+      color: colors.warning
+    },
+    'creative': {
+      name: 'Creativo y Exploratorio',
+      description: 'Enfoque innovador y generación de ideas',
+      icon: '💡',
+      template: 'Adopta un enfoque creativo y exploratorio. Genera ideas innovadoras, conexiones inesperadas y soluciones originales. Explora múltiples perspectivas y posibilidades. Usa la información de archivos como punto de partida para desarrollar ideas nuevas.',
+      recommended_temp: 0.7,
+      color: colors.danger
+    },
+    'custom': {
+      name: 'Personalizado',
+      description: 'Prompt completamente personalizable',
+      icon: '✏️',
+      template: '',
+      recommended_temp: 0.4,
+      color: colors.textSecondary
+    }
+  };
+
+  // Temperature presets with photophobic-friendly descriptions
+  const temperaturePresets = [
+    { value: 0.1, label: 'Muy Preciso', description: 'Respuestas muy consistentes y factuales', color: colors.accent },
+    { value: 0.3, label: 'Preciso', description: 'Buena precisión con algo de variación', color: colors.success },
+    { value: 0.5, label: 'Balanceado', description: 'Equilibrio entre precisión y creatividad', color: colors.warning },
+    { value: 0.7, label: 'Creativo', description: 'Más variación y enfoques creativos', color: colors.danger },
+    { value: 0.9, label: 'Muy Creativo', description: 'Máxima creatividad y exploración', color: colors.textSecondary }
+  ];
+
+  useEffect(() => {
+    // When prompt template changes, update recommended temperature
+    if (selectedPrompt !== 'custom') {
+      const newTemp = promptTemplates[selectedPrompt].recommended_temp;
+      setTemperature(newTemp);
+    }
+  }, [selectedPrompt]);
+
+  useEffect(() => {
+    // Notify parent component of changes
+    const currentPrompt = selectedPrompt === 'custom' 
+      ? customPrompt 
+      : promptTemplates[selectedPrompt].template;
+      
+    onSettingsChange({
+      temperature,
+      prompt: currentPrompt,
+      promptType: selectedPrompt
+    });
+  }, [temperature, selectedPrompt, customPrompt, onSettingsChange]);
+
+  const getTemperatureColor = (temp) => {
+    if (temp <= 0.3) return colors.accent;
+    if (temp <= 0.5) return colors.success;
+    if (temp <= 0.7) return colors.warning;
+    return colors.danger;
+  };
+
+  const getTemperatureLabel = (temp) => {
+    const preset = temperaturePresets.find(p => Math.abs(p.value - temp) < 0.05);
+    return preset ? preset.label : temp.toFixed(1);
+  };
+
+  const handleQuickPreset = (promptType, temp) => {
+    setIsLoading(true);
+    setSelectedPrompt(promptType);
+    setTemperature(temp);
+    setTimeout(() => setIsLoading(false), 300); // Visual feedback
+  };
+
+  return (
+    <div 
+      className={`rounded-lg shadow-lg p-4 mb-4 transition-all duration-300 ${className}`}
+      style={{ 
+        backgroundColor: colors.background,
+        border: `1px solid ${colors.border}`,
+        color: colors.text
+      }}
+    >
+      {/* Header with toggle */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold flex items-center">
+          <span className="mr-2">⚙️</span>
+          Configuración Avanzada
+        </h3>
+        <button
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="px-3 py-1 rounded text-sm font-medium transition-all duration-200 hover:scale-105"
+          style={{ 
+            backgroundColor: showAdvanced ? colors.accent : colors.surface,
+            color: showAdvanced ? colors.background : colors.text,
+            border: `1px solid ${colors.border}`
+          }}
+        >
+          {showAdvanced ? 'Ocultar' : 'Mostrar'}
+        </button>
+      </div>
+
+      {showAdvanced && (
+        <div className="space-y-6 animate-fade-in">
+          {/* Temperature Control */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="font-medium text-sm">
+                🌡️ Temperatura: <span 
+                  className="font-bold"
+                  style={{ color: getTemperatureColor(temperature) }}
+                >
+                  {getTemperatureLabel(temperature)}
+                </span>
+              </label>
+              <span className="text-xs" style={{ color: colors.textSecondary }}>
+                {temperature.toFixed(1)}
+              </span>
+            </div>
+            
+            <div className="relative">
+              <input
+                type="range"
+                min="0.1"
+                max="1.0"
+                step="0.1"
+                value={temperature}
+                onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                className="w-full h-3 rounded-lg appearance-none cursor-pointer transition-all duration-200"
+                style={{ 
+                  background: `linear-gradient(to right, ${colors.accent} 0%, ${colors.warning} 50%, ${colors.danger} 100%)`,
+                  outline: 'none'
+                }}
+              />
+              <div 
+                className="absolute top-0 w-4 h-3 rounded-full border-2 pointer-events-none transition-all duration-200"
+                style={{ 
+                  left: `calc(${((temperature - 0.1) / 0.9) * 100}% - 8px)`,
+                  backgroundColor: getTemperatureColor(temperature),
+                  borderColor: colors.background,
+                  boxShadow: `0 0 10px ${getTemperatureColor(temperature)}50`
+                }}
+              />
+            </div>
+            
+            <div className="flex justify-between text-xs mt-1" style={{ color: colors.textSecondary }}>
+              <span>Preciso</span>
+              <span>Creativo</span>
+            </div>
+            
+            {/* Temperature description */}
+            <p className="text-xs mt-2" style={{ color: colors.textSecondary }}>
+              {temperaturePresets.find(p => Math.abs(p.value - temperature) < 0.05)?.description || 
+               'Personalizado: Ajusta la aleatoriedad de las respuestas'}
+            </p>
+          </div>
+
+          {/* Prompt Template Selection */}
+          <div>
+            <label className="block font-medium text-sm mb-3">
+              📝 Estilo de Respuesta
+            </label>
+            
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {Object.entries(promptTemplates).filter(([key]) => key !== 'custom').map(([key, template]) => (
+                <button
+                  key={key}
+                  onClick={() => setSelectedPrompt(key)}
+                  className={`p-3 rounded-lg text-left text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                    selectedPrompt === key ? 'ring-2' : 'hover:opacity-80'
+                  }`}
+                  style={{ 
+                    backgroundColor: selectedPrompt === key ? colors.surface : colors.surfaceLight,
+                    border: `1px solid ${selectedPrompt === key ? template.color : colors.border}`,
+                    ringColor: template.color
+                  }}
+                >
+                  <div className="flex items-center mb-1">
+                    <span className="mr-2">{template.icon}</span>
+                    <span className="font-semibold">{template.name}</span>
+                  </div>
+                  <div className="text-xs" style={{ color: colors.textSecondary }}>
+                    {template.description}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Custom option */}
+            <button
+              onClick={() => setSelectedPrompt('custom')}
+              className={`w-full p-3 rounded-lg text-left text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                selectedPrompt === 'custom' ? 'ring-2' : 'hover:opacity-80'
+              }`}
+              style={{ 
+                backgroundColor: selectedPrompt === 'custom' ? colors.surface : colors.surfaceLight,
+                border: `1px solid ${selectedPrompt === 'custom' ? colors.textSecondary : colors.border}`,
+                ringColor: colors.textSecondary
+              }}
+            >
+              <div className="flex items-center mb-1">
+                <span className="mr-2">✏️</span>
+                <span className="font-semibold">Personalizado</span>
+              </div>
+              <div className="text-xs" style={{ color: colors.textSecondary }}>
+                Prompt completamente personalizable
+              </div>
+            </button>
+          </div>
+
+          {/* Custom Prompt Input */}
+          {selectedPrompt === 'custom' && (
+            <div>
+              <label className="block font-medium text-sm mb-2">
+                ✏️ Prompt Personalizado
+              </label>
+              <textarea
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder="Escribe aquí cómo quieres que Claude responda..."
+                rows={4}
+                className="w-full p-3 rounded-lg text-sm resize-none transition-all duration-200 focus:ring-2 focus:outline-none"
+                style={{ 
+                  backgroundColor: colors.surface,
+                  border: `1px solid ${colors.border}`,
+                  color: colors.text,
+                  ringColor: colors.accent
+                }}
+              />
+            </div>
+          )}
+
+          {/* Current Prompt Preview */}
+          {selectedPrompt !== 'custom' && (
+            <div>
+              <label className="block font-medium text-sm mb-2">
+                👀 Vista Previa del Prompt
+              </label>
+              <div 
+                className="p-3 rounded-lg text-sm leading-relaxed"
+                style={{ 
+                  backgroundColor: colors.surface,
+                  color: colors.textSecondary,
+                  border: `1px solid ${colors.border}`
+                }}
+              >
+                {promptTemplates[selectedPrompt].template}
+              </div>
+            </div>
+          )}
+
+          {/* Quick Presets */}
+          <div>
+            <label className="block font-medium text-sm mb-3">
+              🚀 Configuraciones Rápidas
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => handleQuickPreset('precise', 0.2)}
+                disabled={isLoading}
+                className="p-2 text-xs rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                style={{ 
+                  backgroundColor: colors.accent,
+                  color: colors.background
+                }}
+              >
+                📊 Análisis Técnico
+              </button>
+              <button
+                onClick={() => handleQuickPreset('detailed', 0.5)}
+                disabled={isLoading}
+                className="p-2 text-xs rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                style={{ 
+                  backgroundColor: colors.success,
+                  color: colors.background
+                }}
+              >
+                📚 Explicación Didáctica
+              </button>
+              <button
+                onClick={() => handleQuickPreset('creative', 0.7)}
+                disabled={isLoading}
+                className="p-2 text-xs rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                style={{ 
+                  backgroundColor: colors.danger,
+                  color: colors.text
+                }}
+              >
+                💡 Brainstorming
+              </button>
+              <button
+                onClick={() => handleQuickPreset('balanced', 0.4)}
+                disabled={isLoading}
+                className="p-2 text-xs rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                style={{ 
+                  backgroundColor: colors.surface,
+                  color: colors.text,
+                  border: `1px solid ${colors.border}`
+                }}
+              >
+                ⚖️ Por Defecto
+              </button>
+            </div>
+          </div>
+
+          {/* Current Settings Summary */}
+          <div 
+            className="p-3 rounded-lg border-l-4"
+            style={{ 
+              backgroundColor: `${colors.accent}20`,
+              borderLeftColor: colors.accent,
+              border: `1px solid ${colors.border}`
+            }}
+          >
+            <div className="text-sm">
+              <strong>Configuración Actual:</strong>
+              <br />
+              • Temperatura: {temperature} ({getTemperatureLabel(temperature)})
+              <br />
+              • Estilo: {promptTemplates[selectedPrompt].name}
+              <br />
+              • Caracteres de prompt: {(selectedPrompt === 'custom' ? customPrompt : promptTemplates[selectedPrompt].template).length}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CSS for animations */}
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+        
+        /* Custom range slider styles for photophobic theme */
+        input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: ${getTemperatureColor(temperature)};
+          border: 2px solid ${colors.background};
+          cursor: pointer;
+          box-shadow: 0 0 10px ${getTemperatureColor(temperature)}50;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: ${getTemperatureColor(temperature)};
+          border: 2px solid ${colors.background};
+          cursor: pointer;
+          box-shadow: 0 0 10px ${getTemperatureColor(temperature)}50;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default AdvancedControls;
+
+---------------------------------------------------------------------------------
+
+4. INTEGRACIÓN EN APP.JS - CONFIGURACIÓN AVANZADA: App.js
+
+import React, { useState, useEffect, useRef } from 'react';
+import './App.css';
+import FileUploader from './components/FileUploader';
+import AdvancedControls from './components/AdvancedControls';
+
+// Photophobic-friendly color palette
+const colors = {
+  background: '#1a1612',       // Very dark warm brown
+  surface: '#2d2823',          // Dark warm brown  
+  surfaceLight: '#3d342c',     // Medium brown
+  text: '#e8dcc6',            // Warm cream
+  textSecondary: '#c4b896',    // Muted cream
+  accent: '#8b6914',          // Warm gold
+  accentHover: '#a67c00',     // Brighter gold
+  success: '#4a5d23',         // Warm green
+  warning: '#8b4513',         // Saddle brown
+  danger: '#722f37',          // Deep burgundy
+  border: '#5a4d42'           // Brown border
+};
+
+function App() {
+  const [conversations, setConversations] = useState([]);
+  const [currentConversation, setCurrentConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [systemHealth, setSystemHealth] = useState({ status: 'unknown' });
+  const [chatSettings, setChatSettings] = useState({
+    temperature: 0.3,
+    prompt: '',
+    promptType: 'balanced'
+  });
+  
+  const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // Scroll to bottom when new messages arrive
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Load conversations on startup
+  useEffect(() => {
+    loadConversations();
+    checkSystemHealth();
+    
+    // Periodic health check
+    const healthInterval = setInterval(checkSystemHealth, 30000); // Every 30 seconds
+    return () => clearInterval(healthInterval);
+  }, []);
+
+  const checkSystemHealth = async () => {
+    try {
+      const response = await fetch('/api/health');
+      const health = await response.json();
+      setSystemHealth(health);
+    } catch (error) {
+      console.error('Health check failed:', error);
+      setSystemHealth({ status: 'error', error: error.message });
+    }
+  };
+
+  const loadConversations = async () => {
+    try {
+      const response = await fetch('/api/conversations');
+      const data = await response.json();
+      setConversations(data.conversations || []);
+      
+      if (data.conversations && data.conversations.length > 0 && !currentConversation) {
+        selectConversation(data.conversations[0]);
+      }
+    } catch (error) {
+      console.error('Error loading conversations:', error);
+    }
+  };
+
+  const createNewConversation = async () => {
+    try {
+      const response = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          title: `Nueva conversación ${new Date().toLocaleDateString()}`,
+          project_id: crypto.randomUUID()
+        })
+      });
+      
+      const newConversation = await response.json();
+      setConversations(prev => [newConversation, ...prev]);
+      selectConversation(newConversation);
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+    }
+  };
+
+  const selectConversation = async (conversation) => {
+    setCurrentConversation(conversation);
+    try {
+      const response = await fetch(`/api/conversations/${conversation.id}/messages`);
+      const data = await response.json();
+      setMessages(data.messages || []);
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      setMessages([]);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!input.trim() || !currentConversation || isLoading) return;
+
+    const userMessage = { role: 'user', content: input.trim() };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/conversations/${currentConversation.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          content: userMessage.content,
+          settings: chatSettings // Send dynamic settings
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.assistant_message) {
+        const assistantMessage = {
+          role: 'assistant',
+          content: data.assistant_message.content,
+          metadata: {
+            context_memories_used: data.context_memories_used,
+            context_strategy: data.context_strategy,
+            settings_applied: data.settings_applied
+          }
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Error: No se pudo enviar el mensaje. Verifica la conexión.',
+        error: true 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const handleSettingsChange = (settings) => {
+    setChatSettings(settings);
+  };
+
+  const formatMessageContent = (content) => {
+    // Simple markdown-like formatting for better readability
+    return content
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code style="background-color: ' + colors.surface + '; padding: 2px 4px; border-radius: 3px;">$1</code>')
+      .replace(/\n/g, '<br>');
+  };
+
+  const SystemStatus = () => {
+    const statusColor = systemHealth.status === 'ok' ? colors.success : 
+                       systemHealth.status === 'error' ? colors.danger : colors.warning;
+    
+    return (
+      <div className="flex items-center space-x-2 text-xs">
+        <div 
+          className="w-2 h-2 rounded-full animate-pulse"
+          style={{ backgroundColor: statusColor }}
+        />
+        <span style={{ color: colors.textSecondary }}>
+          Sistema: {systemHealth.status === 'ok' ? 'Operativo' : 
+                   systemHealth.status === 'error' ? 'Error' : 'Verificando...'}
+        </span>
+        {systemHealth.services && (
+          <span style={{ color: colors.textSecondary }}>
+            | ChromaDB: {systemHealth.services.chromadb === 'healthy' ? '✓' : '✗'}
+          </span>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div 
+      className="flex h-screen"
+      style={{ backgroundColor: colors.background, color: colors.text }}
+    >
+      {/* Sidebar */}
+      <div 
+        className="w-80 border-r flex flex-col"
+        style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+      >
+        {/* Header */}
+        <div className="p-4 border-b" style={{ borderColor: colors.border }}>
+          <h1 className="text-xl font-bold mb-2">Claude Infinito v1.1</h1>
+          <SystemStatus />
+          <button
+            onClick={createNewConversation}
+            className="w-full mt-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+            style={{ 
+              backgroundColor: colors.accent, 
+              color: colors.background,
+              border: 'none'
+            }}
+          >
+            + Nueva Conversación
+          </button>
+        </div>
+
+        {/* Advanced Controls */}
+        <AdvancedControls onSettingsChange={handleSettingsChange} />
+
+        {/* File Uploader */}
+        <div className="p-4 border-b" style={{ borderColor: colors.border }}>
+          <FileUploader 
+            conversationId={currentConversation?.id}
+            projectId={currentConversation?.id} 
+          />
+        </div>
+
+        {/* Conversations List */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4">
+            <h3 className="font-semibold mb-3 text-sm" style={{ color: colors.textSecondary }}>
+              Conversaciones
+            </h3>
+            <div className="space-y-2">
+              {conversations.map(conv => (
+                <button
+                  key={conv.id}
+                  onClick={() => selectConversation(conv)}
+                  className={`w-full text-left p-3 rounded-lg text-sm transition-all duration-200 hover:scale-105 ${
+                    currentConversation?.id === conv.id ? 'ring-2' : ''
+                  }`}
+                  style={{ 
+                    backgroundColor: currentConversation?.id === conv.id ? colors.surfaceLight : colors.background,
+                    border: `1px solid ${colors.border}`,
+                    ringColor: colors.accent
+                  }}
+                >
+                  <div className="font-medium truncate">{conv.title}</div>
+                  <div className="text-xs opacity-70 mt-1">
+                    {new Date(conv.created_at).toLocaleDateString()}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
+        {currentConversation ? (
+          <>
+            {/* Chat Header */}
+            <div 
+              className="p-4 border-b"
+              style={{ 
+                backgroundColor: colors.surface, 
+                borderColor: colors.border 
+              }}
+            >
+              <h2 className="font-semibold">{currentConversation.title}</h2>
+              <div className="text-xs mt-1" style={{ color: colors.textSecondary }}>
+                Configuración: {chatSettings.promptType} | Temperatura: {chatSettings.temperature} | 
+                {messages.length} mensajes
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-3xl p-4 rounded-lg ${
+                      message.role === 'user' ? 'rounded-br-sm' : 'rounded-bl-sm'
+                    }`}
+                    style={{
+                      backgroundColor: message.role === 'user' ? colors.accent : 
+                                     message.error ? colors.danger : colors.surfaceLight,
+                      color: message.role === 'user' ? colors.background : colors.text,
+                      border: `1px solid ${colors.border}`
+                    }}
+                  >
+                    <div 
+                      dangerouslySetInnerHTML={{ 
+                        __html: formatMessageContent(message.content) 
+                      }}
+                    />
+                    
+                    {/* Message metadata */}
+                    {message.metadata && (
+                      <div className="mt-2 pt-2 border-t text-xs opacity-70" style={{ borderColor: colors.border }}>
+                        {message.metadata.context_memories_used > 0 && (
+                          <span>
+                            Contexto: {message.metadata.context_memories_used} memorias 
+                            ({message.metadata.context_strategy})
+                          </span>
+                        )}
+                        {message.metadata.settings_applied && (
+                          <span className="ml-2">
+                            | Temp: {message.metadata.settings_applied.temperature}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div 
+                    className="p-4 rounded-lg rounded-bl-sm"
+                    style={{ backgroundColor: colors.surfaceLight, border: `1px solid ${colors.border}` }}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <div 
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: colors.accent }}
+                      />
+                      <div 
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: colors.accent, animationDelay: '0.2s' }}
+                      />
+                      <div 
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: colors.accent, animationDelay: '0.4s' }}
+                      />
+                      <span style={{ color: colors.textSecondary }}>Claude está pensando...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area */}
+            <div 
+              className="p-4 border-t"
+              style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+            >
+              <div className="flex space-x-3">
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
+                  rows={2}
+                  className="flex-1 p-3 rounded-lg resize-none focus:outline-none focus:ring-2 transition-all duration-200"
+                  style={{ 
+                    backgroundColor: colors.background,
+                    border: `1px solid ${colors.border}`,
+                    color: colors.text,
+                    ringColor: colors.accent
+                  }}
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isLoading}
+                  className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ 
+                    backgroundColor: colors.accent, 
+                    color: colors.background,
+                    border: 'none'
+                  }}
+                >
+                  Enviar
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center" style={{ color: colors.textSecondary }}>
+              <h2 className="text-2xl font-bold mb-4">Bienvenido a Claude Infinito v1.1</h2>
+              <p className="mb-4">Crea una nueva conversación para comenzar</p>
+              <button
+                onClick={createNewConversation}
+                className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                style={{ 
+                  backgroundColor: colors.accent, 
+                  color: colors.background,
+                  border: 'none'
+                }}
+              >
+                Crear Primera Conversación
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Footer with enhanced system info */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 px-4 py-2 border-t text-xs"
+        style={{ 
+          backgroundColor: colors.surface, 
+          borderColor: colors.border,
+          color: colors.textSecondary 
+        }}
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            Claude Infinito v1.1 | Memoria semántica infinita con configuración avanzada
+          </div>
+          <div className="flex space-x-4">
+            <span>Uptime: {systemHealth.uptime ? Math.floor(systemHealth.uptime / 60) : 0}min</span>
+            <SystemStatus />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+--------------------------------------------------------------------------------------
+
+5. DESKTOP LAUNCHER - AUTO-START SCRIPT: Claude Infinito Desktop Launcher - Auto-start Script.
+
+#!/bin/bash
+
+# Claude Infinito v1.1 Desktop Launcher
+# Auto-start script with complete system initialization
+# Optimized for Ubuntu 24.04 LTS
+
+# Colors for terminal output (photophobic-friendly warm colors)
+export BROWN='\033[0;33m'      # Warm brown
+export ORANGE='\033[0;31m'     # Warm orange  
+export GREEN='\033[0;32m'      # Success green
+export NC='\033[0m'            # No color
+
+# Configuration
+PROJECT_DIR="$HOME/Projects/claude-infinito-v11"
+LOG_DIR="$PROJECT_DIR/logs"
+FRONTEND_PORT=3000
+BACKEND_PORT=3001
+CHROMADB_PORT=8001
+POSTGRES_PORT=5433
+
+# Create logs directory if it doesn't exist
+mkdir -p "$LOG_DIR"
+
+# Log files
+LAUNCHER_LOG="$LOG_DIR/launcher.log"
+DOCKER_LOG="$LOG_DIR/docker.log"
+BACKEND_LOG="$LOG_DIR/backend.log"
+FRONTEND_LOG="$LOG_DIR/frontend.log"
+
+# Function to log messages
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LAUNCHER_LOG"
+}
+
+# Function to print colored output
+print_status() {
+    echo -e "${BROWN}[Claude Infinito]${NC} $1"
+    log_message "$1"
+}
+
+print_success() {
+    echo -e "${GREEN}✓${NC} $1"
+    log_message "SUCCESS: $1"
+}
+
+print_error() {
+    echo -e "${ORANGE}✗${NC} $1"
+    log_message "ERROR: $1"
+}
+
+# Function to check if port is in use
+check_port() {
+    local port=$1
+    if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1; then
+        return 0  # Port is in use
+    else
+        return 1  # Port is free
+    fi
+}
+
+# Function to kill processes on port
+kill_port() {
+    local port=$1
+    print_status "Cleaning port $port..."
+    
+    # Kill using lsof
+    local pids=$(lsof -t -i:$port 2>/dev/null)
+    if [ -n "$pids" ]; then
+        echo "$pids" | xargs kill -9 2>/dev/null
+        sleep 2
+    fi
+    
+    # Kill using fuser as backup
+    fuser -k ${port}/tcp 2>/dev/null
+    
+    # Kill known process patterns
+    pkill -f "npm run dev" 2>/dev/null
+    pkill -f "npm start" 2>/dev/null
+    pkill -f "nodemon" 2>/dev/null
+    pkill -f "ts-node" 2>/dev/null
+    
+    sleep 1
+    
+    if check_port $port; then
+        print_error "Port $port still in use after cleanup"
+        return 1
+    else
+        print_success "Port $port cleaned successfully"
+        return 0
+    fi
+}
+
+# Function to wait for service to be ready
+wait_for_service() {
+    local service_name=$1
+    local url=$2
+    local max_attempts=30
+    local attempt=1
+    
+    print_status "Waiting for $service_name to be ready..."
+    
+    while [ $attempt -le $max_attempts ]; do
+        if curl -s -f "$url" >/dev/null 2>&1; then
+            print_success "$service_name is ready"
+            return 0
+        fi
+        
+        echo -n "."
+        sleep 2
+        attempt=$((attempt + 1))
+    done
+    
+    print_error "$service_name failed to start within expected time"
+    return 1
+}
+
+# Function to check system requirements
+check_requirements() {
+    print_status "Checking system requirements..."
+    
+    # Check if we're in the right directory
+    if [ ! -d "$PROJECT_DIR" ]; then
+        print_error "Project directory not found: $PROJECT_DIR"
+        exit 1
+    fi
+    
+    cd "$PROJECT_DIR" || exit 1
+    
+    # Check required commands
+    local required_commands=("docker" "docker-compose" "node" "npm" "curl" "lsof")
+    for cmd in "${required_commands[@]}"; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            print_error "Required command not found: $cmd"
+            exit 1
+        fi
+    done
+    
+    # Check Docker daemon
+    if ! docker info >/dev/null 2>&1; then
+        print_error "Docker daemon is not running"
+        exit 1
+    fi
+    
+    # Check Node version
+    local node_version=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
+    if [ "$node_version" -lt 18 ]; then
+        print_error "Node.js version 18+ required, found: $(node --version)"
+        exit 1
+    fi
+    
+    print_success "All system requirements met"
+}
+
+# Function to start Docker services
+start_docker_services() {
+    print_status "Starting Docker services..."
+    
+    # Stop any existing containers
+    docker-compose down 2>/dev/null
+    
+    # Start services
+    if docker-compose up -d postgres chromadb redis >> "$DOCKER_LOG" 2>&1; then
+        print_success "Docker services started"
+    else
+        print_error "Failed to start Docker services"
+        return 1
+    fi
+    
+    # Wait for services to be ready
+    wait_for_service "PostgreSQL" "localhost:$POSTGRES_PORT" &
+    wait_for_service "ChromaDB" "http://localhost:$CHROMADB_PORT/api/v2/heartbeat" &
+    wait
+    
+    # Check Ollama service
+    print_status "Checking Ollama service..."
+    if systemctl is-active --quiet ollama; then
+        print_success "Ollama service is running"
+        
+        # Check if model is loaded
+        if ollama ps | grep -q "nomic-embed-text"; then
+            print_success "Ollama model loaded"
+        else
+            print_status "Loading Ollama model..."
+            ollama pull nomic-embed-text
+        fi
+    else
+        print_error "Ollama service is not running"
+        print_status "Starting Ollama service..."
+        sudo systemctl start ollama
+    fi
+}
+
+# Function to start backend
+start_backend() {
+    print_status "Starting backend service..."
+    
+    # Clean backend port
+    kill_port $BACKEND_PORT
+    
+    cd "$PROJECT_DIR/backend" || return 1
+    
+    # Install dependencies if needed
+    if [ ! -d "node_modules" ] || [ "package.json" -nt "node_modules" ]; then
+        print_status "Installing backend dependencies..."
+        npm install >> "$BACKEND_LOG" 2>&1
+    fi
+    
+    # Start backend in background
+    print_status "Launching backend process..."
+    nohup npm run dev >> "$BACKEND_LOG" 2>&1 &
+    local backend_pid=$!
+    
+    # Wait for backend to be ready
+    if wait_for_service "Backend API" "http://localhost:$BACKEND_PORT/api/health"; then
+        print_success "Backend started successfully (PID: $backend_pid)"
+        echo "$backend_pid" > "$LOG_DIR/backend.pid"
+        return 0
+    else
+        print_error "Backend failed to start"
+        return 1
+    fi
+}
+
+# Function to start frontend
+start_frontend() {
+    print_status "Starting frontend service..."
+    
+    # Clean frontend port
+    kill_port $FRONTEND_PORT
+    
+    cd "$PROJECT_DIR/frontend" || return 1
+    
+    # Install dependencies if needed
+    if [ ! -d "node_modules" ] || [ "package.json" -nt "node_modules" ]; then
+        print_status "Installing frontend dependencies..."
+        npm install >> "$FRONTEND_LOG" 2>&1
+    fi
+    
+    # Start frontend in background
+    print_status "Launching frontend process..."
+    nohup npm start >> "$FRONTEND_LOG" 2>&1 &
+    local frontend_pid=$!
+    
+    # Wait for frontend to be ready
+    if wait_for_service "Frontend" "http://localhost:$FRONTEND_PORT"; then
+        print_success "Frontend started successfully (PID: $frontend_pid)"
+        echo "$frontend_pid" > "$LOG_DIR/frontend.pid"
+        return 0
+    else
+        print_error "Frontend failed to start"
+        return 1
+    fi
+}
+
+# Function to open browser
+open_browser() {
+    print_status "Opening browser..."
+    
+    # Detect available browsers (prefer Firefox for photophobic users due to better dark mode)
+    if command -v firefox >/dev/null 2>&1; then
+        firefox "http://localhost:$FRONTEND_PORT" >/dev/null 2>&1 &
+        print_success "Firefox opened"
+    elif command -v google-chrome >/dev/null 2>&1; then
+        google-chrome "http://localhost:$FRONTEND_PORT" >/dev/null 2>&1 &
+        print_success "Chrome opened"
+    elif command -v chromium-browser >/dev/null 2>&1; then
+        chromium-browser "http://localhost:$FRONTEND_PORT" >/dev/null 2>&1 &
+        print_success "Chromium opened"
+    else
+        print_error "No supported browser found"
+        print_status "Please open http://localhost:$FRONTEND_PORT manually"
+    fi
+}
+
+# Function to show system status
+show_status() {
+    echo
+    echo -e "${BROWN}=== Claude Infinito v1.1 System Status ===${NC}"
+    echo
+    
+    # Docker services
+    echo "Docker Services:"
+    docker-compose ps 2>/dev/null | grep -E "(postgres|chromadb|redis)" | while read line; do
+        if echo "$line" | grep -q "Up"; then
+            echo -e "  ${GREEN}✓${NC} $line"
+        else
+            echo -e "  ${ORANGE}✗${NC} $line"
+        fi
+    done
+    
+    # Backend status
+    echo
+    echo "Application Services:"
+    if check_port $BACKEND_PORT; then
+        echo -e "  ${GREEN}✓${NC} Backend API (port $BACKEND_PORT)"
+    else
+        echo -e "  ${ORANGE}✗${NC} Backend API (port $BACKEND_PORT)"
+    fi
+    
+    if check_port $FRONTEND_PORT; then
+        echo -e "  ${GREEN}✓${NC} Frontend (port $FRONTEND_PORT)"
+    else
+        echo -e "  ${ORANGE}✗${NC} Frontend (port $FRONTEND_PORT)"
+    fi
+    
+    # Ollama status
+    echo
+    echo "AI Services:"
+    if systemctl is-active --quiet ollama; then
+        echo -e "  ${GREEN}✓${NC} Ollama service"
+        if ollama ps | grep -q "nomic-embed-text"; then
+            echo -e "  ${GREEN}✓${NC} Embedding model loaded"
+        else
+            echo -e "  ${ORANGE}!${NC} Embedding model not loaded"
+        fi
+    else
+        echo -e "  ${ORANGE}✗${NC} Ollama service"
+    fi
+    
+    echo
+    echo "Application URL: http://localhost:$FRONTEND_PORT"
+    echo "Logs directory: $LOG_DIR"
+    echo
+}
+
+# Function to create desktop entry
+create_desktop_entry() {
+    local desktop_file="$HOME/.local/share/applications/claude-infinito.desktop"
+    local icon_path="$PROJECT_DIR/assets/claude-infinito-icon.png"
+    
+    print_status "Creating desktop entry..."
+    
+    # Create assets directory if it doesn't exist
+    mkdir -p "$PROJECT_DIR/assets"
+    
+    # Create a simple icon if it doesn't exist (text-based for now)
+    if [ ! -f "$icon_path" ]; then
+        # For now, use system icon. User can replace with custom icon later
+        icon_path="applications-development"
+    fi
+    
+    cat > "$desktop_file" << EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Claude Infinito v1.1
+Comment=AI Assistant with Infinite Memory
+Exec=$PROJECT_DIR/launch-claude-infinito.sh
+Icon=$icon_path
+Terminal=false
+Categories=Development;Office;
+Keywords=AI;Assistant;Claude;Memory;
+StartupNotify=true
+EOF
+    
+    chmod +x "$desktop_file"
+    print_success "Desktop entry created"
+}
+
+# Function to cleanup on exit
+cleanup() {
+    print_status "Cleaning up..."
+    
+    # Kill PIDs if they exist
+    if [ -f "$LOG_DIR/backend.pid" ]; then
+        local backend_pid=$(cat "$LOG_DIR/backend.pid")
+        kill "$backend_pid" 2>/dev/null
+        rm -f "$LOG_DIR/backend.pid"
+    fi
+    
+    if [ -f "$LOG_DIR/frontend.pid" ]; then
+        local frontend_pid=$(cat "$LOG_DIR/frontend.pid")
+        kill "$frontend_pid" 2>/dev/null
+        rm -f "$LOG_DIR/frontend.pid"
+    fi
+    
+    print_status "Cleanup completed"
+}
+
+# Main execution function
+main() {
+    echo -e "${BROWN}"
+    cat << 'EOF'
+   _____ _                 _        ___        __ _       _ _        
+  / ____| |               | |      |_ _|_ __  / _(_)_ __ (_) |_ ___  
+ | |    | | __ _ _   _  __| | ___   | || '_ \| |_| | '_ \| | __/ _ \ 
+ | |____| |/ _` | | | |/ _` |/ _ \  | || | | |  _| | | | | | || (_) |
+  \_____|_|\__,_|_|_|_|\__,_|\___| |___|_| |_|_| |_|_| |_|_|\__\___/ 
+                                                                     
+                            v1.1 - Desktop Launcher
+EOF
+    echo -e "${NC}"
+    
+    # Trap for cleanup
+    trap cleanup EXIT INT TERM
+    
+    # Start logging
+    log_message "=== Claude Infinito v1.1 Launcher Started ==="
+    
+    # Execute startup sequence
+    check_requirements
+    start_docker_services
+    start_backend
+    start_frontend
+    open_browser
+    
+    # Show final status
+    show_status
+    
+    # Create desktop entry
+    create_desktop_entry
+    
+    print_success "Claude Infinito v1.1 is now running!"
+    print_status "Press Ctrl+C to stop all services"
+    
+    # Keep script running to maintain services
+    while true; do
+        sleep 30
+        
+        # Health check
+        if ! check_port $BACKEND_PORT || ! check_port $FRONTEND_PORT; then
+            print_error "Service health check failed"
+            break
+        fi
+    done
+}
+
+# Script entry point
+if [ "$1" = "--status" ]; then
+    show_status
+    exit 0
+elif [ "$1" = "--stop" ]; then
+    print_status "Stopping all services..."
+    kill_port $FRONTEND_PORT
+    kill_port $BACKEND_PORT
+    docker-compose down
+    print_success "All services stopped"
+    exit 0
+elif [ "$1" = "--help" ]; then
+    echo "Claude Infinito v1.1 Launcher"
+    echo "Usage: $0 [--status|--stop|--help]"
+    echo ""
+    echo "Options:"
+    echo "  --status  Show current system status"
+    echo "  --stop    Stop all services"
+    echo "  --help    Show this help message"
+    echo ""
+    echo "Default: Start all services"
+    exit 0
+else
+    main
+fi
+
+---------------------------------------------------------------------------------------------
+
+RESUMEN DE IMPLEMENTACIONES COMPLETADAS
+CARACTERÍSTICAS IMPLEMENTADAS:
+
+Configuración Dinámica de Temperature y Prompts
+
+Backend: claude.service.ts con soporte completo para settings dinámicos
+Frontend: AdvancedControls.js con paleta fotofóbica
+Integration: index.ts modificado para manejar configuraciones por mensaje
+
+
+UI Mejorada con Paleta Fotofóbica
+
+Colores marrones y cálidos específicamente para tu condición
+Sistema de monitoreo en tiempo real
+Footer mejorado con información del sistema
+Animaciones suaves sin colores irritantes
+
+
+Desktop Launcher Completo
+
+Auto-start de todo el sistema con un solo comando
+Chequeos de salud automatizados
+Limpieza de puertos automática
+Logs detallados para debugging
+Creación de icono de escritorio
+
+
+
+PASOS PARA APLICAR LAS MEJORAS
+PASO 1: Aplicar Backend Changes
+cd ~/Projects/claude-infinito-v11
+
+# Backup de archivos actuales
+cp backend/src/services/claude.service.ts backend/src/services/claude.service.ts.backup
+cp backend/src/index.ts backend/src/index.ts.backup
+
+# Reemplazar con nuevos archivos (copiar contenido de artifacts)
+# - claude.service.ts -> backend/src/services/claude.service.ts  
+# - index.ts modificado -> backend/src/index.ts
+
+PASO 2: Aplicar Frontend Changes
+# Crear componente de configuración avanzada
+mkdir -p frontend/src/components
+# Copiar AdvancedControls.js -> frontend/src/components/AdvancedControls.js
+
+# Backup y reemplazar App.js
+cp frontend/src/App.js frontend/src/App.js.backup
+# Copiar App.js mejorado -> frontend/src/App.js
+
+PASO 3: Instalar Desktop Launcher
+# Crear launcher script
+cp launch-claude-infinito.sh ~/Projects/claude-infinito-v11/launch-claude-infinito.sh
+chmod +x ~/Projects/claude-infinito-v11/launch-claude-infinito.sh
+
+# Crear link en PATH (opcional)
+sudo ln -s ~/Projects/claude-infinito-v11/launch-claude-infinito.sh /usr/local/bin/claude-infinito
+
+PASO 4: Testing del Sistema Completo
+# Limpiar procesos existentes
+pkill -f "npm run dev"
+pkill -f "npm start"
+docker-compose down
+
+# Usar el nuevo launcher
+cd ~/Projects/claude-infinito-v11
+./launch-claude-infinito.sh
+============================================================
+NUEVAS FUNCIONALIDADES DISPONIBLES
+Control de Temperature en UI:
+
+0.1-0.3: Precisión técnica para análisis de documentos
+0.4-0.6: Balance para explicaciones generales
+0.7-0.9: Creatividad para brainstorming
+
+Templates de Prompts:
+
+Preciso y Técnico: Respuestas concisas y exactas
+Balanceado: Equilibrio entre detalle y claridad
+Detallado y Didáctico: Explicaciones profundas
+Creativo y Exploratorio: Enfoque innovador
+Personalizado: Prompt completamente editable
+
+Desktop Launcher:
+
+Un click: Inicia todo el sistema automáticamente
+Monitoreo: Chequeos de salud en tiempo real
+Logs: Sistema de logging detallado
+Desktop Integration: Icono en aplicaciones del sistema
+
+¿Quieres proceder con la aplicación de estas mejoras, o hay algún aspecto específico que te gustaría modificar antes de implementar?
+
+

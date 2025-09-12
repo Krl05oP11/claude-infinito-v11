@@ -30,10 +30,10 @@ function App() {
     promptType: 'balanced'
   });
   
-  // REAL monitoring state
+  // GPU monitoring state
   const [gpuUsage, setGpuUsage] = useState(0);
-  const [claudeConnectionStatus, setClaudeConnectionStatus] = useState('checking');
-  const [backendConnectionStatus, setBackendConnectionStatus] = useState('checking');
+  const [claudeConnectionStatus, setClaudeConnectionStatus] = useState('healthy');
+  const [backendConnectionStatus, setBackendConnectionStatus] = useState('healthy');
   
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -57,46 +57,34 @@ function App() {
     return () => clearInterval(healthInterval);
   }, []);
 
-  // REAL GPU monitoring (mock realistic values)
+  // Monitor GPU usage (simulated for now)
   useEffect(() => {
     const updateGpuUsage = () => {
-      // More realistic GPU usage simulation based on activity
-      const baseUsage = isLoading ? 85 + Math.random() * 10 : 15 + Math.random() * 20;
-      setGpuUsage(Math.min(100, baseUsage));
+      // Simulated GPU usage - in real implementation this would come from system monitoring
+      const usage = Math.random() * 100;
+      setGpuUsage(usage);
     };
 
-    const gpuInterval = setInterval(updateGpuUsage, 3000); // Every 3 seconds
+    const gpuInterval = setInterval(updateGpuUsage, 2000); // Every 2 seconds
     return () => clearInterval(gpuInterval);
-  }, [isLoading]);
+  }, []);
 
-  // REAL connection monitoring
+  // Monitor connections
   useEffect(() => {
-    const checkConnections = async () => {
+    const checkConnections = () => {
       // Check backend connection
-      try {
-        const backendResponse = await fetch('/api/health', { timeout: 5000 });
-        if (backendResponse.ok) {
-          setBackendConnectionStatus('healthy');
-          
-          // Only check Claude if backend is healthy
-          try {
-            const claudeResponse = await fetch('/api/claude/config', { timeout: 5000 });
-            setClaudeConnectionStatus(claudeResponse.ok ? 'healthy' : 'error');
-          } catch {
-            setClaudeConnectionStatus('error');
-          }
-        } else {
-          setBackendConnectionStatus('error');
-          setClaudeConnectionStatus('error'); // If backend is down, Claude is unreachable
-        }
-      } catch {
-        setBackendConnectionStatus('error');
-        setClaudeConnectionStatus('error');
-      }
+      fetch('/api/health')
+        .then(() => setBackendConnectionStatus('healthy'))
+        .catch(() => setBackendConnectionStatus('error'));
+
+      // Check Claude connection (through backend)
+      fetch('/api/claude/config')
+        .then(() => setClaudeConnectionStatus('healthy'))
+        .catch(() => setClaudeConnectionStatus('error'));
     };
 
     checkConnections();
-    const connectionInterval = setInterval(checkConnections, 8000); // Every 8 seconds
+    const connectionInterval = setInterval(checkConnections, 10000); // Every 10 seconds
     return () => clearInterval(connectionInterval);
   }, []);
 
@@ -227,37 +215,18 @@ function App() {
     return colors.danger;                       // Red
   };
 
-  // Helper function for connection status
-  const getConnectionColor = (status) => {
-    switch(status) {
-      case 'healthy': return colors.success;
-      case 'error': return colors.danger;
-      case 'checking': return colors.warning;
-      default: return colors.textSecondary;
-    }
-  };
-
   return (
     <div 
       className="flex h-screen"
-      style={{ 
-        backgroundColor: colors.background, 
-        color: colors.text,
-        overflow: 'hidden'
-      }}
+      style={{ backgroundColor: colors.background, color: colors.text }}
     >
-      {/* Sidebar - EXACTLY 50% */}
+      {/* Sidebar */}
       <div 
-        className="border-r flex flex-col"
-        style={{ 
-          backgroundColor: colors.surface, 
-          borderColor: colors.border,
-          width: '50vw', // EXACTLY 50% of viewport
-          height: '100vh' // Full height
-        }}
+        className="w-80 border-r flex flex-col"
+        style={{ backgroundColor: colors.surface, borderColor: colors.border }}
       >
-        {/* Header - CENTERED */}
-        <div className="p-4 border-b flex-shrink-0 text-center" style={{ borderColor: colors.border }}>
+        {/* Header */}
+        <div className="p-4 border-b" style={{ borderColor: colors.border }}>
           <h1 className="text-xl font-bold">Claude Infinito v1.1</h1>
           <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
             Memoria semántica infinita con configuración avanzada
@@ -268,77 +237,48 @@ function App() {
         </div>
 
         {/* Advanced Controls */}
-        <div className="border-b flex-shrink-0" style={{ borderColor: colors.border }}>
+        <div className="border-b" style={{ borderColor: colors.border }}>
           <AdvancedControls onSettingsChange={handleSettingsChange} />
         </div>
 
-        {/* File Uploader - MINIMAL TEXT ONLY */}
-        <div className="p-3 border-b flex-shrink-0 text-center" style={{ borderColor: colors.border }}>
-          <div className="text-sm font-medium mb-2" style={{ color: colors.textSecondary }}>
-            Subir archivos
-          </div>
-          <div className="text-xs">
-            <FileUploader 
-              conversationId={currentConversation?.id}
-              projectId={currentConversation?.id} 
-            />
-          </div>
-          {/* Hide ALL icons in FileUploader */}
-          <style jsx global>{`
-            .file-uploader svg,
-            .file-uploader img,
-            .file-uploader [class*="icon"],
-            .file-uploader [class*="Icon"] {
-              display: none !important;
-            }
-            .file-uploader {
-              min-height: 30px !important;
-              padding: 5px !important;
-            }
-          `}</style>
+        {/* File Uploader */}
+        <div className="p-4 border-b" style={{ borderColor: colors.border }}>
+          <FileUploader 
+            conversationId={currentConversation?.id}
+            projectId={currentConversation?.id} 
+          />
         </div>
 
-        {/* Nueva Conversación Button - CENTERED */}
-        <div className="p-3 border-b flex-shrink-0 text-center" style={{ borderColor: colors.border }}>
-          <button
-            onClick={createNewConversation}
-            className="px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95"
-            style={{ 
-              backgroundColor: colors.accent, 
-              color: colors.background,
-              border: 'none',
-              boxShadow: `0 2px 4px rgba(0,0,0,0.3)`
-            }}
-          >
-            + Nueva Conversación
-          </button>
-        </div>
-
-        {/* Conversations List - SMALL WINDOW WITH VERTICAL SCROLL */}
-        <div className="p-3 flex-shrink-0">
-          <h3 className="font-semibold text-sm text-center mb-3" style={{ color: colors.textSecondary }}>
-            Conversaciones
-          </h3>
-          
-          {/* SMALL WINDOW WITH VERTICAL SCROLL - EXACTLY AS DIAGRAM */}
-          <div 
-            className="border rounded-lg overflow-y-auto"
-            style={{ 
-              height: '150px', // SMALL FIXED HEIGHT - shows only 2-3 conversations
-              backgroundColor: colors.background,
-              borderColor: colors.border
-            }}
-          >
-            <div className="p-2 space-y-2">
+        {/* Conversations List */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4">
+            <div className="flex flex-col items-center mb-4">
+              <button
+                onClick={createNewConversation}
+                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                style={{ 
+                  backgroundColor: colors.accent, 
+                  color: colors.background,
+                  border: 'none'
+                }}
+              >
+                + Nueva Conversación
+              </button>
+            </div>
+            
+            <h3 className="font-semibold mb-3 text-sm text-center" style={{ color: colors.textSecondary }}>
+              Conversaciones
+            </h3>
+            <div className="space-y-2">
               {conversations.map(conv => (
                 <button
                   key={conv.id}
                   onClick={() => selectConversation(conv)}
-                  className={`w-full text-left p-2 rounded text-xs transition-all duration-200 hover:scale-105 ${
+                  className={`w-full text-left p-3 rounded-lg text-sm transition-all duration-200 hover:scale-105 ${
                     currentConversation?.id === conv.id ? 'ring-2' : ''
                   }`}
                   style={{ 
-                    backgroundColor: currentConversation?.id === conv.id ? colors.surfaceLight : colors.surface,
+                    backgroundColor: currentConversation?.id === conv.id ? colors.surfaceLight : colors.background,
                     border: `1px solid ${colors.border}`,
                     ringColor: colors.accent
                   }}
@@ -352,27 +292,18 @@ function App() {
             </div>
           </div>
         </div>
-
-        {/* Spacer - fills remaining sidebar space */}
-        <div className="flex-1"></div>
       </div>
 
-      {/* Main Chat Area - EXACTLY 50% */}
-      <div 
-        className="flex flex-col"
-        style={{ 
-          width: '50vw', // EXACTLY 50% of viewport
-          height: '100vh' // Full height
-        }}
-      >
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
         {currentConversation ? (
           <>
-            {/* Chat Header - CENTERED */}
+            {/* Chat Header */}
             <div 
-              className="p-4 border-b flex-shrink-0 text-center"
+              className="p-4 border-b"
               style={{ 
                 backgroundColor: colors.surface, 
-                borderColor: colors.border
+                borderColor: colors.border 
               }}
             >
               <h2 className="font-semibold">{currentConversation.title}</h2>
@@ -382,21 +313,15 @@ function App() {
               </div>
             </div>
 
-            {/* Messages - SCROLLABLE AREA */}
-            <div 
-              className="flex-1 overflow-y-auto p-4 space-y-4"
-              style={{
-                height: 'calc(100vh - 150px - 60px)', // viewport - header - footer
-                minHeight: '0'
-              }}
-            >
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((message, index) => (
                 <div
                   key={index}
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-md p-4 rounded-lg ${
+                    className={`max-w-3xl p-4 rounded-lg ${
                       message.role === 'user' ? 'rounded-br-sm' : 'rounded-bl-sm'
                     }`}
                     style={{
@@ -462,69 +387,56 @@ function App() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area - FIXED AT BOTTOM */}
+            {/* Input Area - FIXED LARGER TEXT BOX */}
             <div 
-              className="p-6 border-t flex-shrink-0"
-              style={{ 
-                backgroundColor: colors.surface, 
-                borderColor: colors.border
-              }}
+              className="p-4 border-t"
+              style={{ backgroundColor: colors.surface, borderColor: colors.border }}
             >
-              {/* CENTERED CONTAINER - GOOD DIMENSIONS */}
-              <div className="max-w-full mx-auto">
-                {/* TEXTAREA - CENTERED AND WIDE */}
-                <div className="w-full mb-4">
-                  <textarea
-                    ref={textareaRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
-                    rows={4}
-                    className="w-full p-4 rounded-lg resize-y focus:outline-none focus:ring-2 transition-all duration-200"
-                    style={{ 
-                      backgroundColor: colors.background,
-                      border: `2px solid ${colors.border}`,
-                      color: colors.text,
-                      ringColor: colors.accent,
-                      fontSize: '16px',
-                      lineHeight: '1.5'
-                    }}
-                    disabled={isLoading}
-                  />
-                </div>
-                
-                {/* BUTTON - RIGHT ALIGNED */}
-                <div className="flex justify-end">
-                  <button
-                    onClick={sendMessage}
-                    disabled={!input.trim() || isLoading}
-                    className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ 
-                      backgroundColor: colors.accent, 
-                      color: colors.background,
-                      border: 'none',
-                      fontSize: '16px',
-                      minWidth: '120px',
-                      boxShadow: `0 3px 6px rgba(0,0,0,0.4)`
-                    }}
-                  >
-                    {isLoading ? 'Enviando...' : 'Enviar'}
-                  </button>
-                </div>
-                
-                {/* Settings Status Display - CENTERED */}
-                <div className="mt-3 flex justify-center items-center text-sm" style={{ color: colors.textSecondary }}>
-                  <span>⚙️ {chatSettings.promptType}</span>
-                  <span className="mx-2">|</span>
-                  <span>🌡️ {chatSettings.temperature}</span>
-                  {chatSettings.prompt && chatSettings.promptType === 'custom' && (
-                    <>
-                      <span className="mx-2">|</span>
-                      <span>✏️ Prompt personalizado ({chatSettings.prompt.length} chars)</span>
-                    </>
-                  )}
-                </div>
+              <div className="flex space-x-3">
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
+                  rows={4}
+                  className="flex-1 p-4 rounded-lg resize-none focus:outline-none focus:ring-2 transition-all duration-200 text-base"
+                  style={{ 
+                    backgroundColor: colors.background,
+                    border: `1px solid ${colors.border}`,
+                    color: colors.text,
+                    ringColor: colors.accent,
+                    fontSize: '16px',
+                    lineHeight: '1.5'
+                  }}
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isLoading}
+                  className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-base"
+                  style={{ 
+                    backgroundColor: colors.accent, 
+                    color: colors.background,
+                    border: 'none',
+                    minHeight: '100px'
+                  }}
+                >
+                  Enviar
+                </button>
+              </div>
+              
+              {/* Settings Status Display */}
+              <div className="mt-2 flex items-center text-sm" style={{ color: colors.textSecondary }}>
+                <span>⚙️ {chatSettings.promptType}</span>
+                <span className="mx-2">|</span>
+                <span>🌡️ {chatSettings.temperature}</span>
+                {chatSettings.prompt && chatSettings.promptType === 'custom' && (
+                  <>
+                    <span className="mx-2">|</span>
+                    <span>✏️ Prompt personalizado ({chatSettings.prompt.length} chars)</span>
+                  </>
+                )}
               </div>
             </div>
           </>
@@ -535,12 +447,11 @@ function App() {
               <p className="mb-4">Crea una nueva conversación para comenzar</p>
               <button
                 onClick={createNewConversation}
-                className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+                className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
                 style={{ 
                   backgroundColor: colors.accent, 
                   color: colors.background,
-                  border: 'none',
-                  boxShadow: `0 2px 4px rgba(0,0,0,0.3)`
+                  border: 'none'
                 }}
               >
                 Crear Primera Conversación
@@ -550,75 +461,68 @@ function App() {
         )}
       </div>
 
-      {/* Footer - EXACTLY ONE LINE AS DIAGRAM */}
+      {/* Footer with enhanced system monitoring - FIXED MONITORS */}
       <div 
-        className="fixed bottom-0 left-0 right-0 py-2 px-6 border-t"
+        className="absolute bottom-0 left-0 right-0 px-4 py-2 border-t text-xs"
         style={{ 
-          backgroundColor: colors.surfaceLight,
+          backgroundColor: colors.surface, 
           borderColor: colors.border,
-          color: colors.text,
-          zIndex: 1000,
-          height: '60px' // Fixed height
+          color: colors.text 
         }}
       >
-        {/* SINGLE HORIZONTAL LINE - EXACTLY AS DIAGRAM */}
-        <div className="flex justify-between items-center h-full">
+        <div className="flex justify-between items-center">
           <div className="flex items-center space-x-6">
-            {/* GPU: [bar] 75% */}
+            {/* GPU Meter - IMPROVED VISIBILITY */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-bold">GPU:</span>
+              <span className="text-xs font-semibold" style={{ color: colors.text }}>GPU:</span>
               <div 
-                className="w-16 h-3 rounded-full border"
-                style={{ 
-                  backgroundColor: colors.background, 
-                  border: `1px solid ${colors.text}`
-                }}
+                className="w-20 h-4 rounded-full border-2"
+                style={{ backgroundColor: colors.background, border: `2px solid ${colors.border}` }}
               >
                 <div 
-                  className="h-full rounded-full transition-all duration-500"
+                  className="h-full rounded-full transition-all duration-300"
                   style={{ 
                     width: `${gpuUsage}%`,
                     backgroundColor: getGpuColor(gpuUsage)
                   }}
                 />
               </div>
-              <span className="text-sm font-bold" style={{ color: getGpuColor(gpuUsage) }}>
+              <span 
+                className="text-xs font-bold"
+                style={{ color: getGpuColor(gpuUsage), minWidth: '40px' }}
+              >
                 {gpuUsage.toFixed(0)}%
               </span>
             </div>
 
-            {/* Backend: ● healthy */}
+            {/* Backend Connection - IMPROVED VISIBILITY */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-bold">Backend:</span>
+              <span className="text-xs font-semibold" style={{ color: colors.text }}>Backend:</span>
               <div 
-                className={`w-3 h-3 rounded-full ${backendConnectionStatus === 'error' ? 'animate-pulse' : ''}`}
+                className={`w-4 h-4 rounded-full border-2 ${backendConnectionStatus !== 'healthy' ? 'animate-pulse' : ''}`}
                 style={{ 
-                  backgroundColor: getConnectionColor(backendConnectionStatus)
+                  backgroundColor: backendConnectionStatus === 'healthy' ? colors.success : colors.danger,
+                  borderColor: colors.text,
+                  boxShadow: `0 0 8px ${backendConnectionStatus === 'healthy' ? colors.success : colors.danger}`
                 }}
               />
-              <span className="text-xs" style={{ color: getConnectionColor(backendConnectionStatus) }}>
-                {backendConnectionStatus}
-              </span>
             </div>
 
-            {/* Claude: ● healthy */}
+            {/* Claude Connection - IMPROVED VISIBILITY */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-bold">Claude:</span>
+              <span className="text-xs font-semibold" style={{ color: colors.text }}>Claude:</span>
               <div 
-                className={`w-3 h-3 rounded-full ${claudeConnectionStatus === 'error' ? 'animate-pulse' : ''}`}
+                className={`w-4 h-4 rounded-full border-2 ${claudeConnectionStatus !== 'healthy' ? 'animate-pulse' : ''}`}
                 style={{ 
-                  backgroundColor: getConnectionColor(claudeConnectionStatus)
+                  backgroundColor: claudeConnectionStatus === 'healthy' ? colors.success : colors.danger,
+                  borderColor: colors.text,
+                  boxShadow: `0 0 8px ${claudeConnectionStatus === 'healthy' ? colors.success : colors.danger}`
                 }}
               />
-              <span className="text-xs" style={{ color: getConnectionColor(claudeConnectionStatus) }}>
-                {claudeConnectionStatus}
-              </span>
             </div>
           </div>
-
-          {/* RTX 5070 Ti */}
-          <div>
-            <span className="text-sm font-bold">RTX 5070 Ti</span>
+          <div className="flex items-center space-x-4">
+            <span style={{ color: colors.text }}>RTX 5070 Ti</span>
           </div>
         </div>
       </div>

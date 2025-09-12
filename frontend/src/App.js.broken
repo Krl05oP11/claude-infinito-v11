@@ -1,0 +1,457 @@
+import React, { useState, useEffect, useRef } from 'react';
+import FileUploader from './components/FileUploader';
+import AdvancedControls from './components/AdvancedControls';
+
+// Photophobic-friendly color palette
+const colors = {
+  background: '#1a1612',       // Very dark warm brown
+  surface: '#2d2823',          // Dark warm brown  
+  surfaceLight: '#3d342c',     // Medium brown
+  text: '#e8dcc6',            // Warm cream
+  textSecondary: '#c4b896',    // Muted cream
+  accent: '#8b6914',          // Warm gold
+  accentHover: '#a67c00',     // Brighter gold
+  success: '#4a5d23',         // Warm green
+  warning: '#8b4513',         // Saddle brown
+  danger: '#722f37',          // Deep burgundy
+  border: '#5a4d42'           // Brown border
+};
+
+function App() {
+  const [conversations, setConversations] = useState([]);
+  const [currentConversation, setCurrentConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [systemHealth, setSystemHealth] = useState({ status: 'unknown' });
+  const [chatSettings, setChatSettings] = useState({
+    temperature: 0.3,
+    prompt: '',
+    promptType: 'balanced'
+  });
+  
+  const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // Scroll to bottom when new messages arrive
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Load conversations on startup
+  useEffect(() => {
+    loadConversations();
+    checkSystemHealth();
+    
+    // Periodic health check
+    const healthInterval = setInterval(checkSystemHealth, 30000); // Every 30 seconds
+    return () => clearInterval(healthInterval);
+  }, []);
+
+  const checkSystemHealth = async () => {
+    try {
+      const response = await fetch('/api/health');
+      const health = await response.json();
+      setSystemHealth(health);
+    } catch (error) {
+      console.error('Health check failed:', error);
+      setSystemHealth({ status: 'error', error: error.message });
+    }
+  };
+
+  const loadConversations = async () => {
+    try {
+      const response = await fetch('/api/conversations');
+      const data = await response.json();
+      setConversations(data.conversations || []);
+      
+      if (data.conversations && data.conversations.length > 0 && !currentConversation) {
+        selectConversation(data.conversations[0]);
+      }
+    } catch (error) {
+      console.error('Error loading conversations:', error);
+    }
+  };
+
+  const createNewConversation = async () => {
+    try {
+      const response = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          title: `Nueva conversación ${new Date().toLocaleDateString()}`,
+          project_id: crypto.randomUUID()
+        })
+      });
+      
+      const newConversation = await response.json();
+      setConversations(prev => [newConversation, ...prev]);
+      selectConversation(newConversation);
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+    }
+  };
+
+  const selectConversation = async (conversation) => {
+    setCurrentConversation(conversation);
+    try {
+      const response = await fetch(`/api/conversations/${conversation.id}/messages`);
+      const data = await response.json();
+      setMessages(data.messages || []);
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      setMessages([]);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!input.trim() || !currentConversation || isLoading) return;
+
+    const userMessage = { role: 'user', content: input.trim() };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/conversations/${currentConversation.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          content: userMessage.content,
+          settings: chatSettings // Send dynamic settings
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.assistant_message) {
+        const assistantMessage = {
+          role: 'assistant',
+          content: data.assistant_message.content,
+          metadata: {
+            context_memories_used: data.context_memories_used,
+            context_strategy: data.context_strategy,
+            settings_applied: data.settings_applied
+          }
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Error: No se pudo enviar el mensaje. Verifica la conexión.',
+        error: true 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const handleSettingsChange = (settings) => {
+    setChatSettings(settings);
+  };
+
+  const formatMessageContent = (content) => {
+    // Simple markdown-like formatting for better readability
+    return content
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code style="background-color: ' + colors.surface + '; padding: 2px 4px; border-radius: 3px;">$1</code>')
+      .replace(/\n/g, '<br>');
+  };
+
+  const SystemStatus = () => {
+    const statusColor = systemHealth.status === 'ok' ? colors.success : 
+                       systemHealth.status === 'error' ? colors.danger : colors.warning;
+    
+    return (
+      <div className="flex items-center space-x-2 text-xs">
+        <div 
+          className="w-2 h-2 rounded-full animate-pulse"
+          style={{ backgroundColor: statusColor }}
+        />
+        <span style={{ color: colors.textSecondary }}>
+          Sistema: {systemHealth.status === 'ok' ? 'Operativo' : 
+                   systemHealth.status === 'error' ? 'Error' : 'Verificando...'}
+        </span>
+        {systemHealth.services && (
+          <span style={{ color: colors.textSecondary }}>
+            | ChromaDB: {systemHealth.services.chromadb === 'healthy' ? '✓' : '✗'}
+          </span>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div 
+      className="flex h-screen"
+      style={{ backgroundColor: colors.background, color: colors.text }}
+    >
+      {/* Sidebar */}
+      <div 
+        className="w-80 border-r flex flex-col"
+        style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+      >
+        {/* Header */}
+        <div className="p-4 border-b" style={{ borderColor: colors.border }}>
+          <h1 className="text-xl font-bold mb-2">Claude Infinito v1.1</h1>
+          <SystemStatus />
+          <button
+            onClick={createNewConversation}
+            className="w-full mt-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+            style={{ 
+              backgroundColor: colors.accent, 
+              color: colors.background,
+              border: 'none'
+            }}
+          >
+            + Nueva Conversación
+          </button>
+        </div>
+
+        {/* Advanced Controls */}
+        <AdvancedControls onSettingsChange={handleSettingsChange} />
+
+        {/* File Uploader */}
+        <div className="p-4 border-b" style={{ borderColor: colors.border }}>
+          <FileUploader 
+            conversationId={currentConversation?.id}
+            projectId={currentConversation?.id} 
+          />
+        </div>
+
+        {/* Conversations List */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4">
+            <h3 className="font-semibold mb-3 text-sm" style={{ color: colors.textSecondary }}>
+              Conversaciones
+            </h3>
+            <div className="space-y-2">
+              {conversations.map(conv => (
+                <button
+                  key={conv.id}
+                  onClick={() => selectConversation(conv)}
+                  className={`w-full text-left p-3 rounded-lg text-sm transition-all duration-200 hover:scale-105 ${
+                    currentConversation?.id === conv.id ? 'ring-2' : ''
+                  }`}
+                  style={{ 
+                    backgroundColor: currentConversation?.id === conv.id ? colors.surfaceLight : colors.background,
+                    border: `1px solid ${colors.border}`,
+                    ringColor: colors.accent
+                  }}
+                >
+                  <div className="font-medium truncate">{conv.title}</div>
+                  <div className="text-xs opacity-70 mt-1">
+                    {new Date(conv.created_at).toLocaleDateString()}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
+        {currentConversation ? (
+          <>
+            {/* Chat Header */}
+            <div 
+              className="p-4 border-b"
+              style={{ 
+                backgroundColor: colors.surface, 
+                borderColor: colors.border 
+              }}
+            >
+              <h2 className="font-semibold">{currentConversation.title}</h2>
+              <div className="text-xs mt-1" style={{ color: colors.textSecondary }}>
+                Configuración: {chatSettings.promptType} | Temperatura: {chatSettings.temperature} | 
+                {messages.length} mensajes
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-3xl p-4 rounded-lg ${
+                      message.role === 'user' ? 'rounded-br-sm' : 'rounded-bl-sm'
+                    }`}
+                    style={{
+                      backgroundColor: message.role === 'user' ? colors.accent : 
+                                     message.error ? colors.danger : colors.surfaceLight,
+                      color: message.role === 'user' ? colors.background : colors.text,
+                      border: `1px solid ${colors.border}`
+                    }}
+                  >
+                    <div 
+                      dangerouslySetInnerHTML={{ 
+                        __html: formatMessageContent(message.content) 
+                      }}
+                    />
+                    
+                    {/* Message metadata */}
+                    {message.metadata && (
+                      <div className="mt-2 pt-2 border-t text-xs opacity-70" style={{ borderColor: colors.border }}>
+                        {message.metadata.context_memories_used > 0 && (
+                          <span>
+                            Contexto: {message.metadata.context_memories_used} memorias 
+                            ({message.metadata.context_strategy})
+                          </span>
+                        )}
+                        {message.metadata.settings_applied && (
+                          <span className="ml-2">
+                            | Temp: {message.metadata.settings_applied.temperature}
+                            {message.metadata.settings_applied.promptType && (
+                              <span> | Estilo: {message.metadata.settings_applied.promptType}</span>
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div 
+                    className="p-4 rounded-lg rounded-bl-sm"
+                    style={{ backgroundColor: colors.surfaceLight, border: `1px solid ${colors.border}` }}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <div 
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: colors.accent }}
+                      />
+                      <div 
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: colors.accent, animationDelay: '0.2s' }}
+                      />
+                      <div 
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: colors.accent, animationDelay: '0.4s' }}
+                      />
+                      <span style={{ color: colors.textSecondary }}>Claude está pensando...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area */}
+            <div 
+              className="p-4 border-t"
+              style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+            >
+              <div className="flex space-x-3">
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
+                  rows={2}
+                  className="flex-1 p-3 rounded-lg resize-none focus:outline-none focus:ring-2 transition-all duration-200"
+                  style={{ 
+                    backgroundColor: colors.background,
+                    border: `1px solid ${colors.border}`,
+                    color: colors.text,
+                    ringColor: colors.accent
+                  }}
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isLoading}
+                  className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ 
+                    backgroundColor: colors.accent, 
+                    color: colors.background,
+                    border: 'none'
+                  }}
+                >
+                  Enviar
+                </button>
+              </div>
+              
+              {/* Settings Status Display */}
+              <div className="mt-2 flex items-center text-xs" style={{ color: colors.textSecondary }}>
+                <span>⚙️ {chatSettings.promptType}</span>
+                <span className="mx-2">|</span>
+                <span>🌡️ {chatSettings.temperature}</span>
+                {chatSettings.prompt && chatSettings.promptType === 'custom' && (
+                  <>
+                    <span className="mx-2">|</span>
+                    <span>✏️ Prompt personalizado ({chatSettings.prompt.length} chars)</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center" style={{ color: colors.textSecondary }}>
+              <h2 className="text-2xl font-bold mb-4">Bienvenido a Claude Infinito v1.1</h2>
+              <p className="mb-4">Crea una nueva conversación para comenzar</p>
+              <button
+                onClick={createNewConversation}
+                className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                style={{ 
+                  backgroundColor: colors.accent, 
+                  color: colors.background,
+                  border: 'none'
+                }}
+              >
+                Crear Primera Conversación
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Footer with enhanced system monitoring */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 px-4 py-2 border-t text-xs"
+        style={{ 
+          backgroundColor: colors.surface, 
+          borderColor: colors.border,
+          color: colors.textSecondary 
+        }}
+      >
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-6">
+            <GpuMeter />
+            <ConnectionIndicator status={backendConnectionStatus} label="Backend" />
+            <ConnectionIndicator status={claudeConnectionStatus} label="Claude" />
+          </div>
+          <div className="flex items-center space-x-4">
+            <span>Uptime: {systemHealth.uptime ? Math.floor(systemHealth.uptime / 60) : 0}min</span>
+            <span>RTX 5070 Ti</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
