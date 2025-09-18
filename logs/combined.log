@@ -3183,3 +3183,1456 @@
 2025-09-12T02:17:49.321Z [[32minfo[39m]: [32mClaude response: 1870 input tokens, 1549 output tokens[39m 
 2025-09-12T02:17:49.417Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
 2025-09-12T02:17:49.418Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"detailed","prompt":null}[39m 
+2025-09-12T14:42:29.656Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-12T14:42:29.653Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T14:42:29.656Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-12T14:42:29.656Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-12T14:42:29.656Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-12T14:42:29.656Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-12T14:42:29.666Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-12T15:09:52.358Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-12T15:09:52.355Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T15:09:52.358Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-12T15:09:52.358Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-12T15:09:52.358Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-12T15:09:52.358Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-12T15:09:52.365Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-12T15:38:43.779Z [[32minfo[39m]: [32mProcessing message for conversation 7d6d114b-a56e-4a5d-a2de-e8835c3e1ec7[39m 
+2025-09-12T15:38:43.779Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-12T15:38:43.792Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T15:38:43.792Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-12T15:38:45.823Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-12T15:38:45.825Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T15:38:45.824Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-12T15:38:45.824Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-12T15:38:45.824Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-12T15:38:45.824Z [[32minfo[39m]: [32mFILTERING by keywords: hola, claude, resume, unas, pocas[39m 
+2025-09-12T15:38:45.824Z [[32minfo[39m]: [32mFILTERED to 3 relevant memories for specific question[39m 
+2025-09-12T15:38:45.824Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-12T15:38:45.825Z [[32minfo[39m]: [32mFound 3 conversation memories[39m 
+2025-09-12T15:38:45.825Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-12T15:38:45.825Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T15:38:45.825Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T15:38:45.825Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=7[39m 
+2025-09-12T15:38:58.245Z [[32minfo[39m]: [32mClaude response: 3460 input tokens, 445 output tokens[39m 
+2025-09-12T15:38:58.373Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T15:38:58.373Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 3, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-12T16:03:50.615Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-12T16:03:50.612Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T16:03:50.615Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-12T16:03:50.615Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-12T16:03:50.615Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-12T16:03:50.615Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-12T16:03:50.623Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-12T16:04:42.649Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-12T16:04:42.647Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T16:04:42.649Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-12T16:04:42.649Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-12T16:04:42.649Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-12T16:04:42.649Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-12T16:04:42.657Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-12T16:06:04.512Z [[32minfo[39m]: [32mProcessing message for conversation 7d6d114b-a56e-4a5d-a2de-e8835c3e1ec7[39m 
+2025-09-12T16:06:04.513Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-12T16:06:04.520Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=5, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T16:06:04.520Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-12T16:06:05.634Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T16:06:05.634Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-12T16:06:05.634Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-12T16:06:05.634Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-12T16:06:05.634Z [[32minfo[39m]: [32mFILTERING by keywords: algoritmos, genéticos, libro, mitchell, perspective, está[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T16:06:05.635Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=9[39m 
+2025-09-12T16:06:15.693Z [[32minfo[39m]: [32mClaude response: 3955 input tokens, 331 output tokens[39m 
+2025-09-12T16:06:15.814Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T16:06:15.814Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-12T16:20:27.785Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-12T16:20:27.785Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-12T16:20:27.789Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T16:20:27.789Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T16:20:27.789Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T16:20:27.789Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T16:20:27.789Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T16:20:27.789Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-12T16:20:29.435Z [[32minfo[39m]: [32mClaude response: 2058 input tokens, 3 output tokens[39m 
+2025-09-12T16:20:30.490Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T16:20:30.490Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-12T16:21:17.912Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-12T16:21:17.912Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-12T16:21:17.917Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T16:21:17.917Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T16:21:17.917Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T16:21:17.917Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T16:21:17.917Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T16:21:17.917Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-12T16:21:19.308Z [[32minfo[39m]: [32mClaude response: 2058 input tokens, 3 output tokens[39m 
+2025-09-12T16:21:19.390Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T16:21:19.390Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-12T16:22:10.190Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-12T16:22:10.190Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-12T16:22:10.195Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T16:22:10.195Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T16:22:10.195Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T16:22:10.195Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T16:22:10.195Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T16:22:10.195Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-12T16:22:11.635Z [[32minfo[39m]: [32mClaude response: 2058 input tokens, 3 output tokens[39m 
+2025-09-12T16:22:11.724Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T16:22:11.725Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-12T21:01:41.999Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-12T21:01:41.996Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T21:01:41.999Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-12T21:01:41.999Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-12T21:01:41.999Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-12T21:01:41.999Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-12T21:01:42.009Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-12T21:48:51.469Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-12T21:48:51.470Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.1, promptType=precise[39m 
+2025-09-12T21:48:51.478Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T21:48:51.478Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T21:48:51.478Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T21:48:51.479Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T21:48:51.479Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T21:48:51.479Z [[32minfo[39m]: [32mSending request to Claude: temp=0.1, tokens=4000, promptType=precise, messages=10[39m 
+2025-09-12T21:48:53.155Z [[32minfo[39m]: [32mClaude response: 2058 input tokens, 3 output tokens[39m 
+2025-09-12T21:48:54.263Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T21:48:54.263Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.1,"promptType":"precise","prompt":null}[39m 
+2025-09-12T21:58:19.638Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-12T21:58:19.638Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.1, promptType=precise[39m 
+2025-09-12T21:58:19.644Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T21:58:19.644Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T21:58:19.644Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T21:58:19.644Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T21:58:19.644Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T21:58:19.644Z [[32minfo[39m]: [32mSending request to Claude: temp=0.1, tokens=4000, promptType=precise, messages=10[39m 
+2025-09-12T21:58:21.383Z [[32minfo[39m]: [32mClaude response: 2058 input tokens, 3 output tokens[39m 
+2025-09-12T21:58:22.457Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T21:58:22.457Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.1,"promptType":"precise","prompt":null}[39m 
+2025-09-12T22:19:33.691Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-12T22:19:33.688Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T22:19:33.691Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-12T22:19:33.691Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-12T22:19:33.691Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-12T22:19:33.691Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-12T22:19:33.699Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-12T22:21:26.426Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-12T22:21:26.426Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.1, promptType=precise[39m 
+2025-09-12T22:21:26.442Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T22:21:26.442Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T22:21:26.442Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T22:21:26.442Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T22:21:26.443Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T22:21:26.443Z [[32minfo[39m]: [32mSending request to Claude: temp=0.1, tokens=4000, promptType=precise, messages=10[39m 
+2025-09-12T22:21:28.248Z [[32minfo[39m]: [32mClaude response: 2058 input tokens, 3 output tokens[39m 
+2025-09-12T22:21:29.315Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T22:21:29.315Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.1,"promptType":"precise","prompt":null}[39m 
+2025-09-12T22:28:43.155Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-12T22:28:43.152Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T22:28:43.155Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-12T22:28:43.155Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-12T22:28:43.155Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-12T22:28:43.155Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-12T22:28:43.163Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-12T22:29:03.559Z [[32minfo[39m]: [32mProcessing message for conversation 07310364-f413-4c6f-92b2-5747c7f06b98[39m 
+2025-09-12T22:29:03.559Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.4, promptType=precise[39m 
+2025-09-12T22:29:03.574Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-12T22:29:03.574Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T22:29:03.575Z [[32minfo[39m]: [32mSending request to Claude: temp=0.4, tokens=4000, promptType=precise, messages=10[39m 
+2025-09-12T22:29:03.574Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T22:29:03.574Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T22:29:03.575Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T22:29:05.270Z [[32minfo[39m]: [32mClaude response: 2058 input tokens, 3 output tokens[39m 
+2025-09-12T22:29:06.340Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T22:29:06.341Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.4,"promptType":"precise","prompt":null}[39m 
+2025-09-12T22:35:04.755Z [[32minfo[39m]: [32mProcessing message for conversation 7614c86e-19d4-4d0a-83f9-c2250f7d4de6[39m 
+2025-09-12T22:35:04.756Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.4, promptType=precise[39m 
+2025-09-12T22:35:04.762Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=0, hasEstablishedContext=false, isFirstFileQuestion=false[39m 
+2025-09-12T22:35:04.762Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-12T22:35:04.762Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-12T22:35:04.762Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-12T22:35:04.762Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-12T22:35:04.762Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-12T22:35:04.763Z [[32minfo[39m]: [32mSending request to Claude: temp=0.4, tokens=4000, promptType=precise, messages=1[39m 
+2025-09-12T22:35:09.201Z [[32minfo[39m]: [32mClaude response: 83 input tokens, 191 output tokens[39m 
+2025-09-12T22:35:10.271Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-12T22:35:10.272Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.4,"promptType":"precise","prompt":null}[39m 
+2025-09-14T14:06:05.440Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T14:06:05.437Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T14:06:05.440Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T14:06:05.440Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T14:06:05.440Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T14:06:05.440Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T14:06:05.450Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T15:32:21.423Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T15:32:21.420Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T15:32:21.423Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T15:32:21.423Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T15:32:21.423Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T15:32:21.423Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T15:32:21.431Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T15:43:35.762Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T15:43:35.760Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T15:43:35.762Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T15:43:35.762Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T15:43:35.762Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T15:43:35.763Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T15:43:35.770Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T15:43:50.188Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T15:43:50.185Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T15:43:50.188Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T15:43:50.188Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T15:43:50.188Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T15:43:50.188Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T15:43:50.198Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T15:45:47.518Z [[32minfo[39m]: [32m📄 Processing uploaded file: An-Introduction-to-Genetic-Algorithms-for-Scientists-and-Engineers.pdf (8622779 bytes)[39m 
+2025-09-14T15:50:54.715Z [[32minfo[39m]: [32mProcessing message for conversation 7614c86e-19d4-4d0a-83f9-c2250f7d4de6[39m 
+2025-09-14T15:50:54.715Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T15:50:54.736Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=true[39m 
+2025-09-14T15:50:54.736Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T15:50:55.935Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T15:50:55.935Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mInjecting 297 characters of context (strategy: full)[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mFinal summary: 0 archivos, 12 conversaciones[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mApplied context injection strategy: full, promptType: balanced[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T15:50:55.936Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T15:50:55.937Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=3[39m 
+2025-09-14T15:51:09.228Z [[32minfo[39m]: [32mClaude response: 502 input tokens, 259 output tokens[39m 
+2025-09-14T15:51:09.298Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T15:51:09.300Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 12, Strategy: full, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T15:52:36.301Z [[32minfo[39m]: [32mProcessing message for conversation 7614c86e-19d4-4d0a-83f9-c2250f7d4de6[39m 
+2025-09-14T15:52:36.302Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T15:52:36.307Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T15:52:36.307Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T15:52:36.307Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T15:52:36.307Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-14T15:52:36.307Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T15:52:36.307Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T15:52:36.307Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=5[39m 
+2025-09-14T15:52:46.199Z [[32minfo[39m]: [32mClaude response: 612 input tokens, 378 output tokens[39m 
+2025-09-14T15:52:46.292Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T15:52:46.293Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T16:02:18.073Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T16:02:18.071Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:02:18.073Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T16:02:18.074Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T16:02:18.074Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T16:02:18.074Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T16:02:18.082Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T16:03:20.682Z [[32minfo[39m]: [32mProcessing message for conversation 7614c86e-19d4-4d0a-83f9-c2250f7d4de6[39m 
+2025-09-14T16:03:20.682Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T16:03:20.690Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=2, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T16:03:20.690Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T16:03:21.824Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T16:03:21.825Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:03:21.824Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T16:03:21.824Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T16:03:21.824Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T16:03:21.824Z [[32minfo[39m]: [32mFILTERING by keywords: archivo, problema, ahora, subiré, otro, quiero, digas, puedes[39m 
+2025-09-14T16:03:21.824Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T16:03:21.825Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T16:03:21.825Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-14T16:03:21.825Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-14T16:03:21.825Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T16:03:21.825Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T16:03:21.825Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=7[39m 
+2025-09-14T16:03:35.518Z [[32minfo[39m]: [32mClaude response: 1022 input tokens, 294 output tokens[39m 
+2025-09-14T16:03:35.626Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T16:03:35.626Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T16:05:37.025Z [[32minfo[39m]: [32m📄 Processing uploaded file: 2005_Book_AModernIntroductionToProbabili.pdf (3416984 bytes)[39m 
+2025-09-14T16:06:47.832Z [[32minfo[39m]: [32mProcessing message for conversation 7614c86e-19d4-4d0a-83f9-c2250f7d4de6[39m 
+2025-09-14T16:06:47.833Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T16:06:47.840Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=3, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T16:06:47.840Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T16:06:48.036Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:06:48.036Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T16:06:48.036Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T16:06:48.036Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mFILTERING by keywords: archivo, puedes, acceder, subí, recién[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T16:06:48.037Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=9[39m 
+2025-09-14T16:06:56.523Z [[32minfo[39m]: [32mClaude response: 1337 input tokens, 355 output tokens[39m 
+2025-09-14T16:06:56.593Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T16:06:56.594Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T16:08:23.927Z [[32minfo[39m]: [32mProcessing message for conversation 7614c86e-19d4-4d0a-83f9-c2250f7d4de6[39m 
+2025-09-14T16:08:23.927Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T16:08:23.932Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=3, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T16:08:23.933Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mFILTERING by keywords: archivo, collections, bien, entonces, dime, puedes, algún, chromadb[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-14T16:08:24.154Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T16:08:24.155Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T16:08:24.155Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-14T16:08:25.607Z [[32minfo[39m]: [32mClaude response: 1629 input tokens, 3 output tokens[39m 
+2025-09-14T16:08:25.677Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T16:08:25.677Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T16:26:14.554Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T16:26:14.551Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:26:14.554Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T16:26:14.554Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T16:26:14.554Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T16:26:14.554Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T16:26:14.562Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T16:26:32.311Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T16:26:32.309Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:26:32.312Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T16:26:32.312Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T16:26:32.312Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T16:26:32.312Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T16:26:32.320Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T16:28:30.113Z [[32minfo[39m]: [32m📄 Processing uploaded file: thinkstats2.pdf (2075463 bytes)[39m 
+2025-09-14T16:30:37.466Z [[32minfo[39m]: [32mProcessing message for conversation 7614c86e-19d4-4d0a-83f9-c2250f7d4de6[39m 
+2025-09-14T16:30:37.467Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T16:30:37.474Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=3, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T16:30:37.474Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T16:30:37.681Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T16:30:37.683Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:30:37.681Z [[32minfo[39m]: [32mFound 19 memories in CURRENT project[39m 
+2025-09-14T16:30:37.682Z [[32minfo[39m]: [32mFound 1 memories in OTHER projects[39m 
+2025-09-14T16:30:37.682Z [[32minfo[39m]: [32mPRIORITIZED: 19 from current project, 3 from other projects[39m 
+2025-09-14T16:30:37.682Z [[32minfo[39m]: [32mFILTERING by keywords: archivo, pdf, vamos, nuevo, test, acabo, subir, otro[39m 
+2025-09-14T16:30:37.682Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T16:30:37.682Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T16:30:37.683Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-14T16:30:37.683Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T16:30:37.683Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T16:30:37.684Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-14T16:30:39.676Z [[32minfo[39m]: [32mClaude response: 1629 input tokens, 3 output tokens[39m 
+2025-09-14T16:30:39.758Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T16:30:39.759Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T16:39:49.438Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T16:39:49.436Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:39:49.438Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T16:39:49.438Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T16:39:49.438Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T16:39:49.439Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T16:39:49.446Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T16:43:15.291Z [[32minfo[39m]: [32mProcessing message for conversation b1ae4850-25a7-42ec-98ad-3874cbfec5f9[39m 
+2025-09-14T16:43:15.291Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T16:43:15.297Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=true[39m 
+2025-09-14T16:43:15.297Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T16:43:16.425Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:43:16.425Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T16:43:16.425Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T16:43:16.425Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mInjecting 342 characters of context (strategy: full)[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mFinal summary: 0 archivos, 12 conversaciones[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mApplied context injection strategy: full, promptType: balanced[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T16:43:16.426Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=1[39m 
+2025-09-14T16:43:25.633Z [[32minfo[39m]: [32mClaude response: 287 input tokens, 316 output tokens[39m 
+2025-09-14T16:43:25.742Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T16:43:25.743Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 12, Strategy: full, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T16:58:40.413Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T16:58:40.410Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T16:58:40.413Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T16:58:40.413Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T16:58:40.413Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T16:58:40.413Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T16:58:40.421Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T17:03:44.608Z [[32minfo[39m]: [32m📄 Processing uploaded file: how-to-code-in-python.pdf (5022439 bytes)[39m 
+2025-09-14T17:11:33.566Z [[32minfo[39m]: [32mProcessing message for conversation 4d8b852a-8b06-4ba9-b0c5-474e0327056f[39m 
+2025-09-14T17:11:33.567Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T17:11:33.573Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=true[39m 
+2025-09-14T17:11:33.573Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T17:11:34.667Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T17:11:34.668Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T17:11:34.667Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T17:11:34.667Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T17:11:34.667Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T17:11:34.667Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T17:11:34.667Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-14T17:11:34.667Z [[32minfo[39m]: [32mInjecting 309 characters of context (strategy: full)[39m 
+2025-09-14T17:11:34.668Z [[32minfo[39m]: [32mFinal summary: 0 archivos, 12 conversaciones[39m 
+2025-09-14T17:11:34.668Z [[32minfo[39m]: [32mApplied context injection strategy: full, promptType: balanced[39m 
+2025-09-14T17:11:34.668Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T17:11:34.668Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T17:11:34.668Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=1[39m 
+2025-09-14T17:11:43.239Z [[32minfo[39m]: [32mClaude response: 282 input tokens, 288 output tokens[39m 
+2025-09-14T17:11:43.388Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T17:11:43.389Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 12, Strategy: full, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T17:31:48.253Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T17:31:48.250Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T17:31:48.253Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T17:31:48.253Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T17:31:48.253Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T17:31:48.253Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T17:31:48.261Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T17:32:06.600Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T17:32:06.597Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T17:32:06.600Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T17:32:06.600Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T17:32:06.600Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T17:32:06.600Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T17:32:06.608Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T17:33:42.308Z [[32minfo[39m]: [32mProcessing message for conversation 4d8b852a-8b06-4ba9-b0c5-474e0327056f[39m 
+2025-09-14T17:33:42.308Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T17:33:42.316Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=2, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T17:33:42.316Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T17:33:43.442Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T17:33:43.444Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T17:33:43.442Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T17:33:43.442Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T17:33:43.442Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T17:33:43.443Z [[32minfo[39m]: [32mFILTERING by keywords: pdf, confirma, archivos, puedes, ahora[39m 
+2025-09-14T17:33:43.443Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T17:33:43.444Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T17:33:43.444Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-14T17:33:43.444Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-14T17:33:43.444Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T17:33:43.444Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T17:33:43.444Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=3[39m 
+2025-09-14T17:33:52.724Z [[32minfo[39m]: [32mClaude response: 388 input tokens, 271 output tokens[39m 
+2025-09-14T17:33:52.836Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T17:33:52.836Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T17:47:35.501Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T17:47:35.499Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T17:47:35.502Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T17:47:35.502Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T17:47:35.502Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T17:47:35.502Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T17:47:35.509Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T17:48:26.329Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T17:48:26.326Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T17:48:26.329Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T17:48:26.329Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T17:48:26.329Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T17:48:26.329Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T17:48:26.337Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T17:49:27.237Z [[32minfo[39m]: [32mProcessing message for conversation 4d8b852a-8b06-4ba9-b0c5-474e0327056f[39m 
+2025-09-14T17:49:27.237Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T17:49:27.245Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=3, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T17:49:27.245Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T17:49:28.357Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T17:49:28.359Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T17:49:28.357Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T17:49:28.357Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T17:49:28.357Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T17:49:28.358Z [[32minfo[39m]: [32mFILTERING by keywords: pdf, archivos, puedes, ahora[39m 
+2025-09-14T17:49:28.358Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T17:49:28.359Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T17:49:28.359Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-14T17:49:28.359Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-14T17:49:28.359Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T17:49:28.360Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T17:49:28.360Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=5[39m 
+2025-09-14T17:49:39.129Z [[32minfo[39m]: [32mClaude response: 676 input tokens, 382 output tokens[39m 
+2025-09-14T17:49:39.272Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T17:49:39.273Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T18:02:58.557Z [[32minfo[39m]: [32mProcessing message for conversation 4d8b852a-8b06-4ba9-b0c5-474e0327056f[39m 
+2025-09-14T18:02:58.557Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T18:02:58.563Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T18:02:58.563Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T18:02:59.692Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mFound 20 memories in CURRENT project[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mFound 0 memories in OTHER projects[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mPRIORITIZED: 20 from current project, 3 from other projects[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mFILTERING by keywords: pdf, momento, archivos, puedes[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-14T18:02:59.693Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-14T18:02:59.694Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T18:02:59.694Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T18:02:59.694Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=7[39m 
+2025-09-14T18:03:05.344Z [[32minfo[39m]: [32mClaude response: 1076 input tokens, 258 output tokens[39m 
+2025-09-14T18:03:05.444Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T18:03:05.444Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T18:11:24.319Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-14T18:11:24.316Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T18:11:24.319Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-14T18:11:24.319Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-14T18:11:24.319Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-14T18:11:24.319Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-14T18:11:24.327Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-14T18:13:46.057Z [[32minfo[39m]: [32m📄 Processing uploaded file: olist_colab_script.py (84190 bytes)[39m 
+2025-09-14T18:16:46.270Z [[32minfo[39m]: [32mProcessing message for conversation 4d8b852a-8b06-4ba9-b0c5-474e0327056f[39m 
+2025-09-14T18:16:46.271Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T18:16:46.278Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=5, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T18:16:46.278Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T18:16:46.350Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T18:16:46.351Z [[32minfo[39m]: [32mFound 0 memories in CURRENT project[39m 
+2025-09-14T18:16:46.351Z [[32minfo[39m]: [32mFound 20 memories in OTHER projects[39m 
+2025-09-14T18:16:46.351Z [[32minfo[39m]: [32mFALLBACK: Using 15 memories from other projects[39m 
+2025-09-14T18:16:46.351Z [[32minfo[39m]: [32mFILTERING by keywords: archivos, puedes[39m 
+2025-09-14T18:16:46.352Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFound 8 file memories[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFound 0 conversation memories[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 1: olist_colab_script.py OTHER (similarity: 57.1%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 2: olist_colab_script.py OTHER (similarity: 57.0%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 3: olist_colab_script.py OTHER (similarity: 56.6%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 4: olist_colab_script.py OTHER (similarity: 52.4%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 5: olist_colab_script.py OTHER (similarity: 49.0%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 6: olist_colab_script.py OTHER (similarity: 46.1%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 7: olist_colab_script.py OTHER (similarity: 45.8%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFile 8: olist_colab_script.py OTHER (similarity: 45.7%)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mInjecting 3980 characters of context (strategy: filtered)[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mFinal summary: 8 archivos, 0 conversaciones[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-14T18:16:46.354Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T18:16:46.355Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T18:16:46.355Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=9[39m 
+2025-09-14T18:16:58.803Z [[32minfo[39m]: [32mClaude response: 2667 input tokens, 422 output tokens[39m 
+2025-09-14T18:16:58.925Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T18:16:58.926Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T18:17:10.227Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T18:17:10.227Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T18:17:10.231Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=true[39m 
+2025-09-14T18:17:10.232Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-14T18:17:10.272Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T18:17:10.272Z [[32minfo[39m]: [32mFound 2 memories in CURRENT project[39m 
+2025-09-14T18:17:10.272Z [[32minfo[39m]: [32mFound 18 memories in OTHER projects[39m 
+2025-09-14T18:17:10.272Z [[32minfo[39m]: [32mPRIORITIZED: 2 from current project, 3 from other projects[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mFound 3 file memories[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mFound 2 conversation memories[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mFile 1: olist_colab_script.py OTHER (similarity: 57.1%)[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mFile 2: olist_colab_script.py OTHER (similarity: 57.0%)[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mFile 3: olist_colab_script.py OTHER (similarity: 56.6%)[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mInjecting 5733 characters of context (strategy: full)[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mFinal summary: 3 archivos, 2 conversaciones[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mApplied context injection strategy: full, promptType: balanced[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T18:17:10.273Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T18:17:10.274Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=1[39m 
+2025-09-14T18:17:15.491Z [[32minfo[39m]: [32mClaude response: 2015 input tokens, 422 output tokens[39m 
+2025-09-14T18:17:15.557Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T18:17:15.557Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 5, Strategy: full, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T18:43:51.596Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T18:43:51.596Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-14T18:43:51.601Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T18:43:51.602Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T18:43:51.601Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T18:43:51.602Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-14T18:43:51.602Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T18:43:51.602Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T18:43:51.602Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=3[39m 
+2025-09-14T18:44:00.064Z [[32minfo[39m]: [32mClaude response: 533 input tokens, 281 output tokens[39m 
+2025-09-14T18:44:01.107Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T18:44:01.107Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-14T18:47:53.005Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T18:47:53.005Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-14T18:47:53.010Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T18:47:53.010Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T18:47:53.010Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T18:47:53.010Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-14T18:47:53.010Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T18:47:53.010Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T18:47:53.011Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=5[39m 
+2025-09-14T18:48:00.910Z [[32minfo[39m]: [32mClaude response: 939 input tokens, 447 output tokens[39m 
+2025-09-14T18:48:01.029Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T18:48:01.030Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-14T18:55:29.848Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T18:55:29.849Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-14T18:55:29.854Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T18:55:29.855Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T18:55:29.854Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T18:55:29.854Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-14T18:55:29.855Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T18:55:29.855Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T18:55:29.855Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=7[39m 
+2025-09-14T18:55:40.420Z [[32minfo[39m]: [32mClaude response: 1544 input tokens, 451 output tokens[39m 
+2025-09-14T18:55:41.518Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T18:55:41.519Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-14T21:33:13.401Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T21:33:13.401Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-14T21:33:13.406Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T21:33:13.407Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T21:33:13.406Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T21:33:13.406Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-14T21:33:13.407Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T21:33:13.407Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T21:33:13.407Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=9[39m 
+2025-09-14T21:33:22.240Z [[32minfo[39m]: [32mClaude response: 2011 input tokens, 431 output tokens[39m 
+2025-09-14T21:33:23.293Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T21:33:23.293Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-14T21:36:32.201Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T21:36:32.201Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-14T21:36:32.206Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T21:36:32.206Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T21:36:32.206Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T21:36:32.207Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T21:36:32.207Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T21:36:32.207Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=10[39m 
+2025-09-14T21:36:33.837Z [[32minfo[39m]: [32mClaude response: 2385 input tokens, 3 output tokens[39m 
+2025-09-14T21:36:33.914Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T21:36:33.915Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-14T21:42:04.110Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T21:42:04.110Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-14T21:42:04.115Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T21:42:04.115Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T21:42:04.115Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T21:42:04.115Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T21:42:04.115Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T21:42:04.115Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-14T21:42:05.513Z [[32minfo[39m]: [32mClaude response: 2385 input tokens, 3 output tokens[39m 
+2025-09-14T21:42:06.551Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T21:42:06.551Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-14T21:43:27.862Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T21:43:27.862Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=creative[39m 
+2025-09-14T21:43:27.867Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T21:43:27.868Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T21:43:27.867Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T21:43:27.868Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T21:43:27.868Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T21:43:27.868Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=creative, messages=10[39m 
+2025-09-14T21:43:29.362Z [[32minfo[39m]: [32mClaude response: 2385 input tokens, 3 output tokens[39m 
+2025-09-14T21:43:29.432Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T21:43:29.432Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"creative","prompt":null}[39m 
+2025-09-14T21:57:53.411Z [[32minfo[39m]: [32mProcessing message for conversation e99e6a68-1590-4e0a-b9fc-4e36c95af170[39m 
+2025-09-14T21:57:53.411Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-14T21:57:53.415Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-14T21:57:53.415Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T21:57:53.415Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T21:57:53.415Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T21:57:53.415Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T21:57:53.416Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=10[39m 
+2025-09-14T21:57:54.911Z [[32minfo[39m]: [32mClaude response: 2385 input tokens, 3 output tokens[39m 
+2025-09-14T21:57:55.938Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T21:57:55.939Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"detailed","prompt":null}[39m 
+2025-09-14T22:13:25.450Z [[32minfo[39m]: [32mProcessing message for conversation 1e9460b4-a652-48de-98f7-d9f9dbe263e8[39m 
+2025-09-14T22:13:25.450Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-14T22:13:25.455Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=0, hasEstablishedContext=false, isFirstFileQuestion=false[39m 
+2025-09-14T22:13:25.456Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-14T22:13:25.455Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-14T22:13:25.455Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: detailed[39m 
+2025-09-14T22:13:25.456Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-14T22:13:25.456Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-14T22:13:25.456Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=1[39m 
+2025-09-14T22:13:50.944Z [[32minfo[39m]: [32mClaude response: 97 input tokens, 1312 output tokens[39m 
+2025-09-14T22:13:52.034Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-14T22:13:52.034Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"detailed","prompt":null}[39m 
+2025-09-15T00:03:21.505Z [[32minfo[39m]: [32mProcessing message for conversation 1e9460b4-a652-48de-98f7-d9f9dbe263e8[39m 
+2025-09-15T00:03:21.506Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-15T00:03:21.511Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=0, hasEstablishedContext=false, isFirstFileQuestion=false[39m 
+2025-09-15T00:03:21.511Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-15T00:03:21.511Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-15T00:03:21.511Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: detailed[39m 
+2025-09-15T00:03:21.511Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-15T00:03:21.511Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-15T00:03:21.511Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=3[39m 
+2025-09-15T00:04:21.551Z [[31merror[39m]: [31mClaude API network error:[39m 
+2025-09-15T00:04:21.552Z [[31merror[39m]: [31mError processing message: Claude API network error: No response received[39m Error: Claude API network error: No response received
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:117:15)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:444:28
+2025-09-15T00:04:53.653Z [[32minfo[39m]: [32mProcessing message for conversation 9db55e7b-48ac-4472-8e55-a0a99aa6fcd4[39m 
+2025-09-15T00:04:53.654Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-15T00:04:53.658Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=0, hasEstablishedContext=false, isFirstFileQuestion=false[39m 
+2025-09-15T00:04:53.659Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-15T00:04:53.659Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-15T00:04:53.659Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: detailed[39m 
+2025-09-15T00:04:53.659Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-15T00:04:53.659Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-15T00:04:53.659Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=1[39m 
+2025-09-15T00:05:53.670Z [[31merror[39m]: [31mClaude API network error:[39m 
+2025-09-15T00:05:53.670Z [[31merror[39m]: [31mError processing message: Claude API network error: No response received[39m Error: Claude API network error: No response received
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:117:15)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:444:28
+2025-09-15T23:53:37.094Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-15T23:53:37.091Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-15T23:53:37.094Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-15T23:53:37.094Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-15T23:53:37.094Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-15T23:53:37.094Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-15T23:53:37.104Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T00:00:19.246Z [[32minfo[39m]: [32mProcessing message for conversation 9db55e7b-48ac-4472-8e55-a0a99aa6fcd4[39m 
+2025-09-16T00:00:19.247Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-16T00:00:19.260Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=0, hasEstablishedContext=false, isFirstFileQuestion=false[39m 
+2025-09-16T00:00:19.260Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T00:00:19.260Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-16T00:00:19.260Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-16T00:00:19.260Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-16T00:00:19.260Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-16T00:00:19.261Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=2[39m 
+2025-09-16T00:00:37.428Z [[32minfo[39m]: [32mClaude response: 225 input tokens, 938 output tokens[39m 
+2025-09-16T00:00:38.600Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-16T00:00:38.600Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-16T22:23:33.706Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-16T22:23:33.703Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T22:23:33.706Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-16T22:23:33.706Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-16T22:23:33.706Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-16T22:23:33.706Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-16T22:23:33.721Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T22:24:18.550Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-16T22:24:18.547Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T22:24:18.551Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-16T22:24:18.551Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-16T22:24:18.551Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-16T22:24:18.551Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-16T22:24:18.564Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T22:25:03.179Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-16T22:25:03.176Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T22:25:03.179Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-16T22:25:03.179Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-16T22:25:03.179Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-16T22:25:03.179Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-16T22:25:03.192Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T22:25:24.408Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-16T22:25:24.405Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T22:25:24.408Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-16T22:25:24.408Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-16T22:25:24.408Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-16T22:25:24.408Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-16T22:25:24.421Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T22:25:39.428Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-16T22:25:39.425Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T22:25:39.428Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-16T22:25:39.428Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-16T22:25:39.428Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-16T22:25:39.428Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-16T22:25:39.441Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T22:35:02.778Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-16T22:35:02.775Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T22:35:02.778Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-16T22:35:02.778Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-16T22:35:02.778Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-16T22:35:02.778Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-16T22:35:02.791Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T22:57:44.862Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-16T22:57:44.859Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T22:57:44.862Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-16T22:57:44.862Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-16T22:57:44.862Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-16T22:57:44.862Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-16T22:57:44.871Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-16T23:01:53.954Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-16T23:01:53.954Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-16T23:01:53.962Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=false, previousFileQuestions=0, hasEstablishedContext=false, isFirstFileQuestion=false[39m 
+2025-09-16T23:01:53.963Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T23:01:53.963Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=1[39m 
+2025-09-16T23:01:53.962Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-16T23:01:53.962Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-16T23:01:53.963Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-16T23:01:53.963Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-16T23:01:57.284Z [[32minfo[39m]: [32mClaude response: 84 input tokens, 124 output tokens[39m 
+2025-09-16T23:01:58.395Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-16T23:01:58.395Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-16T23:06:47.616Z [[32minfo[39m]: [32m📄 Processing uploaded file: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf (1249519 bytes)[39m 
+2025-09-16T23:09:27.361Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-16T23:09:27.362Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-16T23:09:27.367Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=1, hasEstablishedContext=true, isFirstFileQuestion=true[39m 
+2025-09-16T23:09:27.367Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-16T23:09:27.439Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T23:09:27.440Z [[32minfo[39m]: [32mFound 1 memories in CURRENT project[39m 
+2025-09-16T23:09:27.440Z [[32minfo[39m]: [32mFound 19 memories in OTHER projects[39m 
+2025-09-16T23:09:27.440Z [[32minfo[39m]: [32mPRIORITIZED: 1 from current project, 3 from other projects[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mFound 3 file memories[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mFound 1 conversation memories[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mFile 1: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 64.0%)[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mFile 2: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 60.6%)[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mFile 3: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 58.6%)[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mInjecting 4469 characters of context (strategy: full)[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mFinal summary: 3 archivos, 1 conversaciones[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mApplied context injection strategy: full, promptType: precise[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-16T23:09:27.441Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-16T23:09:27.442Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=3[39m 
+2025-09-16T23:09:33.936Z [[32minfo[39m]: [32mClaude response: 1741 input tokens, 220 output tokens[39m 
+2025-09-16T23:09:33.989Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-16T23:09:33.990Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 4, Strategy: full, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-16T23:11:19.319Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-16T23:11:19.319Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-16T23:11:19.324Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=2, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-16T23:11:19.324Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-16T23:11:19.373Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-16T23:11:19.374Z [[32minfo[39m]: [32mFound 4 memories in CURRENT project[39m 
+2025-09-16T23:11:19.374Z [[32minfo[39m]: [32mFound 16 memories in OTHER projects[39m 
+2025-09-16T23:11:19.374Z [[32minfo[39m]: [32mPRIORITIZED: 4 from current project, 3 from other projects[39m 
+2025-09-16T23:11:19.374Z [[32minfo[39m]: [32mFILTERING by keywords: páginas, tienes, table, contents, sirve, orientarte[39m 
+2025-09-16T23:11:19.374Z [[32minfo[39m]: [32mFILTERED to 4 relevant memories for specific question[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mFound 3 file memories[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mFound 1 conversation memories[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mFile 1: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 46.1%)[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mFile 2: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 44.7%)[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mFile 3: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 43.8%)[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mInjecting 4455 characters of context (strategy: filtered)[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mFinal summary: 3 archivos, 1 conversaciones[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: precise[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-16T23:11:19.375Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=5[39m 
+2025-09-16T23:11:25.814Z [[32minfo[39m]: [32mClaude response: 2066 input tokens, 309 output tokens[39m 
+2025-09-16T23:11:25.867Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-16T23:11:25.868Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 4, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-17T00:13:00.149Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T00:13:00.149Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.7, promptType=balanced[39m 
+2025-09-17T00:13:00.154Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=3, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T00:13:00.154Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T00:13:01.125Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T00:13:01.125Z [[32minfo[39m]: [32mFound 5 memories in CURRENT project[39m 
+2025-09-17T00:13:01.125Z [[32minfo[39m]: [32mFound 15 memories in OTHER projects[39m 
+2025-09-17T00:13:01.125Z [[32minfo[39m]: [32mPRIORITIZED: 5 from current project, 3 from other projects[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFILTERING by keywords: libro, hi9ce, algunas, reformas, vuelvo, preguntarte, prueba, estadística[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFILTERED to 6 relevant memories for specific question[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFound 3 file memories[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFound 3 conversation memories[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFile 1: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 54.6%)[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFile 2: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 54.6%)[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFile 3: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 54.3%)[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mInjecting 4619 characters of context (strategy: filtered)[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mFinal summary: 3 archivos, 3 conversaciones[39m 
+2025-09-17T00:13:01.126Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-17T00:13:01.127Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T00:13:01.127Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T00:13:01.127Z [[32minfo[39m]: [32mSending request to Claude: temp=0.7, tokens=4000, promptType=balanced, messages=7[39m 
+2025-09-17T00:13:08.931Z [[32minfo[39m]: [32mClaude response: 2405 input tokens, 352 output tokens[39m 
+2025-09-17T00:13:09.016Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T00:13:09.016Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 6, Strategy: filtered, Settings: {"temperature":0.7,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T00:17:31.089Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T00:17:31.086Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T00:17:31.089Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T00:17:31.090Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T00:17:31.090Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T00:17:31.090Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T00:17:31.098Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T00:30:03.908Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T00:30:03.905Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T00:30:03.908Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T00:30:03.908Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T00:30:03.908Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T00:30:03.908Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T00:30:03.916Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T00:36:16.910Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T00:36:16.907Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T00:36:16.910Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T00:36:16.910Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T00:36:16.910Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T00:36:16.910Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T00:36:16.918Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T00:39:03.296Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T00:39:03.293Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T00:39:03.296Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T00:39:03.296Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T00:39:03.296Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T00:39:03.296Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T00:39:03.305Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T01:07:43.709Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T01:07:43.709Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T01:07:43.716Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T01:07:43.716Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T01:07:44.709Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T01:07:44.709Z [[32minfo[39m]: [32mFound 8 memories in CURRENT project[39m 
+2025-09-17T01:07:44.709Z [[32minfo[39m]: [32mFound 12 memories in OTHER projects[39m 
+2025-09-17T01:07:44.709Z [[32minfo[39m]: [32mPRIORITIZED: 8 from current project, 3 from other projects[39m 
+2025-09-17T01:07:44.709Z [[32minfo[39m]: [32mFILTERING by keywords: páginas, tienes, table, contents, sirve, orientarte[39m 
+2025-09-17T01:07:44.710Z [[32minfo[39m]: [32mFILTERED to 7 relevant memories for specific question[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mFound 3 file memories[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mFound 4 conversation memories[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mFile 1: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 46.1%)[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mFile 2: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 44.7%)[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mFile 3: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 43.8%)[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mInjecting 4455 characters of context (strategy: filtered)[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mFinal summary: 3 archivos, 4 conversaciones[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mApplied context injection strategy: filtered, promptType: balanced[39m 
+2025-09-17T01:07:44.711Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T01:07:44.712Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T01:07:44.712Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=9[39m 
+2025-09-17T01:07:51.910Z [[32minfo[39m]: [32mClaude response: 2816 input tokens, 381 output tokens[39m 
+2025-09-17T01:07:51.998Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T01:07:51.999Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 7, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T01:29:44.582Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T01:29:44.579Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T01:29:44.582Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T01:29:44.582Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T01:29:44.582Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T01:29:44.582Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T01:29:44.590Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T01:30:57.868Z [[32minfo[39m]: [32m📄 Processing uploaded file: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf (1249519 bytes)[39m 
+2025-09-17T01:35:32.569Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T01:35:32.569Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T01:35:32.583Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T01:35:32.583Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T01:35:32.662Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T01:35:32.666Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T01:35:32.662Z [[32minfo[39m]: [32mFound 10 memories in CURRENT project[39m 
+2025-09-17T01:35:32.662Z [[32minfo[39m]: [32mFound 10 memories in OTHER projects[39m 
+2025-09-17T01:35:32.662Z [[32minfo[39m]: [32mPRIORITIZED: 10 from current project, 3 from other projects[39m 
+2025-09-17T01:35:32.663Z [[32minfo[39m]: [32mFILTERING by keywords: archivo, pdf, ahora, volvía, subirte, chromadb, procesó, resultando[39m 
+2025-09-17T01:35:32.663Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-17T01:35:32.665Z [[32minfo[39m]: [32mFound 3 file memories[39m 
+2025-09-17T01:35:32.665Z [[32minfo[39m]: [32mFound 5 conversation memories[39m 
+2025-09-17T01:35:32.665Z [[32minfo[39m]: [32mFile 1: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 49.6%)[39m 
+2025-09-17T01:35:32.665Z [[32minfo[39m]: [32mFile 2: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 49.6%)[39m 
+2025-09-17T01:35:32.665Z [[32minfo[39m]: [32mFile 3: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 49.5%)[39m 
+2025-09-17T01:35:32.665Z [[32minfo[39m]: [32mInjecting 4480 characters of context (strategy: filtered)[39m 
+2025-09-17T01:35:32.665Z [[32minfo[39m]: [32mFinal summary: 3 archivos, 5 conversaciones[39m 
+2025-09-17T01:35:32.666Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T01:35:32.666Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T01:35:32.666Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T01:35:34.099Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T01:35:34.151Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T01:35:34.152Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T01:36:25.500Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T01:36:25.500Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T01:36:25.505Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T01:36:25.505Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T01:36:25.566Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T01:36:25.568Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T01:36:25.566Z [[32minfo[39m]: [32mFound 12 memories in CURRENT project[39m 
+2025-09-17T01:36:25.566Z [[32minfo[39m]: [32mFound 8 memories in OTHER projects[39m 
+2025-09-17T01:36:25.566Z [[32minfo[39m]: [32mPRIORITIZED: 12 from current project, 3 from other projects[39m 
+2025-09-17T01:36:25.566Z [[32minfo[39m]: [32mFILTERING by keywords: libro, pdf, puedes, acceder, subí, recién[39m 
+2025-09-17T01:36:25.566Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-17T01:36:25.567Z [[32minfo[39m]: [32mFound 1 file memories[39m 
+2025-09-17T01:36:25.567Z [[32minfo[39m]: [32mFound 7 conversation memories[39m 
+2025-09-17T01:36:25.567Z [[32minfo[39m]: [32mFile 1: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 50.2%)[39m 
+2025-09-17T01:36:25.568Z [[32minfo[39m]: [32mInjecting 1525 characters of context (strategy: filtered)[39m 
+2025-09-17T01:36:25.568Z [[32minfo[39m]: [32mFinal summary: 1 archivos, 7 conversaciones[39m 
+2025-09-17T01:36:25.568Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T01:36:25.568Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T01:36:25.568Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T01:36:26.937Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T01:36:26.988Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T01:36:26.988Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T02:02:23.608Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T02:02:23.605Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T02:02:23.608Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T02:02:23.608Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T02:02:23.608Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T02:02:23.608Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T02:02:23.616Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T02:04:23.049Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T02:04:23.049Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T02:04:23.061Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T02:04:23.061Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T02:04:24.040Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T02:04:24.042Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T02:04:24.040Z [[32minfo[39m]: [32mFound 14 memories in CURRENT project[39m 
+2025-09-17T02:04:24.040Z [[32minfo[39m]: [32mFound 6 memories in OTHER projects[39m 
+2025-09-17T02:04:24.040Z [[32minfo[39m]: [32mPRIORITIZED: 14 from current project, 3 from other projects[39m 
+2025-09-17T02:04:24.041Z [[32minfo[39m]: [32mFILTERING by keywords: libro, pdf, puedes, acceder, subí, recién[39m 
+2025-09-17T02:04:24.041Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-17T02:04:24.042Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-17T02:04:24.042Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-17T02:04:24.043Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T02:04:24.043Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T02:04:24.043Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T02:04:26.354Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T02:04:26.424Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T02:04:26.425Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T02:05:46.389Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T02:05:46.389Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T02:05:46.394Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T02:05:46.394Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T02:05:46.478Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T02:05:46.479Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T02:05:46.478Z [[32minfo[39m]: [32mFound 13 memories in CURRENT project[39m 
+2025-09-17T02:05:46.478Z [[32minfo[39m]: [32mFound 7 memories in OTHER projects[39m 
+2025-09-17T02:05:46.478Z [[32minfo[39m]: [32mPRIORITIZED: 13 from current project, 3 from other projects[39m 
+2025-09-17T02:05:46.478Z [[32minfo[39m]: [32mFILTERING by keywords: archivo, pdf, libro, realmente, estás, seguro, puedes, acceder[39m 
+2025-09-17T02:05:46.478Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-17T02:05:46.479Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-17T02:05:46.479Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-17T02:05:46.479Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T02:05:46.479Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T02:05:46.479Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T02:05:47.765Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T02:05:47.814Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T02:05:47.815Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T02:10:29.677Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T02:10:29.677Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T02:10:29.682Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T02:10:29.682Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T02:10:29.749Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mFound 10 memories in CURRENT project[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mFound 10 memories in OTHER projects[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mPRIORITIZED: 10 from current project, 3 from other projects[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mFILTERING by keywords: pdf, positivamente, estás, seguro, acceder, statistical, tests, lewis[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T02:10:29.750Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T02:10:29.751Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T02:10:31.122Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T02:10:31.174Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T02:10:31.175Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T02:27:13.814Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T02:27:13.811Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T02:27:13.814Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T02:27:13.814Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T02:27:13.814Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T02:27:13.814Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T02:27:13.822Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T02:28:34.342Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T02:28:34.342Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T02:28:34.354Z [[32minfo[39m]: [32mContext Analysis: isFileQuestion=true, previousFileQuestions=4, hasEstablishedContext=true, isFirstFileQuestion=false[39m 
+2025-09-17T02:28:34.354Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T02:28:35.312Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T02:28:35.315Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T02:28:35.312Z [[32minfo[39m]: [32mFound 17 memories in CURRENT project[39m 
+2025-09-17T02:28:35.312Z [[32minfo[39m]: [32mFound 3 memories in OTHER projects[39m 
+2025-09-17T02:28:35.312Z [[32minfo[39m]: [32mPRIORITIZED: 17 from current project, 3 from other projects[39m 
+2025-09-17T02:28:35.313Z [[32minfo[39m]: [32mFILTERING by keywords: libro, pdf, puedes, acceder, subí, recién[39m 
+2025-09-17T02:28:35.313Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-17T02:28:35.314Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-17T02:28:35.315Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-17T02:28:35.315Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T02:28:35.315Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T02:28:35.315Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T02:28:36.496Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T02:28:36.566Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T02:28:36.567Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T03:10:40.317Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T03:10:40.315Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:10:40.317Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T03:10:40.317Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T03:10:40.318Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T03:10:40.318Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T03:10:40.326Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T03:11:39.135Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T03:11:39.132Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:11:39.135Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T03:11:39.135Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T03:11:39.135Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T03:11:39.135Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T03:11:39.144Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T03:14:09.340Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T03:14:09.338Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:14:09.341Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T03:14:09.341Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T03:14:09.341Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T03:14:09.341Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T03:14:09.349Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T03:14:56.406Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T03:14:56.406Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T03:14:56.413Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T03:14:57.386Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T03:14:57.389Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:14:57.387Z [[32minfo[39m]: [32mFound 16 memories in CURRENT project[39m 
+2025-09-17T03:14:57.387Z [[32minfo[39m]: [32mFound 4 memories in OTHER projects[39m 
+2025-09-17T03:14:57.387Z [[32minfo[39m]: [32mPRIORITIZED: 16 from current project, 3 from other projects[39m 
+2025-09-17T03:14:57.387Z [[32minfo[39m]: [32mFILTERING by keywords: pdf, puedes, acceder, subí[39m 
+2025-09-17T03:14:57.387Z [[32minfo[39m]: [32mFILTERED to 8 relevant memories for specific question[39m 
+2025-09-17T03:14:57.389Z [[32minfo[39m]: [32mFound 0 file memories[39m 
+2025-09-17T03:14:57.389Z [[32minfo[39m]: [32mFound 8 conversation memories[39m 
+2025-09-17T03:14:57.389Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T03:14:57.389Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T03:14:57.389Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T03:14:58.576Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T03:14:58.637Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T03:14:58.638Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 8, Strategy: filtered, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T03:28:46.415Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T03:28:46.412Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:28:46.415Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T03:28:46.415Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T03:28:46.415Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T03:28:46.415Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T03:28:46.423Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T03:30:10.627Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T03:30:10.627Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T03:30:10.638Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-17T03:30:10.638Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:30:10.638Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T03:30:10.638Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T03:30:10.639Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T03:30:11.838Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T03:30:12.815Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T03:30:12.816Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: contradiction_skip, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T03:33:36.083Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T03:33:36.080Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:33:36.083Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T03:33:36.083Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T03:33:36.083Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T03:33:36.083Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T03:33:36.091Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T03:34:13.827Z [[32minfo[39m]: [32mProcessing message for conversation 8ef5424c-9611-4829-b66a-e5b934346901[39m 
+2025-09-17T03:34:13.827Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T03:34:13.840Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-17T03:34:13.840Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:34:13.840Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T03:34:13.840Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T03:34:13.841Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T03:34:15.145Z [[32minfo[39m]: [32mClaude response: 1579 input tokens, 3 output tokens[39m 
+2025-09-17T03:34:15.214Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T03:34:15.215Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: contradiction_skip, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T03:37:01.903Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-17T03:37:01.904Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T03:37:01.908Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-17T03:37:02.008Z [[32minfo[39m]: [32mFound 20 total memories across all projects[39m 
+2025-09-17T03:37:02.010Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T03:37:02.008Z [[32minfo[39m]: [32mFound 19 memories in CURRENT project[39m 
+2025-09-17T03:37:02.008Z [[32minfo[39m]: [32mFound 1 memories in OTHER projects[39m 
+2025-09-17T03:37:02.008Z [[32minfo[39m]: [32mPRIORITIZED: 19 from current project, 3 from other projects[39m 
+2025-09-17T03:37:02.010Z [[32minfo[39m]: [32mFound 1 file memories[39m 
+2025-09-17T03:37:02.010Z [[32minfo[39m]: [32mFound 12 conversation memories[39m 
+2025-09-17T03:37:02.010Z [[32minfo[39m]: [32mFile 1: 100 Statistical tests in R - N. D Lewis-(e-pub.me).pdf OTHER (similarity: 53.4%)[39m 
+2025-09-17T03:37:02.010Z [[32minfo[39m]: [32mInjecting 1965 characters of context (strategy: full)[39m 
+2025-09-17T03:37:02.010Z [[32minfo[39m]: [32mFinal summary: 1 archivos, 12 conversaciones[39m 
+2025-09-17T03:37:02.010Z [[32minfo[39m]: [32mApplied context injection strategy: full, promptType: balanced[39m 
+2025-09-17T03:37:02.011Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T03:37:02.011Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T03:37:02.011Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=1[39m 
+2025-09-17T03:37:10.863Z [[32minfo[39m]: [32mClaude response: 674 input tokens, 394 output tokens[39m 
+2025-09-17T03:37:10.950Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T03:37:10.950Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 13, Strategy: full, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T19:08:51.699Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T19:08:51.697Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T19:08:51.699Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T19:08:51.699Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T19:08:51.699Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T19:08:51.700Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T19:08:51.715Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T19:09:55.951Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T19:09:55.948Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T19:09:55.951Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T19:09:55.951Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T19:09:55.951Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T19:09:55.951Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T19:09:55.959Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T20:25:16.304Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T20:25:16.302Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T20:25:16.304Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T20:25:16.304Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T20:25:16.305Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T20:25:16.305Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T20:25:16.318Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T20:31:45.067Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T20:31:45.065Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T20:31:45.067Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T20:31:45.067Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T20:31:45.067Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T20:31:45.068Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T20:31:45.081Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T20:41:42.145Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T20:41:42.142Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T20:41:42.145Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T20:41:42.145Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T20:41:42.145Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T20:41:42.145Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T20:41:42.153Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T20:49:06.603Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T20:49:06.600Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T20:49:06.603Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T20:49:06.604Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T20:49:06.604Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T20:49:06.604Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T20:49:06.618Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T20:50:49.637Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-17T20:50:49.637Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T20:50:49.649Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-17T20:50:49.650Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T20:50:49.650Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-17T20:50:49.650Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T20:50:49.650Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T20:50:49.650Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=3[39m 
+2025-09-17T20:50:55.145Z [[32minfo[39m]: [32mClaude response: 506 input tokens, 317 output tokens[39m 
+2025-09-17T20:50:56.179Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T20:50:56.179Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T20:52:10.425Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-17T20:52:10.426Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T20:52:10.430Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-17T20:52:10.431Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T20:52:10.431Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-17T20:52:10.431Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T20:52:10.431Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T20:52:10.431Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=5[39m 
+2025-09-17T20:52:21.607Z [[32minfo[39m]: [32mClaude response: 843 input tokens, 458 output tokens[39m 
+2025-09-17T20:52:21.931Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T20:52:21.931Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T20:54:50.992Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-17T20:54:50.992Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T20:54:50.997Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-17T20:54:50.997Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T20:54:50.997Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-17T20:54:50.997Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T20:54:50.997Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T20:54:50.997Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=7[39m 
+2025-09-17T20:55:08.760Z [[32minfo[39m]: [32mClaude response: 1317 input tokens, 1044 output tokens[39m 
+2025-09-17T20:55:09.450Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T20:55:09.451Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T21:44:33.511Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T21:44:33.508Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T21:44:33.511Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T21:44:33.511Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T21:44:33.511Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T21:44:33.511Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T21:44:33.526Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T21:45:04.032Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-17T21:45:04.033Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T21:45:04.045Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-17T21:45:04.045Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T21:45:04.045Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-17T21:45:04.045Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T21:45:04.045Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T21:45:04.045Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=9[39m 
+2025-09-17T21:45:14.159Z [[32minfo[39m]: [32mClaude response: 2367 input tokens, 205 output tokens[39m 
+2025-09-17T21:45:15.289Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T21:45:15.289Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T21:45:52.374Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-17T21:45:52.374Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-17T21:45:52.379Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-17T21:45:52.379Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T21:45:52.379Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-17T21:45:52.379Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-17T21:45:52.379Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=10[39m 
+2025-09-17T21:45:56.267Z [[32minfo[39m]: [32mClaude response: 2509 input tokens, 3 output tokens[39m 
+2025-09-17T21:45:56.348Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-17T21:45:56.349Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-17T21:51:17.838Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T21:51:17.836Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T21:51:17.839Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T21:51:17.839Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T21:51:17.839Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T21:51:17.839Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T21:51:17.853Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T21:53:22.350Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T21:53:22.346Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T21:53:22.350Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T21:53:22.350Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T21:53:22.350Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T21:53:22.350Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T21:53:22.365Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T22:13:33.708Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T22:13:33.705Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T22:13:33.709Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T22:13:33.709Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T22:13:33.709Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T22:13:33.709Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T22:13:33.723Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T23:26:26.949Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T23:26:26.945Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T23:26:26.950Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T23:26:26.950Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T23:26:26.950Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T23:26:26.950Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T23:26:26.963Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T23:27:50.899Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T23:27:50.896Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T23:27:50.899Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T23:27:50.900Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T23:27:50.900Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T23:27:50.900Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T23:27:50.914Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T23:30:16.436Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T23:30:16.433Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T23:30:16.436Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T23:30:16.436Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T23:30:16.436Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T23:30:16.436Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T23:30:16.452Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-17T23:56:18.022Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-17T23:56:18.019Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-17T23:56:18.022Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-17T23:56:18.022Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-17T23:56:18.022Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-17T23:56:18.022Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-17T23:56:18.036Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T00:19:31.706Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T00:19:31.704Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T00:19:31.707Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T00:19:31.707Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T00:19:31.707Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T00:19:31.707Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T00:19:31.721Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T00:20:16.168Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T00:20:16.165Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T00:20:16.168Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T00:20:16.168Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T00:20:16.168Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T00:20:16.168Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T00:20:16.183Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T00:20:40.121Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T00:20:40.118Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T00:20:40.121Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T00:20:40.121Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T00:20:40.121Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T00:20:40.121Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T00:20:40.134Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T01:44:18.763Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T01:44:18.760Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T01:44:18.763Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T01:44:18.763Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T01:44:18.763Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T01:44:18.764Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T01:44:18.778Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T01:45:31.422Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-18T01:45:31.423Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-18T01:45:31.431Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T01:45:31.431Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T01:45:31.431Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T01:45:31.431Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T01:45:31.431Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=10[39m 
+2025-09-18T01:45:35.658Z [[32minfo[39m]: [32mClaude response: 2509 input tokens, 17 output tokens[39m 
+2025-09-18T01:45:36.687Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T01:45:36.687Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"detailed","prompt":null}[39m 
+2025-09-18T01:46:04.054Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-18T01:46:04.054Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-18T01:46:04.059Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T01:46:04.059Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T01:46:04.059Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T01:46:04.059Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T01:46:04.059Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=10[39m 
+2025-09-18T01:46:07.545Z [[32minfo[39m]: [32mClaude response: 2509 input tokens, 23 output tokens[39m 
+2025-09-18T01:46:07.617Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T01:46:07.618Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"detailed","prompt":null}[39m 
+2025-09-18T01:46:43.865Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-18T01:46:43.865Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-18T01:46:43.871Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T01:46:43.871Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T01:46:43.871Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T01:46:43.871Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T01:46:43.872Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=10[39m 
+2025-09-18T01:46:46.266Z [[32minfo[39m]: [32mClaude response: 2509 input tokens, 3 output tokens[39m 
+2025-09-18T01:46:46.327Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T01:46:46.328Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"detailed","prompt":null}[39m 
+2025-09-18T01:47:51.625Z [[32minfo[39m]: [32m📄 Processing uploaded file: Introduccion_al_Lenguaje_Python.pdf (1233219 bytes)[39m 
+2025-09-18T01:48:29.108Z [[32minfo[39m]: [32mProcessing message for conversation 3b8b778a-7017-41e4-838a-f7b69ec94341[39m 
+2025-09-18T01:48:29.108Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=detailed[39m 
+2025-09-18T01:48:29.113Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T01:48:29.113Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T01:48:29.114Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T01:48:29.114Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T01:48:29.114Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=detailed, messages=10[39m 
+2025-09-18T01:48:31.174Z [[32minfo[39m]: [32mClaude response: 2509 input tokens, 3 output tokens[39m 
+2025-09-18T01:48:31.245Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T01:48:31.245Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: contradiction_skip, Settings: {"temperature":0.3,"promptType":"detailed","prompt":null}[39m 
+2025-09-18T02:37:33.957Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T02:37:33.953Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:37:33.957Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T02:37:33.957Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T02:37:33.957Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T02:37:33.957Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T02:37:33.971Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T02:39:01.865Z [[32minfo[39m]: [32m📄 Processing uploaded file: claude-infinito.desktop.txt (1077 bytes)[39m 
+2025-09-18T02:39:42.935Z [[32minfo[39m]: [32mProcessing message for conversation 2b25b23b-05fc-4cd0-9247-d41248d1ef86[39m 
+2025-09-18T02:39:42.935Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-18T02:39:42.941Z [[32minfo[39m]: [32mSearching for relevant context across all projects...[39m 
+2025-09-18T02:39:42.985Z [[32minfo[39m]: [32mFound 1 total memories across all projects[39m 
+2025-09-18T02:39:42.986Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:39:42.985Z [[32minfo[39m]: [32mFound 0 memories in CURRENT project[39m 
+2025-09-18T02:39:42.985Z [[32minfo[39m]: [32mFound 1 memories in OTHER projects[39m 
+2025-09-18T02:39:42.985Z [[32minfo[39m]: [32mFALLBACK: Using 1 memories from other projects[39m 
+2025-09-18T02:39:42.985Z [[32minfo[39m]: [32mFound 1 file memories[39m 
+2025-09-18T02:39:42.985Z [[32minfo[39m]: [32mFound 0 conversation memories[39m 
+2025-09-18T02:39:42.985Z [[32minfo[39m]: [32mFile 1: claude-infinito.desktop.txt OTHER (similarity: 48.8%)[39m 
+2025-09-18T02:39:42.986Z [[32minfo[39m]: [32mInjecting 1254 characters of context (strategy: full)[39m 
+2025-09-18T02:39:42.986Z [[32minfo[39m]: [32mFinal summary: 1 archivos, 0 conversaciones[39m 
+2025-09-18T02:39:42.986Z [[32minfo[39m]: [32mApplied context injection strategy: full, promptType: balanced[39m 
+2025-09-18T02:39:42.986Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T02:39:42.986Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T02:39:42.987Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=1[39m 
+2025-09-18T02:40:03.045Z [[32minfo[39m]: [32mClaude response: 583 input tokens, 974 output tokens[39m 
+2025-09-18T02:40:03.212Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T02:40:03.212Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 1, Strategy: full, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-18T02:41:49.648Z [[32minfo[39m]: [32mProcessing message for conversation 2b25b23b-05fc-4cd0-9247-d41248d1ef86[39m 
+2025-09-18T02:41:49.648Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-18T02:41:49.653Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T02:41:49.653Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:41:49.653Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=3[39m 
+2025-09-18T02:41:49.653Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-18T02:41:49.653Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T02:41:49.653Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T02:42:05.105Z [[32minfo[39m]: [32mClaude response: 1098 input tokens, 499 output tokens[39m 
+2025-09-18T02:42:05.183Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T02:42:05.184Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-18T02:45:40.760Z [[32minfo[39m]: [32mProcessing message for conversation 2b25b23b-05fc-4cd0-9247-d41248d1ef86[39m 
+2025-09-18T02:45:40.760Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=precise[39m 
+2025-09-18T02:45:40.765Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T02:45:40.765Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:45:40.765Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: precise[39m 
+2025-09-18T02:45:40.765Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T02:45:40.765Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T02:45:40.766Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=precise, messages=5[39m 
+2025-09-18T02:45:52.332Z [[32minfo[39m]: [32mClaude response: 1674 input tokens, 529 output tokens[39m 
+2025-09-18T02:45:52.398Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T02:45:52.399Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"precise","prompt":null}[39m 
+2025-09-18T02:53:25.974Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T02:53:25.971Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:53:25.974Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T02:53:25.974Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T02:53:25.974Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T02:53:25.974Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T02:53:25.989Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T02:55:50.432Z [[32minfo[39m]: [32mProcessing message for conversation 2b25b23b-05fc-4cd0-9247-d41248d1ef86[39m 
+2025-09-18T02:55:50.432Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-18T02:55:50.439Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T02:55:50.440Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:55:50.440Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-18T02:55:50.440Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T02:55:50.440Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T02:55:50.440Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=7[39m 
+2025-09-18T02:56:06.249Z [[32minfo[39m]: [32mClaude response: 2247 input tokens, 625 output tokens[39m 
+2025-09-18T02:56:07.327Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T02:56:07.327Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-18T02:57:54.999Z [[32minfo[39m]: [32mProcessing message for conversation 2b25b23b-05fc-4cd0-9247-d41248d1ef86[39m 
+2025-09-18T02:57:54.999Z [[32minfo[39m]: [32mUsing dynamic settings: temp=0.3, promptType=balanced[39m 
+2025-09-18T02:57:55.004Z [[32minfo[39m]: [32mNon-file question, skipping file context search[39m 
+2025-09-18T02:57:55.005Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:57:55.004Z [[32minfo[39m]: [32mApplied context injection strategy: none, promptType: balanced[39m 
+2025-09-18T02:57:55.005Z [[32minfo[39m]: [32mAPI Key status: CONFIGURED[39m 
+2025-09-18T02:57:55.005Z [[32minfo[39m]: [32mSending to Claude API with context...[39m 
+2025-09-18T02:57:55.005Z [[32minfo[39m]: [32mSending request to Claude: temp=0.3, tokens=4000, promptType=balanced, messages=9[39m 
+2025-09-18T02:57:58.584Z [[32minfo[39m]: [32mClaude response: 2894 input tokens, 84 output tokens[39m 
+2025-09-18T02:57:58.655Z [[32minfo[39m]: [32mStored messages in ChromaDB for future context[39m 
+2025-09-18T02:57:58.655Z [[32minfo[39m]: [32mMessage processed successfully. Context memories used: 0, Strategy: none, Settings: {"temperature":0.3,"promptType":"balanced","prompt":null}[39m 
+2025-09-18T02:58:27.309Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T02:58:27.305Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T02:58:27.309Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T02:58:27.309Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T02:58:27.309Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T02:58:27.309Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T02:58:27.324Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T14:17:06.350Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T14:17:06.348Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T14:17:06.351Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T14:17:06.351Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T14:17:06.351Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T14:17:06.351Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T14:17:06.367Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T14:18:06.668Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T14:18:06.663Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T14:18:06.668Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T14:18:06.669Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T14:18:06.669Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T14:18:06.669Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T14:18:06.683Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T14:18:28.082Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T14:18:28.080Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T14:18:28.083Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T14:18:28.083Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T14:18:28.083Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T14:18:28.083Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T14:18:28.097Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T14:20:40.235Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T14:20:40.252Z [[32minfo[39m]: [32mDatabase connected successfully[39m 

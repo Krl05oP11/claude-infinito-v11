@@ -25,6 +25,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
 app.use('/api/upload', uploadRoutes);
 
 // Chat routes
@@ -61,28 +62,113 @@ function isFileRelatedQuestion(content: string): boolean {
 
 // Helper function to extract keywords from question for context filtering
 function extractQuestionKeywords(content: string): string[] {
-  const stopWords = ['que', 'qué', 'el', 'la', 'de', 'en', 'y', 'a', 'un', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son', 'con', 'para', 'como', 'pero', 'sus', 'had', 'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'];
+  // Stop words expandidos - palabras que NO queremos como keywords
+  const stopWords = [
+    // Español básico
+    'que', 'qué', 'el', 'la', 'de', 'en', 'y', 'a', 'un', 'una', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son', 'con', 'para', 'como', 'pero', 'sus', 'del', 'las', 'los', 'una', 'este', 'esta', 'estos', 'estas', 'ese', 'esa', 'esos', 'esas', 
+    'desde', 'hasta', 'cuando', 'donde', 'quien', 'cual', 'cuales', 'muy', 'más', 'menos', 'también', 'tan', 'tanto', 'toda', 'todo', 'todos', 'todas',
+    'me', 'mi', 'mis', 'nos', 'nuestro', 'nuestra', 'nuestros', 'nuestras',
+    'ser', 'estar', 'tener', 'hacer', 'poder', 'decir', 'ir', 'ver', 'dar', 'saber', 'querer', 'llegar', 'poner', 'parecer', 'seguir', 'encontrar', 'llamar', 'venir', 'pensar', 'salir', 'volver', 'tomar', 'conocer', 'vivir', 'sentir', 'tratar', 'dejar', 'llevar',
+    
+    // Palabras genéricas de conversación
+    'hola', 'claude', 'resume', 'resumen', 'unas', 'pocas', 'líneas', 'cuáles', 'ventajas', 'debes', 'debe', 'debo', 'tener', 'acceso', 'collection', 'subido', 'subida',
+    
+    // English básico
+    'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'
+  ];
   
-  return content
+  // Palabras clave importantes que siempre queremos preservar
+  const importantKeywords = [
+    // Autores y nombres propios
+    'mitchell', 'melanie', 'darwin', 'holland', 'goldberg', 'koza', 'fogel',
+    
+    // Términos técnicos de algoritmos genéticos
+    'algoritmos', 'genéticos', 'genetic', 'algorithm', 'algorithms',
+    'fitness', 'selección', 'selection', 'mutación', 'mutation', 'crossover', 'cruzamiento',
+    'población', 'population', 'generación', 'generation', 'cromosoma', 'chromosome',
+    'evolución', 'evolution', 'adaptación', 'adaptation', 'supervivencia', 'survival',
+    
+    // Términos de machine learning
+    'machine', 'learning', 'aprendizaje', 'automático', 'inteligencia', 'artificial',
+    'clustering', 'clasificación', 'regresión', 'neural', 'redes', 'networks',
+    'elbow', 'method', 'método', 'codo', 'kmeans', 'svm', 'bayes',
+    
+    // Términos de documentos
+    'libro', 'capítulo', 'página', 'sección', 'documento', 'archivo', 'pdf', 'text',
+    'paper', 'artículo', 'investigación', 'estudio', 'análisis',
+    
+    // Conceptos específicos
+    'optimización', 'optimization', 'búsqueda', 'search', 'heurística', 'heuristic',
+    'convergencia', 'convergence', 'diversidad', 'diversity', 'exploración', 'exploration',
+    'explotación', 'exploitation', 'parámetros', 'parameters'
+  ];
+  
+  // Limpiar y procesar el contenido
+  const words = content
     .toLowerCase()
-    .replace(/[^\w\s]/g, ' ')
+    .replace(/[^\w\sáéíóúñü]/g, ' ') // Preservar caracteres españoles
     .split(/\s+/)
-    .filter(word => word.length > 3 && !stopWords.includes(word))
-    .slice(0, 5); // Top 5 keywords
+    .filter(word => word.length > 2); // Mínimo 3 caracteres
+  
+  // Extraer keywords con priorización inteligente
+  const extractedKeywords: string[] = [];
+  
+  // 1. Primero: palabras importantes identificadas específicamente
+  words.forEach(word => {
+    if (importantKeywords.includes(word) && !extractedKeywords.includes(word)) {
+      extractedKeywords.push(word);
+    }
+  });
+  
+  // 2. Segundo: sustantivos técnicos que no están en stop words
+  words.forEach(word => {
+    if (word.length >= 4 && 
+        !stopWords.includes(word) && 
+        !importantKeywords.includes(word) &&
+        !extractedKeywords.includes(word) &&
+        extractedKeywords.length < 8) { // Límite total de 8 keywords
+      
+      // Priorizar palabras que parecen técnicas o específicas
+      if (word.includes('tion') || word.includes('sion') || word.includes('ción') ||
+          word.includes('ment') || word.includes('ness') || word.includes('ismo') ||
+          word.includes('idad') || word.includes('encia') || word.includes('ancia')) {
+        extractedKeywords.push(word);
+      }
+    }
+  });
+  
+  // 3. Tercero: otras palabras relevantes si aún necesitamos más
+  if (extractedKeywords.length < 5) {
+    words.forEach(word => {
+      if (word.length >= 4 && 
+          !stopWords.includes(word) && 
+          !extractedKeywords.includes(word) &&
+          extractedKeywords.length < 8) {
+        extractedKeywords.push(word);
+      }
+    });
+  }
+  
+  return extractedKeywords.slice(0, 8); // Máximo 8 keywords
 }
-
-// Messages endpoint with RAG integration
+// Messages endpoint with RAG integration and DYNAMIC CONFIGURATION SUPPORT
 app.post('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const conversationId = req.params.id;
-    const { content } = req.body;
+    const { content, settings } = req.body; // ✅ ADDED: settings support
 
     if (!content) {
       res.status(400).json({ error: 'Message content required' });
       return;
     }
 
+    // ✅ NEW: Extract and validate dynamic settings
+    const claudeSettings = settings || {};
+    
     logger.info(`Processing message for conversation ${conversationId}`);
+    if (settings) {
+      logger.info(`Using dynamic settings: temp=${claudeSettings.temperature || 'default'}, promptType=${claudeSettings.promptType || 'none'}`);
+    }
 
     // 1. Save user message
     const userMessage = await dbService.addMessage(conversationId, 'user', content);
@@ -94,7 +180,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     const conversation = await dbService.getConversationById(conversationId);
     const currentProjectId = conversation?.project_id || conversationId;
     
-    // 4. ✅ SMART CONTEXT DETECTION: Analyze conversation history for file context
+    // 4. Smart context detection: Analyze conversation history for file context
     const isCurrentFileQuestion = isFileRelatedQuestion(content);
     const previousFileQuestions = recentMessages.filter(msg => 
       msg.role === 'user' && isFileRelatedQuestion(msg.content)
@@ -103,7 +189,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     const hasEstablishedFileContext = previousFileQuestions > 0;
     const isFirstFileQuestion = previousFileQuestions <= 1 && isCurrentFileQuestion;
     
-    logger.info(`📊 Context Analysis: isFileQuestion=${isCurrentFileQuestion}, previousFileQuestions=${previousFileQuestions}, hasEstablishedContext=${hasEstablishedFileContext}, isFirstFileQuestion=${isFirstFileQuestion}`);
+    logger.info(`Context Analysis: isFileQuestion=${isCurrentFileQuestion}, previousFileQuestions=${previousFileQuestions}, hasEstablishedContext=${hasEstablishedFileContext}, isFirstFileQuestion=${isFirstFileQuestion}`);
     
     // 5. Initialize variables for RAG
     let relevantMemories: any[] = [];
@@ -114,7 +200,9 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     try {
       if (isCurrentFileQuestion) {
         logger.info('Searching for relevant context across all projects...');
+        console.log('🚀 CALLING searchAllProjects...');
         const allMemories = await ragService.searchAllProjects(content, 20);
+        console.log('🚀 searchAllProjects RETURNED:', allMemories.length, 'memories');
 
         if (allMemories.length > 0) {
           logger.info(`Found ${allMemories.length} total memories across all projects`);
@@ -142,33 +230,50 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
             if (remainingSlots > 0 && otherProjectsMemories.length > 0) {
               finalMemories = [...finalMemories, ...otherProjectsMemories.slice(0, Math.min(3, remainingSlots))];
             }
-            logger.info(`🎯 PRIORITIZED: ${currentProjectMemories.length} from current project, ${Math.min(3, Math.max(15 - currentProjectMemories.slice(0, 12).length, 0))} from other projects`);
+            logger.info(`PRIORITIZED: ${currentProjectMemories.length} from current project, ${Math.min(3, Math.max(15 - currentProjectMemories.slice(0, 12).length, 0))} from other projects`);
           } else {
             finalMemories = otherProjectsMemories.slice(0, 15);
-            logger.info(`🔄 FALLBACK: Using ${finalMemories.length} memories from other projects`);
+            logger.info(`FALLBACK: Using ${finalMemories.length} memories from other projects`);
           }
           
           relevantMemories = finalMemories;
           
-          // ✅ SMART CONTEXT FILTERING: Filter by question relevance for subsequent questions
+          // SMART CONTEXT FILTERING: Filter by question relevance for subsequent questions
           if (hasEstablishedFileContext && !isFirstFileQuestion) {
             const questionKeywords = extractQuestionKeywords(content);
-            logger.info(`🔍 FILTERING by keywords: ${questionKeywords.join(', ')}`);
+            logger.info(`FILTERING by keywords: ${questionKeywords.join(', ')}`);
             
             // Filter memories by relevance to specific question
-            const keywordFilteredMemories = relevantMemories.filter(memory => {
-              const memoryText = memory.content.toLowerCase();
-              return questionKeywords.some(keyword => memoryText.includes(keyword));
-            });
-            
+          const keywordFilteredMemories = relevantMemories.filter(memory => {
+            // ✅ PRESERVE ALL FILES regardless of keywords
+            const isFile = memory.metadata?.source_type === 'file_upload' || 
+                           memory.metadata?.file_name || 
+                           memory.metadata?.filename ||
+                           memory.metadata?.fileType;
+  
+            if (isFile) {
+              console.log('🔍 PRESERVING FILE:', memory.metadata?.file_name || 'unknown_file');
+              return true; // Always keep files
+            }
+  
+            // Filter conversations by keywords
+            const memoryText = memory.content.toLowerCase();
+            const hasKeywords = questionKeywords.some(keyword => memoryText.includes(keyword));
+  
+            if (hasKeywords) {
+              console.log('🔍 KEEPING CONVERSATION by keywords');
+            }
+  
+            return hasKeywords;
+          });            
             if (keywordFilteredMemories.length > 0) {
               relevantMemories = keywordFilteredMemories.slice(0, 8); // Reduced for focused context
               contextStrategy = 'filtered';
-              logger.info(`🎯 FILTERED to ${relevantMemories.length} relevant memories for specific question`);
+              logger.info(`FILTERED to ${relevantMemories.length} relevant memories for specific question`);
             } else {
               relevantMemories = relevantMemories.slice(0, 5); // Even more reduced if no keyword matches
               contextStrategy = 'minimal';
-              logger.info(`⚠️ No keyword matches, using minimal context (${relevantMemories.length} memories)`);
+              logger.info(`No keyword matches, using minimal context (${relevantMemories.length} memories)`);
             }
           } else {
             contextStrategy = isFirstFileQuestion ? 'full' : 'standard';
@@ -176,12 +281,22 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
           
           // Separate file content from conversation history
           const fileMemories = relevantMemories.filter(memory => {
-            const sourceType = memory.metadata?.source_type;
-            const fileName = memory.metadata?.file_name || memory.metadata?.filename;
-            const fileType = memory.metadata?.fileType;
-            return sourceType === 'file_upload' || fileName || fileType;
+          const sourceType = memory.metadata?.source_type;
+          const fileName = memory.metadata?.file_name || memory.metadata?.filename;
+          const fileType = memory.metadata?.fileType;
+          const isFile = sourceType === 'file_upload' || fileName || fileType;
+  
+          // 🔍 DEBUG FILTRADO
+          console.log('🔍 FILTERING DEBUG:', {
+            sourceType,
+            fileName, 
+            fileType,
+            isFile,
+            fullMetadata: memory.metadata
           });
-          
+  
+          return isFile;
+        });          
           const conversationMemories = relevantMemories.filter(memory => {
             const sourceType = memory.metadata?.source_type;
             const fileName = memory.metadata?.file_name || memory.metadata?.filename;
@@ -197,13 +312,13 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
             fileMemories.forEach((memory, index) => {
               const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'unknown_file';
               const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown_project';
-              const isCurrent = projectId === currentProjectId ? '🎯 CURRENT' : '🔄 OTHER';
+              const isCurrent = projectId === currentProjectId ? 'CURRENT' : 'OTHER';
               const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
-              logger.info(`📄 File ${index + 1}: ${fileName} ${isCurrent} (similarity: ${similarity}%)`);
+              logger.info(`File ${index + 1}: ${fileName} ${isCurrent} (similarity: ${similarity}%)`);
             });
           }
           
-          // ✅ CONTEXT BUILDING: Adapt based on strategy
+          // CONTEXT BUILDING: Adapt based on strategy
           let contextSections: string[] = [];
           
           if (contextStrategy === 'full' || contextStrategy === 'standard') {
@@ -217,13 +332,13 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
                 const chunkInfo = memory.metadata?.chunkIndex !== undefined ? 
                   ` (parte ${memory.metadata.chunkIndex + 1}/${memory.metadata.totalChunks})` : '';
                 const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown';
-                const isCurrent = projectId === currentProjectId ? '🎯 PROYECTO ACTUAL' : '🔄 OTRO PROYECTO';
+                const isCurrent = projectId === currentProjectId ? 'PROYECTO ACTUAL' : 'OTRO PROYECTO';
                 const projectInfo = ` [${isCurrent}]`;
                 
-                return `**📄 ${fileName}** ${chunkInfo}${projectInfo}\n🔍 Sección: ${section}\n🎯 Relevancia: ${similarity}%\n\n${memory.content}`;
+                return `**${fileName}** ${chunkInfo}${projectInfo}\nSeccion: ${section}\nRelevancia: ${similarity}%\n\n${memory.content}`;
               });
               
-              contextSections.push(`--- 📁 ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n─────────────\n\n')}`);
+              contextSections.push(`--- ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n─────────────\n\n')}`);
             }
             
             // Add conversation context if needed
@@ -239,7 +354,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
                 return `[${similarity}% similitud | ${timestamp}]\n${memory.content}`;
               });
               
-              contextSections.push(`--- 💬 CONTEXTO CONVERSACIONAL (${priorityConversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
+              contextSections.push(`--- CONTEXTO CONVERSACIONAL (${priorityConversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
             }
           } else if (contextStrategy === 'filtered' || contextStrategy === 'minimal') {
             // FOCUSED CONTEXT for specific follow-up questions
@@ -248,25 +363,25 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
               const fileParts = focusedMemories.map(memory => {
                 const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
                 const section = memory.metadata?.section || 'contenido';
-                return `**📄 ${fileName}** - ${section}\n\n${memory.content}`;
+                return `**${fileName}** - ${section}\n\n${memory.content}`;
               });
               
-              contextSections.push(`--- 🎯 CONTENIDO RELEVANTE ---\n${fileParts.join('\n\n---\n\n')}`);
+              contextSections.push(`--- CONTENIDO RELEVANTE ---\n${fileParts.join('\n\n---\n\n')}`);
             }
           }
           
           // Build final context
           if (contextSections.length > 0) {
-            contextualMemory = `\n\n${contextSections.join('\n\n════════════════════════════════════════\n\n')}\n\n--- FIN INFORMACIÓN DISPONIBLE ---\n\n`;
+            contextualMemory = `\n\n${contextSections.join('\n\n════════════════════════════════════════\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
             
-            logger.info(`📤 Injecting ${contextualMemory.length} characters of context (strategy: ${contextStrategy})`);
-            logger.info(`🎯 Final summary: ${fileMemories.length} archivos, ${conversationMemories.length} conversaciones`);
+            logger.info(`Injecting ${contextualMemory.length} characters of context (strategy: ${contextStrategy})`);
+            logger.info(`Final summary: ${fileMemories.length} archivos, ${conversationMemories.length} conversaciones`);
           }
         } else {
-          logger.info('❌ No relevant context found in any project');
+          logger.info('No relevant context found in any project');
         }
       } else {
-        logger.info('ℹ️ Non-file question, skipping file context search');
+        logger.info('Non-file question, skipping file context search');
       }
     } catch (ragError) {
       logger.warn('RAG search failed, continuing without context:', ragError);
@@ -278,46 +393,66 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       content: msg.content
     }));
 
-    // 8. ✅ INTELLIGENT CONTEXT INJECTION based on conversation state
-    if (claudeMessages.length > 0 && isCurrentFileQuestion) {
+    // 8. ✅ ENHANCED: Context injection with DYNAMIC PROMPT SUPPORT
+    if (claudeMessages.length > 0) {
       const lastUserIndex = claudeMessages.length - 1;
       if (claudeMessages[lastUserIndex].role === 'user') {
-        let instruction: string;
+        let baseInstruction = '';
         
-        if (contextStrategy === 'full') {
-          // First file question - full context
-          instruction = `${contextualMemory}\n🎯 INSTRUCCIÓN IMPORTANTE: Tienes acceso a archivos que el usuario ha subido al PROYECTO ACTUAL (marcados con 🎯 PROYECTO ACTUAL). USA PRIORITARIAMENTE la información de estos archivos del proyecto actual para responder. Si la pregunta se refiere a contenido de archivos, cita específicamente de qué archivo del proyecto actual proviene la información.\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
-        } else if (contextStrategy === 'filtered') {
-          // Subsequent specific question - focused context
-          instruction = `${contextualMemory}\n🔍 INSTRUCCIÓN: Ya tienes el contexto del archivo. La pregunta específica del usuario se refiere a: "${content}". Enfócate en responder específicamente esta nueva pregunta basándote en el contenido más relevante del archivo.\n\nPregunta específica:\n${claudeMessages[lastUserIndex].content}`;
-        } else if (contextStrategy === 'minimal') {
-          // Follow-up with minimal context
-          instruction = `${contextualMemory}\n💡 INSTRUCCIÓN: Responde la nueva pregunta específica del usuario basándote en el archivo que ya conoces del contexto de la conversación.\n\nNueva pregunta:\n${claudeMessages[lastUserIndex].content}`;
-        } else {
-          // Standard strategy
-          instruction = `${contextualMemory}\n📄 INFORMACIÓN: Tienes acceso a archivos subidos. Responde basándote en el contenido disponible.\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
+        // Build base instruction based on context strategy and settings
+        if (isCurrentFileQuestion && contextualMemory) {
+          if (contextStrategy === 'full') {
+            baseInstruction = `${contextualMemory}\nINSTRUCCION IMPORTANTE: Tienes acceso a archivos que el usuario ha subido al PROYECTO ACTUAL. USA PRIORITARIAMENTE la informacion de estos archivos del proyecto actual para responder. Si la pregunta se refiere a contenido de archivos, cita especificamente de que archivo del proyecto actual proviene la informacion.`;
+          } else if (contextStrategy === 'filtered') {
+            baseInstruction = `${contextualMemory}\nINSTRUCCION: Ya tienes el contexto del archivo. La pregunta especifica del usuario se refiere a: "${content}". Enfocate en responder especificamente esta nueva pregunta basandote en el contenido mas relevante del archivo.`;
+          } else if (contextStrategy === 'minimal') {
+            baseInstruction = `${contextualMemory}\nINSTRUCCION: Responde la nueva pregunta especifica del usuario basandote en el archivo que ya conoces del contexto de la conversacion.`;
+          } else {
+            baseInstruction = `${contextualMemory}\nINFORMACION: Tienes acceso a archivos subidos. Responde basandote en el contenido disponible.`;
+          }
         }
         
-        claudeMessages[lastUserIndex].content = instruction;
-        logger.info(`🎯 Applied context injection strategy: ${contextStrategy}`);
+        // ✅ NEW: Apply custom prompt/template if provided
+        let finalInstruction = baseInstruction;
+        if (claudeSettings.prompt) {
+          finalInstruction = `${baseInstruction}\n\n--- INSTRUCCIONES ADICIONALES ---\n${claudeSettings.prompt}`;
+        }
+        
+        finalInstruction += `\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
+        claudeMessages[lastUserIndex].content = finalInstruction;
+        
+        logger.info(`Applied context injection strategy: ${contextStrategy}${claudeSettings.promptType ? `, promptType: ${claudeSettings.promptType}` : ''}`);
       }
     }
 
-    // 9. Send to Claude API
+    // 9. ✅ ENHANCED: Send to Claude API with dynamic settings
     const { ClaudeService } = require('./services/claude.service');
     const claudeService = new ClaudeService();
     
+    // Validate settings before sending
+    const validation = claudeService.validateSettings(claudeSettings);
+    if (!validation.valid) {
+      logger.warn('Invalid Claude settings provided:', validation.errors);
+      res.status(400).json({ error: 'Invalid settings', details: validation.errors });
+      return;
+    }
+    
     logger.info('API Key status: CONFIGURED');
     logger.info('Sending to Claude API with context...');
-    const claudeResponse = await claudeService.sendMessage(claudeMessages);
+    console.log('🔍 PROMPT DEBUG - Final messages being sent to Claude:');
+    console.log(JSON.stringify(claudeMessages, null, 2));
+    const claudeResponse = await claudeService.sendMessage(claudeMessages, claudeSettings);
+    console.log('🔍 CLAUDE RESPONSE DEBUG:', JSON.stringify(claudeResponse, null, 2));
     const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
+    //const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
 
-    // 10. Save Claude's response
+    // 10. Save Claude's response with settings metadata
     const assistantMessage = await dbService.addMessage(conversationId, 'assistant', assistantContent, { 
       model: claudeResponse.model,
       usage: claudeResponse.usage,
       context_used: relevantMemories?.length || 0,
-      context_strategy: contextStrategy
+      context_strategy: contextStrategy,
+      settings_used: claudeSettings // ✅ NEW: Store settings used
     });
 
     // 11. Store new messages in ChromaDB for future searches
@@ -354,20 +489,69 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       logger.warn('Failed to store in ChromaDB:', storageError);
     }
 
-    // 12. Respond to frontend
+    // 12. ✅ ENHANCED: Respond with configuration info
     res.json({
       user_message: userMessage,
       assistant_message: assistantMessage,
       usage: claudeResponse.usage,
       context_memories_used: relevantMemories?.length || 0,
-      context_strategy: contextStrategy
+      context_strategy: contextStrategy,
+      settings_applied: claudeSettings // ✅ NEW: Return applied settings
     });
 
-    logger.info(`Message processed successfully. Context memories used: ${relevantMemories?.length || 0}, Strategy: ${contextStrategy}`);
+    logger.info(`Message processed successfully. Context memories used: ${relevantMemories?.length || 0}, Strategy: ${contextStrategy}, Settings: ${JSON.stringify(claudeSettings)}`);
 
   } catch (error) {
     logger.error('Error processing message:', error);
     res.status(500).json({ error: 'Failed to process message' });
+  }
+});
+
+// Get messages from conversation
+app.get('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const conversationId = req.params.id;
+    const messages = await dbService.getMessages(conversationId);
+    res.json({ messages });
+  } catch (error) {
+    logger.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// Get conversation by id
+app.get('/api/conversations/:id', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const conversationId = req.params.id;
+    const conversation = await dbService.getConversationById(conversationId);
+    if (!conversation) {
+      res.status(404).json({ error: 'Conversation not found' });
+      return;
+    }
+    res.json(conversation);
+  } catch (error) {
+    logger.error('Error fetching conversation:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// ✅ NEW: Endpoint to get available Claude configuration options
+app.get('/api/claude/config', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const { ClaudeService } = require('./services/claude.service');
+    const claudeAPI = new ClaudeService(); // ✅ FIXED: Same variable name pattern
+    
+    res.json({
+      templates: claudeAPI.getPromptTemplates(),
+      defaults: claudeAPI.getDefaultSettings(),
+      limits: {
+        temperature: { min: 0, max: 1, step: 0.1 },
+        maxTokens: { min: 100, max: 8000, step: 100 }
+      }
+    });
+  } catch (error) {
+    logger.error('Error getting Claude config:', error);
+    res.status(500).json({ error: 'Failed to get configuration' });
   }
 });
 
@@ -391,7 +575,7 @@ app.get('/api/info', (req, res) => {
   res.json({
     name: 'Claude Infinito v1.1 Backend',
     version: '1.1.0',
-    features: ['RAG Integration', 'Persistent Memory', 'Cross-Project Context', 'File Upload Support', 'Intelligent Context Management']
+    features: ['RAG Integration', 'Persistent Memory', 'Cross-Project Context', 'File Upload Support', 'Intelligent Context Management', 'Dynamic Configuration']
   });
 });
 
@@ -403,10 +587,11 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  logger.info(`🚀 Claude Infinito Backend running on port ${port}`);
-  logger.info('🧠 RAG-enabled memory system active');
-  logger.info('📁 File upload integration enabled');
-  logger.info('🎯 Intelligent context management enabled');
+  logger.info(`Claude Infinito Backend running on port ${port}`);
+  logger.info('RAG-enabled memory system active');
+  logger.info('File upload integration enabled');
+  logger.info('Intelligent context management enabled');
+  logger.info('Dynamic configuration support enabled'); // ✅ NEW
 });
 
 export default app;

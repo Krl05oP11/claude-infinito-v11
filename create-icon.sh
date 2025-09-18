@@ -1,0 +1,18 @@
+#!/bin/bash
+PROJECT_DIR="$HOME/Projects/claude-infinito-v11"
+ICON_DIR="$PROJECT_DIR/assets"
+ICON_FILE="$ICON_DIR/claude-infinito-icon.svg"
+
+mkdir -p "$ICON_DIR"
+
+cat > "$ICON_FILE" << 'EOI'
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="64" cy="64" r="60" fill="#2d2823" stroke="#8b6914" stroke-width="3"/>
+  <path d="M 30 64 C 30 54, 36 48, 44 48 C 52 48, 58 54, 64 64 C 70 54, 76 48, 84 48 C 92 48, 98 54, 98 64 C 98 74, 92 80, 84 80 C 76 80, 70 74, 64 64 C 58 74, 52 80, 44 80 C 36 80, 30 74, 30 64 Z" fill="#8b6914" stroke="#e8dcc6" stroke-width="2"/>
+  <text x="64" y="45" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#e8dcc6" text-anchor="middle">C</text>
+  <text x="64" y="105" font-family="Arial, sans-serif" font-size="10" fill="#c4b896" text-anchor="middle">INFINITO</text>
+</svg>
+EOI
+
+echo "Ícono creado: $ICON_FILE"

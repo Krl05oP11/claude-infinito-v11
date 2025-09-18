@@ -119,8 +119,8 @@ export class FileProcessorService {
       let storedCount = 0;
       for (const chunk of chunks) {
         const success = await this.ragService.addMemory(
-          projectId,
-          conversationId,
+          "global_knowledge_base",
+          "global", 
           chunk.content,
           {
             ...chunk.metadata,
@@ -151,13 +151,22 @@ export class FileProcessorService {
   }
 
   // FIXED: Process PDF files with proper text extraction and ChromaDB-compatible metadata
+// FIXED: Process PDF files with proper text extraction and character normalization
   private async processPDFFile(buffer: Buffer, filename: string): Promise<FileChunk[]> {
     console.log(`📄 Processing PDF: ${filename}`);
     
     try {
-      // Extract text from PDF using pdf-parse
-      const data = await pdfParse(buffer);
-      const extractedText = data.text;
+      // Extract text from PDF using pdf-parse with proper configuration
+      const data = await pdfParse(buffer, {
+        // Normalize whitespace and handle text extraction properly
+        normalizeWhitespace: true,
+        disableCombineTextItems: false,
+        // Additional options for better text extraction
+        max: 0, // Process all pages
+        version: 'v1.10.100'
+      });
+      
+      let extractedText = data.text;
       
       if (!extractedText || extractedText.trim().length === 0) {
         console.warn(`⚠️ No text extracted from PDF: ${filename}`);
@@ -172,7 +181,6 @@ export class FileProcessorService {
             section: 'Empty PDF',
             language: 'text',
             pages: data.numpages || 0,
-            // FIXED: Only primitive values for ChromaDB
             pdfTitle: (data.info && data.info.Title) ? String(data.info.Title) : '',
             pdfAuthor: (data.info && data.info.Author) ? String(data.info.Author) : '',
             pdfSubject: (data.info && data.info.Subject) ? String(data.info.Subject) : '',
@@ -181,6 +189,13 @@ export class FileProcessorService {
         }];
       }
 
+      // 🛠️ CRITICAL FIX: Clean corrupted characters that cause search failures
+      console.log(`🔧 Original text preview: "${extractedText.substring(0, 200)}..."`);
+      
+      // Fix common PDF text extraction corruptions
+      extractedText = this.cleanPDFText(extractedText);
+      
+      console.log(`🔧 Cleaned text preview: "${extractedText.substring(0, 200)}..."`);
       console.log(`📊 PDF ${filename}: ${data.numpages} pages, ${extractedText.length} characters extracted`);
 
       // Split text into logical chunks
@@ -188,7 +203,7 @@ export class FileProcessorService {
       const maxChunkSize = 1500;
       const textChunks = this.chunkText(extractedText, maxChunkSize);
       
-      // FIXED: Extract only primitive values from PDF info
+      // Extract only primitive values from PDF info
       const pdfTitle = (data.info && data.info.Title) ? String(data.info.Title) : '';
       const pdfAuthor = (data.info && data.info.Author) ? String(data.info.Author) : '';
       const pdfSubject = (data.info && data.info.Subject) ? String(data.info.Subject) : '';
@@ -210,7 +225,6 @@ export class FileProcessorService {
             language: 'text',
             pages: totalPages,
             estimatedPage: estimatedPage,
-            // FIXED: Only primitive values - no complex objects
             pdfTitle: pdfTitle,
             pdfAuthor: pdfAuthor,
             pdfSubject: pdfSubject,
@@ -243,6 +257,58 @@ export class FileProcessorService {
     }
   }
 
+  // 🛠️ NEW METHOD: Clean corrupted PDF text extraction
+  private cleanPDFText(text: string): string {
+    let cleanedText = text;
+    
+    // Fix specific character corruptions found in PDF extraction
+    const characterFixes = [
+      // Greek theta (Ɵ) replacing "ti" combinations
+      { from: /Ɵ/g, to: 'ti' },
+      
+      // Other common PDF extraction issues
+      { from: /ﬁ/g, to: 'fi' },   // Ligature fi
+      { from: /ﬂ/g, to: 'fl' },   // Ligature fl
+      { from: /ﬀ/g, to: 'ff' },   // Ligature ff
+      { from: /ﬃ/g, to: 'ffi' },  // Ligature ffi
+      { from: /ﬄ/g, to: 'ffl' },  // Ligature ffl
+      
+      // Unicode normalization issues
+      { from: /'/g, to: "'" },     // Curly apostrophe to straight
+      { from: /"/g, to: '"' },     // Curly quotes to straight
+      { from: /"/g, to: '"' },
+      { from: /–/g, to: '-' },     // En dash to hyphen
+      { from: /—/g, to: '-' },     // Em dash to hyphen
+      
+      // Remove excessive whitespace and normalize line breaks
+      { from: /\s+/g, to: ' ' },   // Multiple spaces to single space
+      { from: /\n\s*\n/g, to: '\n\n' }, // Normalize paragraph breaks
+    ];
+    
+    // Apply all character fixes
+    characterFixes.forEach(fix => {
+      cleanedText = cleanedText.replace(fix.from, fix.to);
+    });
+    
+    // Unicode normalization (NFC = Canonical Decomposition + Canonical Composition)
+    cleanedText = cleanedText.normalize('NFC');
+    
+    // Trim excessive whitespace
+    cleanedText = cleanedText.trim();
+    
+    // Log if significant changes were made
+    if (cleanedText.length !== text.length || cleanedText !== text) {
+      console.log(`🔧 Text cleaning applied: ${text.length} → ${cleanedText.length} characters`);
+      
+      // Log specific problematic patterns found
+      if (text.includes('Ɵ')) {
+        const thetaCount = (text.match(/Ɵ/g) || []).length;
+        console.log(`🔧 Fixed ${thetaCount} theta (Ɵ) → ti replacements`);
+      }
+    }
+    
+    return cleanedText;
+  }
   // Procesar Jupyter Notebook (.ipynb)
   private async processJupyterNotebook(content: string, filename: string): Promise<FileChunk[]> {
     const chunks: FileChunk[] = [];

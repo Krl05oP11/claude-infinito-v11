@@ -272,3 +272,4 @@
   transform: translateX(5px);
   transition: all 0.2s ease;
 }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

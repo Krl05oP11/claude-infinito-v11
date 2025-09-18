@@ -156,3 +156,43 @@ input[type="range"]::-webkit-slider-thumb:hover {
     width: 600px !important;
   }
 }
+
+/* ✅ RESPONSIVE LAYOUT */
+@media (max-width: 1200px) {
+  .sidebar {
+    flex: 0 0 350px !important;
+    min-width: 300px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    flex: 0 0 200px !important;
+    width: 100% !important;
+    max-width: none !important;
+    resize: none !important;
+  }
+}
+
+/* ✅ REDIMENSIONAMIENTO MANUAL */
+.sidebar::-webkit-resizer {
+  background-color: #8b6914;
+  border-radius: 2px;
+  width: 8px;
+}
+
+/* ✅ ANIMACIONES LOADING */
+@keyframes spin { 
+  0% { transform: rotate(0deg); } 
+  100% { transform: rotate(360deg); } 
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading-dots {
+  animation: pulse 1.5s infinite;
+}
+

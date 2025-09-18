@@ -1,0 +1,32 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Claude Infinito v1.1
+Comment=AI Assistant with Infinite Memory and Knowledge Base
+GenericName=AI Assistant
+Keywords=AI;Assistant;Claude;Memory;Knowledge;RAG;Chat;
+
+# Execution
+Exec=/home/carlos/Projects/claude-infinito-v11/launch-claude-infinito.sh
+Path=/home/carlos/Projects/claude-infinito-v11
+Terminal=true
+StartupWMClass=claude-infinito
+
+# Visual
+Icon=applications-development
+StartupNotify=true
+
+# Categories for application menu
+Categories=Development;Office;Utility;
+MimeType=text/plain;application/pdf;
+
+# Desktop integration
+Actions=status;stop;
+
+[Desktop Action status]
+Name=Show Status
+Exec=/home/carlos/Projects/claude-infinito-v11/launch-claude-infinito.sh --status
+
+[Desktop Action stop]
+Name=Stop Services
+Exec=/home/carlos/Projects/claude-infinito-v11/launch-claude-infinito.sh --stop

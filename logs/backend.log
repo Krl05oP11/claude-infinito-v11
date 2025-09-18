@@ -1,0 +1,11 @@
+=== Backend startup jue 18 sep 2025 11:20:39 -03 ===
+ChromaDB config: http://localhost:8001 (API v2)
+ChromaDB config: http://localhost:8001 (API v2)
+2025-09-18T14:20:40.235Z [[32minfo[39m]: [32mClaude Service initialized: model=claude-sonnet-4-20250514, defaultTemp=0.3, defaultMaxTokens=4000[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mClaude Infinito Backend running on port 3001[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mRAG-enabled memory system active[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mFile upload integration enabled[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mIntelligent context management enabled[39m 
+2025-09-18T14:20:40.238Z [[32minfo[39m]: [32mDynamic configuration support enabled[39m 
+2025-09-18T14:20:40.252Z [[32minfo[39m]: [32mDatabase connected successfully[39m 
+Backend compiled and started with Node.js at jue 18 sep 2025 11:20:45 -03

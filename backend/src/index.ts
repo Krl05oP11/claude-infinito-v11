@@ -1,3 +1,4 @@
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -62,16 +63,95 @@ function isFileRelatedQuestion(content: string): boolean {
 
 // Helper function to extract keywords from question for context filtering
 function extractQuestionKeywords(content: string): string[] {
-  const stopWords = ['que', 'qué', 'el', 'la', 'de', 'en', 'y', 'a', 'un', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son', 'con', 'para', 'como', 'pero', 'sus', 'had', 'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'];
+  // Stop words expandidos - palabras que NO queremos como keywords
+  const stopWords = [
+    // Español básico
+    'que', 'qué', 'el', 'la', 'de', 'en', 'y', 'a', 'un', 'una', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son', 'con', 'para', 'como', 'pero', 'sus', 'del', 'las', 'los', 'una', 'este', 'esta', 'estos', 'estas', 'ese', 'esa', 'esos', 'esas', 
+    'desde', 'hasta', 'cuando', 'donde', 'quien', 'cual', 'cuales', 'muy', 'más', 'menos', 'también', 'tan', 'tanto', 'toda', 'todo', 'todos', 'todas',
+    'me', 'mi', 'mis', 'nos', 'nuestro', 'nuestra', 'nuestros', 'nuestras',
+    'ser', 'estar', 'tener', 'hacer', 'poder', 'decir', 'ir', 'ver', 'dar', 'saber', 'querer', 'llegar', 'poner', 'parecer', 'seguir', 'encontrar', 'llamar', 'venir', 'pensar', 'salir', 'volver', 'tomar', 'conocer', 'vivir', 'sentir', 'tratar', 'dejar', 'llevar',
+    
+    // Palabras genéricas de conversación
+    'hola', 'claude', 'resume', 'resumen', 'unas', 'pocas', 'líneas', 'cuáles', 'ventajas', 'debes', 'debe', 'debo', 'tener', 'acceso', 'collection', 'subido', 'subida',
+    
+    // English básico
+    'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'
+  ];
   
-  return content
+  // Palabras clave importantes que siempre queremos preservar
+  const importantKeywords = [
+    // Autores y nombres propios
+    'mitchell', 'melanie', 'darwin', 'holland', 'goldberg', 'koza', 'fogel',
+    
+    // Términos técnicos de algoritmos genéticos
+    'algoritmos', 'genéticos', 'genetic', 'algorithm', 'algorithms',
+    'fitness', 'selección', 'selection', 'mutación', 'mutation', 'crossover', 'cruzamiento',
+    'población', 'population', 'generación', 'generation', 'cromosoma', 'chromosome',
+    'evolución', 'evolution', 'adaptación', 'adaptation', 'supervivencia', 'survival',
+    
+    // Términos de machine learning
+    'machine', 'learning', 'aprendizaje', 'automático', 'inteligencia', 'artificial',
+    'clustering', 'clasificación', 'regresión', 'neural', 'redes', 'networks',
+    'elbow', 'method', 'método', 'codo', 'kmeans', 'svm', 'bayes',
+    
+    // Términos de documentos
+    'libro', 'capítulo', 'página', 'sección', 'documento', 'archivo', 'pdf', 'text',
+    'paper', 'artículo', 'investigación', 'estudio', 'análisis',
+    
+    // Conceptos específicos
+    'optimización', 'optimization', 'búsqueda', 'search', 'heurística', 'heuristic',
+    'convergencia', 'convergence', 'diversidad', 'diversity', 'exploración', 'exploration',
+    'explotación', 'exploitation', 'parámetros', 'parameters'
+  ];
+  
+  // Limpiar y procesar el contenido
+  const words = content
     .toLowerCase()
-    .replace(/[^\w\s]/g, ' ')
+    .replace(/[^\w\sáéíóúñü]/g, ' ') // Preservar caracteres españoles
     .split(/\s+/)
-    .filter(word => word.length > 3 && !stopWords.includes(word))
-    .slice(0, 5); // Top 5 keywords
+    .filter(word => word.length > 2); // Mínimo 3 caracteres
+  
+  // Extraer keywords con priorización inteligente
+  const extractedKeywords: string[] = [];
+  
+  // 1. Primero: palabras importantes identificadas específicamente
+  words.forEach(word => {
+    if (importantKeywords.includes(word) && !extractedKeywords.includes(word)) {
+      extractedKeywords.push(word);
+    }
+  });
+  
+  // 2. Segundo: sustantivos técnicos que no están en stop words
+  words.forEach(word => {
+    if (word.length >= 4 && 
+        !stopWords.includes(word) && 
+        !importantKeywords.includes(word) &&
+        !extractedKeywords.includes(word) &&
+        extractedKeywords.length < 8) { // Límite total de 8 keywords
+      
+      // Priorizar palabras que parecen técnicas o específicas
+      if (word.includes('tion') || word.includes('sion') || word.includes('ción') ||
+          word.includes('ment') || word.includes('ness') || word.includes('ismo') ||
+          word.includes('idad') || word.includes('encia') || word.includes('ancia')) {
+        extractedKeywords.push(word);
+      }
+    }
+  });
+  
+  // 3. Tercero: otras palabras relevantes si aún necesitamos más
+  if (extractedKeywords.length < 5) {
+    words.forEach(word => {
+      if (word.length >= 4 && 
+          !stopWords.includes(word) && 
+          !extractedKeywords.includes(word) &&
+          extractedKeywords.length < 8) {
+        extractedKeywords.push(word);
+      }
+    });
+  }
+  
+  return extractedKeywords.slice(0, 8); // Máximo 8 keywords
 }
-
 // Messages endpoint with RAG integration and DYNAMIC CONFIGURATION SUPPORT
 app.post('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
@@ -103,25 +183,68 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     
     // 4. Smart context detection: Analyze conversation history for file context
     const isCurrentFileQuestion = isFileRelatedQuestion(content);
+    // Calculate file context variables
     const previousFileQuestions = recentMessages.filter(msg => 
       msg.role === 'user' && isFileRelatedQuestion(msg.content)
     ).length;
-    
     const hasEstablishedFileContext = previousFileQuestions > 0;
     const isFirstFileQuestion = previousFileQuestions <= 1 && isCurrentFileQuestion;
-    
-    logger.info(`Context Analysis: isFileQuestion=${isCurrentFileQuestion}, previousFileQuestions=${previousFileQuestions}, hasEstablishedContext=${hasEstablishedFileContext}, isFirstFileQuestion=${isFirstFileQuestion}`);
     
     // 5. Initialize variables for RAG
     let relevantMemories: any[] = [];
     let contextualMemory: string = '';
     let contextStrategy: string = 'none';
+
+// 🛠️ COMPREHENSIVE FIX: Check contradictions BEFORE filtering
+console.log('🔍 CONTRADICTION CHECK DEBUG:');
+console.log('  isCurrentFileQuestion:', isCurrentFileQuestion);
+console.log('  recentMessages count:', recentMessages.length);
+
+let hasContradictoryHistory = false;
+if (isCurrentFileQuestion) {
+  console.log('🔍 Checking for contradictory history...');
+  
+  // Check each message for contradictory content
+  recentMessages.forEach((msg, index) => {
+    if (msg.role === 'assistant') {
+      const content = msg.content.toLowerCase();
+      
+      const hasContradiction = (
+        content.includes('no veo archivos') ||
+        content.includes('no tengo acceso') ||
+        content.includes('no puedo acceder') ||
+        content.includes('sorry, could not generate') ||
+        content.includes('no dispongo de') ||
+        content.includes('content": []') ||
+        content.includes('cannot generate response')
+      );
+      
+      if (hasContradiction) {
+        console.log(`⚠️ CONTRADICTION FOUND in message ${index}: "${content.substring(0, 100)}..."`);
+        hasContradictoryHistory = true;
+      }
+    }
+  });
+  
+  if (hasContradictoryHistory) {
+    console.log('⚠️ CONTRADICTION DETECTED: Skipping ALL file context search to avoid contradictions');
+    // Skip the entire file search process
+    relevantMemories = [];
+    contextualMemory = '';
+    contextStrategy = 'contradiction_skip';
+  }
+}    
     
     // 6. Search for semantic context with INTELLIGENT STRATEGY
     try {
-      if (isCurrentFileQuestion) {
+      if (isCurrentFileQuestion && !hasContradictoryHistory) {
         logger.info('Searching for relevant context across all projects...');
-        const allMemories = await ragService.searchAllProjects(content, 20);
+        console.log('🚀 CALLING searchAllProjects...');
+    // DESPUÉS - Pasar threshold del usuario:
+
+    const userThreshold = claudeSettings.temperature; // Temperature del slider UI
+    const allMemories = await ragService.searchAllProjects(content, 20, userThreshold);
+        console.log('🚀 searchAllProjects RETURNED:', allMemories.length, 'memories');
 
         if (allMemories.length > 0) {
           logger.info(`Found ${allMemories.length} total memories across all projects`);
@@ -129,6 +252,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
           // Separate current project from other projects
           const currentProjectMemories = allMemories.filter(memory => {
             const memoryProjectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
+    
             return memoryProjectId === currentProjectId;
           });
           
@@ -163,11 +287,28 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
             logger.info(`FILTERING by keywords: ${questionKeywords.join(', ')}`);
             
             // Filter memories by relevance to specific question
-            const keywordFilteredMemories = relevantMemories.filter(memory => {
-              const memoryText = memory.content.toLowerCase();
-              return questionKeywords.some(keyword => memoryText.includes(keyword));
-            });
-            
+          const keywordFilteredMemories = relevantMemories.filter(memory => {
+            // ✅ PRESERVE ALL FILES regardless of keywords
+            const isFile = memory.metadata?.source_type === 'file_upload' || 
+                           memory.metadata?.file_name || 
+                           memory.metadata?.filename ||
+                           memory.metadata?.fileType;
+  
+            if (isFile) {
+              console.log('🔍 PRESERVING FILE:', memory.metadata?.file_name || 'unknown_file');
+              return true; // Always keep files
+            }
+  
+            // Filter conversations by keywords
+            const memoryText = memory.content.toLowerCase();
+            const hasKeywords = questionKeywords.some(keyword => memoryText.includes(keyword));
+  
+            if (hasKeywords) {
+              console.log('🔍 KEEPING CONVERSATION by keywords');
+            }
+  
+            return hasKeywords;
+          });            
             if (keywordFilteredMemories.length > 0) {
               relevantMemories = keywordFilteredMemories.slice(0, 8); // Reduced for focused context
               contextStrategy = 'filtered';
@@ -183,12 +324,22 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
           
           // Separate file content from conversation history
           const fileMemories = relevantMemories.filter(memory => {
-            const sourceType = memory.metadata?.source_type;
-            const fileName = memory.metadata?.file_name || memory.metadata?.filename;
-            const fileType = memory.metadata?.fileType;
-            return sourceType === 'file_upload' || fileName || fileType;
+          const sourceType = memory.metadata?.source_type;
+          const fileName = memory.metadata?.file_name || memory.metadata?.filename;
+          const fileType = memory.metadata?.fileType;
+          const isFile = sourceType === 'file_upload' || fileName || fileType;
+  
+          // 🔍 DEBUG FILTRADO
+          console.log('🔍 FILTERING DEBUG:', {
+            sourceType,
+            fileName, 
+            fileType,
+            isFile,
+            fullMetadata: memory.metadata
           });
-          
+  
+          return isFile;
+        });          
           const conversationMemories = relevantMemories.filter(memory => {
             const sourceType = memory.metadata?.source_type;
             const fileName = memory.metadata?.file_name || memory.metadata?.filename;
@@ -279,11 +430,35 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       logger.warn('RAG search failed, continuing without context:', ragError);
     }
 
+    // AGREGAR EN index.ts alrededor de la línea 340, antes de la inyección de contexto
+
+    // 🛠️ ENHANCED CONTRADICTION DETECTION with DEBUGGING
+    console.log('🔍 CONTRADICTION CHECK DEBUG:');
+    console.log('  isCurrentFileQuestion:', isCurrentFileQuestion);
+    console.log('  contextualMemory length:', contextualMemory ? contextualMemory.length : 0);
+    console.log('  recentMessages count:', recentMessages.length);
+
+
     // 7. Build messages for Claude
     const claudeMessages = recentMessages.map(msg => ({
       role: msg.role as 'user' | 'assistant',
       content: msg.content
     }));
+
+// 🛠️ HANDLE CONTRADICTIONS: Modify prompt when contradictions detected
+    if (hasContradictoryHistory && claudeMessages.length > 0) {
+      const lastUserIndex = claudeMessages.length - 1;
+      if (claudeMessages[lastUserIndex].role === 'user') {
+        const originalQuestion = claudeMessages[lastUserIndex].content;
+        claudeMessages[lastUserIndex].content = `CONTEXTO: Hubo respuestas anteriores donde mencioné no tener acceso a archivos. Esa información puede estar desactualizada. 
+
+Pregunta actual del usuario: ${originalQuestion}
+
+INSTRUCCIÓN: Responde de manera directa y útil sobre el estado actual del sistema. Si se refiere a archivos, explica honestamente las capacidades actuales sin referencias contradictorias al historial.`;
+        
+        console.log('🛠️ APPLIED CONTRADICTION PROMPT MODIFICATION');
+      }
+    }
 
     // 8. ✅ ENHANCED: Context injection with DYNAMIC PROMPT SUPPORT
     if (claudeMessages.length > 0) {
@@ -331,8 +506,12 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     
     logger.info('API Key status: CONFIGURED');
     logger.info('Sending to Claude API with context...');
+    console.log('🔍 PROMPT DEBUG - Final messages being sent to Claude:');
+    console.log(JSON.stringify(claudeMessages, null, 2));
     const claudeResponse = await claudeService.sendMessage(claudeMessages, claudeSettings);
+    console.log('🔍 CLAUDE RESPONSE DEBUG:', JSON.stringify(claudeResponse, null, 2));
     const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
+    //const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
 
     // 10. Save Claude's response with settings metadata
     const assistantMessage = await dbService.addMessage(conversationId, 'assistant', assistantContent, { 

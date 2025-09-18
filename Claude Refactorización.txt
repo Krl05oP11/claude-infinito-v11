@@ -1,0 +1,25 @@
+Claude:
+## Refactorización de la línea Exec **Línea original** (línea 10, `claude-infinito.desktop.txt`): 
+``` Exec=/home/carlos/Projects/claude-infinito-v11/launch-claude-infinito.sh ``` 
+**Línea refactorizada**: 
+``` Exec=bash -c "test -x '/home/carlos/Projects/claude-infinito-v11/launch-claude-infinito.sh' && '/home/carlos/Projects/claude-infinito-v11/launch-claude-infinito.sh' %F || notify-send 'Claude Infinito' 'Error: Script no ejecutable o no encontrado' --icon=error" ``` 
+
+## Análisis técnico de la solución: ### 
+**Componentes implementados:** 
+1. **`bash -c`**: Wrapper shell para ejecución de comandos complejos 
+2. **`test -x`**: Verificación atómica de existencia y permisos de ejecución 
+3. **Quoted paths**: Protección contra espacios y caracteres especiales en rutas 
+4. **`%F` field code**: Soporte para múltiples archivos según XDG Desktop Entry Specification v1.5 
+5. **`||` operator**: Manejo de errores con fallback 
+6. **`notify-send`**: Notificación de errores vía D-Bus desktop notifications 
+
+### **Problemas resueltos:** 
+- ✅ **Validación de existencia**: `test -x` verifica archivo y permisos 
+- ✅ **Manejo de argumentos**: `%F` permite procesamiento de archivos desde file managers 
+- ✅ **Error handling**: Notificación visual de fallos de ejecución 
+- ✅ **Path safety**: Comillas simples previenen injection y parsing errors 
+
+### **Comportamiento esperado:** 
+- **Éxito**: Ejecuta script con archivos seleccionados como argumentos 
+- **Fallo**: Muestra notificación desktop con mensaje de error específico 
+La solución mantiene la dependencia del usuario `carlos` como requisito establecido mientras implementa robustez operacional completa.

@@ -1,7 +1,5 @@
 // frontend/src/components/FileUploader.js
 
-// frontend/src/components/FileUploader.js - VERSIÓN COMPACTA
-
 import React, { useState, useRef } from 'react';
 import './FileUploader.css';
 
@@ -76,8 +74,10 @@ const FileUploader = ({ projectId, conversationId, onUploadComplete }) => {
 
     try {
       if (validFiles.length === 1) {
+        // Subir archivo individual
         await uploadSingleFile(validFiles[0]);
       } else {
+        // Subir múltiples archivos
         await uploadMultipleFiles(validFiles);
       }
     } catch (error) {
@@ -137,26 +137,15 @@ const FileUploader = ({ projectId, conversationId, onUploadComplete }) => {
   };
 
   return (
-    <div className="file-uploader file-uploader-compact">
-      {/* ÁREA COMPACTA - Sin ícono, título minimalista */}
+    <div className="file-uploader">
+      {/* Área de drop */}
       <div 
-        className={`drop-zone-compact ${dragActive ? 'active' : ''} ${uploading ? 'uploading' : ''}`}
+        className={`drop-zone ${dragActive ? 'active' : ''} ${uploading ? 'uploading' : ''}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        style={{
-          height: '50px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '2px dashed #8b6914',
-          borderRadius: '8px',
-          backgroundColor: dragActive ? '#3d342c' : '#2d2823',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease'
-        }}
       >
         <input
           ref={fileInputRef}
@@ -168,68 +157,69 @@ const FileUploader = ({ projectId, conversationId, onUploadComplete }) => {
         />
         
         {uploading ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#e8dcc6' }}>
-            <div className="spinner" style={{ 
-              width: '16px', 
-              height: '16px', 
-              border: '2px solid #8b6914', 
-              borderTop: 'transparent',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite'
-            }}></div>
-            <span style={{ fontSize: '14px' }}>Procesando...</span>
+          <div className="uploading-indicator">
+            <div className="spinner"></div>
+            <p>Procesando archivos...</p>
           </div>
         ) : (
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px',
-            color: '#e8dcc6',
-            fontSize: '14px'
-          }}>
-            <span style={{ fontSize: '16px' }}>📎</span>
-            <span>Arrastra archivos o click para subir</span>
-            <span style={{ 
-              fontSize: '12px', 
-              color: '#c4b896',
-              fontWeight: 'normal'
-            }}>
-              PDF, TXT, DOC, código...
-            </span>
+          <div className="drop-content">
+            <div className="upload-icon">📄</div>
+            <h3>Subir Archivos</h3>
+            <p>Arrastra archivos aquí o haz click para seleccionar</p>
+            <div className="supported-types">
+              <strong>Tipos soportados:</strong>
+              <div className="type-list">
+                {supportedTypes.slice(0, 8).map(type => (
+                  <span key={type.extension} className="file-type">
+                    {type.extension}
+                  </span>
+                ))}
+                {supportedTypes.length > 8 && (
+                  <span className="more-types">+{supportedTypes.length - 8} más</span>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      {/* RESULTADOS COMPACTOS */}
+      {/* Resultados de upload */}
       {uploadResults.length > 0 && (
-        <div style={{ 
-          marginTop: '8px',
-          padding: '8px',
-          backgroundColor: '#3d342c',
-          borderRadius: '6px',
-          fontSize: '13px'
-        }}>
+        <div className="upload-results">
+          <h4>Resultados del Procesamiento</h4>
           {uploadResults.map((result, index) => (
-            <div key={index} style={{ 
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              color: result.success ? '#4a5d23' : '#722f37',
-              marginBottom: index < uploadResults.length - 1 ? '4px' : '0'
-            }}>
-              <span>
+            <div key={index} className={`result-item ${result.success ? 'success' : 'error'}`}>
+              <div className="result-filename">
                 {result.success ? '✅' : '❌'} {result.filename}
-              </span>
-              <span style={{ fontSize: '12px', color: '#c4b896' }}>
-                {result.success ? 
-                  `${result.chunksProcessed} chunks | ${(result.fileSize / 1024).toFixed(1)} KB` :
-                  result.error
-                }
-              </span>
+              </div>
+              <div className="result-details">
+                {result.success ? (
+                  <>
+                    <span className="chunks">
+                      {result.chunksProcessed} chunks procesados
+                    </span>
+                    <span className="size">
+                      {(result.fileSize / 1024).toFixed(1)} KB
+                    </span>
+                  </>
+                ) : (
+                  <span className="error-msg">{result.error}</span>
+                )}
+              </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Información adicional */}
+      <div className="upload-info">
+        <div className="info-item">
+          <strong>Límites:</strong> Máximo 50MB por archivo, 10 archivos simultáneos
+        </div>
+        <div className="info-item">
+          <strong>Procesamiento:</strong> Los archivos se dividen en chunks semánticos para búsqueda inteligente
+        </div>
+      </div>
     </div>
   );
 };

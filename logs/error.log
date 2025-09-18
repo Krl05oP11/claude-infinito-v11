@@ -221,3 +221,11 @@
     at next (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/index.js:280:10)
     at urlencodedParser (/home/carlos/Projects/claude-infinito-v11/node_modules/body-parser/lib/types/urlencoded.js:94:7)
     at Layer.handle [as handle_request] (/home/carlos/Projects/claude-infinito-v11/node_modules/express/lib/router/layer.js:95:5)
+2025-09-15T00:04:21.551Z [[31merror[39m]: [31mClaude API network error:[39m 
+2025-09-15T00:04:21.552Z [[31merror[39m]: [31mError processing message: Claude API network error: No response received[39m Error: Claude API network error: No response received
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:117:15)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:444:28
+2025-09-15T00:05:53.670Z [[31merror[39m]: [31mClaude API network error:[39m 
+2025-09-15T00:05:53.670Z [[31merror[39m]: [31mError processing message: Claude API network error: No response received[39m Error: Claude API network error: No response received
+    at ClaudeService.sendMessage (/home/carlos/Projects/claude-infinito-v11/backend/src/services/claude.service.ts:117:15)
+    at async /home/carlos/Projects/claude-infinito-v11/backend/src/index.ts:444:28

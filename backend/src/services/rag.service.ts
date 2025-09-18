@@ -68,9 +68,8 @@ export class RAGService {
   }
 
   // Obtener collection ID por project ID
-  // ✅ MÉTODO 1: Cambiar nombre de colección para forzar nueva creación
   async getProjectCollectionId(projectId: string): Promise<string | null> {
-    const collectionName = `project_cosine_${projectId}`; // ⭐ NUEVO NOMBRE
+    const collectionName = `project_cosine_${projectId}`;
     try {
       const collections = await this.getAllCollections();
       const existing = collections.find((c: ChromaDBCollection) => c.name === collectionName);
@@ -86,87 +85,80 @@ export class RAGService {
     }
   }
   
-  // ✅ MÉTODO 3: Actualizar filtro de colecciones
-// REEMPLAZAR ESTE MÉTODO para buscar SOLO en colecciones coseno:
-
-async getProjectCollections(): Promise<ChromaDBCollection[]> {
-  const allCollections = await this.getAllCollections();
-  
-  // ⭐ SOLO colecciones coseno - ignorar las L2 viejas
-  const cosineCollections = allCollections.filter(col => 
-    col.name.startsWith('project_cosine_')
-  );
-  
-  console.log(`🔍 Found ${allCollections.length} total collections, ${cosineCollections.length} COSINE collections`);
-  cosineCollections.forEach(col => {
-    console.log(`✅ COSINE Collection: ${col.name} (ID: ${col.id})`);
-  });
-  
-  // Si no hay colecciones coseno, devolver array vacío (no las L2 viejas)
-  if (cosineCollections.length === 0) {
-    console.log(`⚠️ No COSINE collections found - searches will return empty until new cosine collection is created`);
-  }
-  
-  return cosineCollections;
-}
-
-  // ✅ CORREGIDO: Crear colección con similitud COSENO
-// ✅ MÉTODO 2: Crear colección con nombre coseno
-async createProjectCollection(projectId: string): Promise<string | null> {
-  const collectionName = `project_cosine_${projectId}`; // ⭐ NUEVO NOMBRE
-  
-  console.log(`🔧 FORCE Creating NEW COSINE collection: ${collectionName}`);
-  
-  try {
-    const requestBody = {
-      name: collectionName,
-      metadata: {
-        project_id: projectId,
-        created_at: new Date().toISOString(),
-        description: 'RAG memory collection for Claude Infinito - COSINE SIMILARITY',
-        similarity_type: 'cosine' // Metadata para identificar
-      },
-      // ⭐ CONFIGURACIÓN COSENO EXPLÍCITA
-      configuration: {
-        hnsw: {
-          space: "cosine",
-          ef_construction: 100,
-          ef_search: 100,
-          max_neighbors: 16,
-          resize_factor: 1.2,
-          sync_threshold: 1000
-        }
-      }
-    };
+  async getProjectCollections(): Promise<ChromaDBCollection[]> {
+    const allCollections = await this.getAllCollections();
     
-    console.log(`🔧 FORCE Creating collection with cosine space: ${collectionName}`);
-    
-    const response = await axios.post(
-      this.getApiUrl('/collections'),
-      requestBody,
-      { headers: this.getHeaders() }
+    // ⭐ SOLO colecciones coseno - ignorar las L2 viejas
+    const cosineCollections = allCollections.filter(col => 
+      col.name.startsWith('project_cosine_')
     );
     
-    console.log(`✅ FORCE Created NEW COSINE collection: ${collectionName} ID: ${response.data.id}`);
-    console.log(`🔧 Collection configuration:`, response.data.configuration_json);
+    console.log(`🔍 Found ${allCollections.length} total collections, ${cosineCollections.length} COSINE collections`);
+    cosineCollections.forEach(col => {
+      console.log(`✅ COSINE Collection: ${col.name} (ID: ${col.id})`);
+    });
     
-    return response.data.id;
-  } catch (error: any) {
-    console.error(`❌ ERROR creating FORCE cosine collection:`, error.response?.data);
-    return null;
+    // Si no hay colecciones coseno, devolver array vacío (no las L2 viejas)
+    if (cosineCollections.length === 0) {
+      console.log(`⚠️ No COSINE collections found - searches will return empty until new cosine collection is created`);
+    }
+    
+    return cosineCollections;
   }
-}
 
-  // ✅ CORREGIDO: Búsqueda con similitud COSENO
-// backend/src/services/rag.service.ts - COMPLETE FIXED VERSION
-// Replace the entire searchInCollection method with this corrected version
-
-  // ✅ FIXED: Search with proper metadata recovery
-  async searchInCollection(collectionId: string, query: string, limit: number = 5): Promise<Memory[]> {
+  async createProjectCollection(projectId: string): Promise<string | null> {
+    const collectionName = `project_cosine_${projectId}`;
+    
+    console.log(`🔧 FORCE Creating NEW COSINE collection: ${collectionName}`);
+    
     try {
+      const requestBody = {
+        name: collectionName,
+        metadata: {
+          project_id: projectId,
+          created_at: new Date().toISOString(),
+          description: 'RAG memory collection for Claude Infinito - COSINE SIMILARITY',
+          similarity_type: 'cosine'
+        },
+        configuration: {
+          hnsw: {
+            space: "cosine",
+            ef_construction: 100,
+            ef_search: 100,
+            max_neighbors: 16,
+            resize_factor: 1.2,
+            sync_threshold: 1000
+          }
+        }
+      };
+      
+      console.log(`🔧 FORCE Creating collection with cosine space: ${collectionName}`);
+      
+      const response = await axios.post(
+        this.getApiUrl('/collections'),
+        requestBody,
+        { headers: this.getHeaders() }
+      );
+      
+      console.log(`✅ FORCE Created NEW COSINE collection: ${collectionName} ID: ${response.data.id}`);
+      console.log(`🔧 Collection configuration:`, response.data.configuration_json);
+      
+      return response.data.id;
+    } catch (error: any) {
+      console.error(`❌ ERROR creating FORCE cosine collection:`, error.response?.data);
+      return null;
+    }
+  }
+
+  // 🛠️ MODIFICACIÓN 1: Aumentar límite por defecto y hacer threshold flexible
+  async searchInCollection(collectionId: string, query: string, limit: number = 15, customThreshold?: number): Promise<Memory[]> {
+    try {
+      // 🛠️ MODIFICACIÓN 2: Usar threshold personalizado si se proporciona
+      const threshold = customThreshold || this.similarityThreshold;
+      
       console.log(`🔍 SEARCH DEBUG: Starting search in COSINE collection ${collectionId}`);
       console.log(`🔍 SEARCH DEBUG: Query: "${query.substring(0, 50)}..."`);
-      console.log(`🔍 SEARCH DEBUG: Limit: ${limit}, Threshold: ${this.similarityThreshold}`);
+      console.log(`🔍 SEARCH DEBUG: Limit: ${limit}, Threshold: ${threshold}`);
       
       const embedding = await this.embeddingService.generateEmbedding(query);
       console.log(`🔍 SEARCH DEBUG: Embedding generated, length: ${embedding.length}`);
@@ -198,27 +190,22 @@ async createProjectCollection(projectId: string): Promise<string | null> {
         const content = results.documents[0][i];
         const rawMetadata = results.metadatas[0][i];
         
-        // ✅ DEBUG: Log raw metadata to see what's actually coming from ChromaDB
         console.log(`\n--- MEMORY ${i + 1} (COSINE) ---`);
         console.log(`Distance: ${distance.toFixed(4)}`);
         console.log(`Similarity: ${similarity.toFixed(4)}`);
-        console.log(`Threshold: ${this.similarityThreshold}`);
+        console.log(`Threshold: ${threshold}`);
         console.log(`Content preview: "${content.substring(0, 100)}..."`);
         console.log(`🔍 RAW METADATA DEBUG:`, JSON.stringify(rawMetadata, null, 2));
         
-        // ✅ FIXED: Ensure metadata is properly structured
         const processedMetadata = {
           conversation_id: rawMetadata?.conversation_id || 'unknown',
           project_id: rawMetadata?.project_id || 'unknown',
           timestamp: rawMetadata?.timestamp || new Date().toISOString(),
-          // ✅ CRITICAL: Preserve file-related metadata
           source_type: rawMetadata?.source_type,
           file_name: rawMetadata?.file_name || rawMetadata?.filename,
           filename: rawMetadata?.filename || rawMetadata?.file_name,
           fileType: rawMetadata?.fileType,
-          // ✅ Include all other metadata fields
           ...rawMetadata,
-          // ✅ Add calculated similarity
           similarity: similarity
         };
         
@@ -229,7 +216,7 @@ async createProjectCollection(projectId: string): Promise<string | null> {
           fileType: processedMetadata.fileType
         }, null, 2));
         
-        if (similarity >= this.similarityThreshold) {
+        if (similarity >= threshold) {
           console.log(`✅ MEMORY ${i + 1}: ABOVE threshold, adding to results`);
           
           memories.push({
@@ -238,13 +225,12 @@ async createProjectCollection(projectId: string): Promise<string | null> {
             metadata: processedMetadata
           });
         } else {
-          console.log(`❌ MEMORY ${i + 1}: BELOW threshold (${similarity.toFixed(4)} < ${this.similarityThreshold})`);
+          console.log(`❌ MEMORY ${i + 1}: BELOW threshold (${similarity.toFixed(4)} < ${threshold})`);
         }
       }
       
       console.log(`\n🎯 SEARCH DEBUG: Final results: ${memories.length} memories above threshold`);
       
-      // ✅ ADDITIONAL DEBUG: Log file detection results
       const fileMemoriesFound = memories.filter(m => 
         m.metadata?.source_type === 'file_upload' || 
         m.metadata?.file_name || 
@@ -275,44 +261,86 @@ async createProjectCollection(projectId: string): Promise<string | null> {
       return [];
     }
   }
-  // ✅ REQUERIDO: Buscar en todas las colecciones (usado por index.ts)
-  async searchAllProjects(query: string, limit: number = 10): Promise<Memory[]> {
+
+  // 🛠️ MODIFICACIÓN 3: Optimizado para archivos grandes con más resultados y threshold flexible
+  async searchAllProjects(query: string, limit: number = 50, userThreshold?: number): Promise<Memory[]> {
     try {
-      console.log(`🔍 Searching ALL COSINE projects for: "${query.substring(0, 50)}..."`);
-    
-      const projectCollections = await this.getProjectCollections();
-      console.log(`Found ${projectCollections.length} COSINE project collections`);
-    
-      if (projectCollections.length === 0) {
-        console.log(`⚠️ No COSINE collections available for search`);
-        return [];
-      }
+      console.log(`🔍 Searching GLOBAL knowledge base + ALL projects for: "${query.substring(0, 50)}..."`);
     
       const allMemories: Memory[] = [];
+      
+      // 🛠️ MODIFICACIÓN 4: Detectar si es búsqueda de páginas específicas o índices
+      const isPageQuery = query.toLowerCase().includes('página') || 
+                         query.toLowerCase().includes('page') ||
+                         query.toLowerCase().includes('table of contents') ||
+                         query.toLowerCase().includes('índice') ||
+                         query.toLowerCase().includes('toc') ||
+                         /test\s*\d+/i.test(query); // Detecta "Test 19", "test 7", etc.
+      
+      // 🛠️ MODIFICACIÓN 5: Usar parámetros más agresivos para búsquedas específicas
+      const searchLimit = isPageQuery ? 80 : 50; // Más resultados para páginas específicas
+      
+      // ✅ PRESERVAR configuración del usuario - solo sugerir threshold más permisivo si no hay config personalizada
+      let effectiveThreshold: number;
+      if (userThreshold !== undefined) {
+        // Usuario ha configurado threshold específico desde UI - RESPETARLO
+        effectiveThreshold = userThreshold;
+        console.log(`🎯 USING USER-CONFIGURED threshold: ${effectiveThreshold} (UI setting preserved)`);
+      } else {
+        // No hay configuración del usuario, usar automático
+        effectiveThreshold = isPageQuery ? 0.15 : this.similarityThreshold;
+        if (isPageQuery) {
+          console.log(`🎯 DETECTED PAGE/INDEX QUERY - Using enhanced search: limit=${searchLimit}, threshold=${effectiveThreshold} (auto-detected)`);
+        }
+      }
+      
+      // 🎯 PASO 1: Buscar en GLOBAL KNOWLEDGE BASE primero con parámetros optimizados
+      console.log(`🌍 Searching GLOBAL knowledge base...`);
+      const globalCollectionId = await this.getProjectCollectionId("global_knowledge_base");
+      
+      if (globalCollectionId) {
+        console.log(`🌍 Found global collection ID: ${globalCollectionId}`);
+        // 🛠️ MODIFICACIÓN 6: Usar límite y threshold optimizados para global KB
+        const globalMemories = await this.searchInCollection(globalCollectionId, query, searchLimit, effectiveThreshold);
+        console.log(`🌍 Global knowledge base: found ${globalMemories.length} memories`);
+        allMemories.push(...globalMemories);
+      } else {
+        console.log(`⚠️ Global knowledge base not found (no files uploaded yet)`);
+      }
+      
+      // 🎯 PASO 2: Buscar en colecciones de proyectos específicos
+      const projectCollections = await this.getProjectCollections();
+      console.log(`📁 Found ${projectCollections.length} project collections`);
     
       for (const collection of projectCollections) {
-        console.log(`🔍 Searching COSINE Collection ID ${collection.id} (${collection.name})`);
-        const memories = await this.searchInCollection(collection.id, query, limit);
-        console.log(`Collection ID ${collection.id}: found ${memories.length} memories`);
+        // Skip global knowledge base si ya lo buscamos
+        if (collection.name === "project_cosine_global_knowledge_base") {
+          continue;
+        }
+        
+        console.log(`🔍 Searching project collection ${collection.id} (${collection.name})`);
+        const memories = await this.searchInCollection(collection.id, query, searchLimit, effectiveThreshold);
+        console.log(`🔍 Project ${collection.name}: found ${memories.length} memories`);
         allMemories.push(...memories);
       }
     
-      // Ordenar por similitud y limitar resultados
+      // Ordenar por similitud y limitar resultados finales
       const sortedMemories = allMemories
         .sort((a, b) => (b.metadata.similarity || 0) - (a.metadata.similarity || 0))
         .slice(0, limit);
     
-      const relevantMemories = sortedMemories.filter(m => (m.metadata.similarity || 0) >= this.similarityThreshold);
+      const relevantMemories = sortedMemories.filter(m => (m.metadata.similarity || 0) >= effectiveThreshold);
     
-      console.log(`🎯 COSINE search results: ${allMemories.length} total, ${relevantMemories.length} above threshold`);
+      console.log(`🎯 GLOBAL + PROJECT search results: ${allMemories.length} total, ${relevantMemories.length} above threshold (${effectiveThreshold})`);
+      console.log(`🌍 Global files accessible from ANY conversation!`);
     
       return relevantMemories;
     } catch (error: any) {
-      console.error('❌ Error searching COSINE projects:', error.response?.data || error.message);
+      console.error('❌ Error searching GLOBAL + projects:', error.response?.data || error.message);
       return [];
     }
   }
-  
+
   // Inyectar contexto relevante en prompt
   injectContextIntoPrompt(originalPrompt: string, memories: Memory[]): string {
     if (memories.length === 0) {
@@ -345,7 +373,6 @@ Current question: ${originalPrompt}`;
     }
   }
 
-  // ✅ CORREGIDO: Agregar memoria con collection ID real
   async addMemory(
     projectId: string, 
     conversationId: string, 
@@ -413,3 +440,4 @@ Current question: ${originalPrompt}`;
     }
   }
 }
+

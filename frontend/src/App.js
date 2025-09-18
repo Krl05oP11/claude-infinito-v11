@@ -125,17 +125,31 @@ function App() {
     if (!input.trim() || !currentConversation || isLoading) return;
 
     const userMessage = { role: 'user', content: input.trim() };
+    
+    // Definir chatSettings ANTES del debugging
+    const chatSettings = {
+      temperature,
+      promptType: isCustomPromptMode ? null : selectedTemplate,
+      prompt: isCustomPromptMode ? customPrompt : null
+    };
+
+    // DEBUGGING PUNTO 1: Verificar qué enviamos al backend
+    console.log('🔍 FRONTEND DEBUG - Sending to backend:', {
+      content: userMessage.content,
+      settings: chatSettings,
+      conversationId: currentConversation.id,
+      settings_breakdown: {
+        temperature: chatSettings.temperature,
+        promptType: chatSettings.promptType,
+        customPrompt: chatSettings.prompt ? chatSettings.prompt.substring(0, 100) + '...' : 'none'
+      }
+    });
+
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      const chatSettings = {
-        temperature,
-        promptType: isCustomPromptMode ? null : selectedTemplate,
-        prompt: isCustomPromptMode ? customPrompt : null
-      };
-
       const response = await fetch(`/api/conversations/${currentConversation.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -146,6 +160,19 @@ function App() {
       });
 
       const data = await response.json();
+      
+      // DEBUGGING PUNTO 2: Verificar qué recibimos del backend
+      console.log('🔍 FRONTEND DEBUG - Backend response received:', {
+        context_memories_used: data.context_memories_used,
+        context_strategy: data.context_strategy,
+        settings_applied: data.settings_applied,
+        response_length: data.assistant_message?.content?.length,
+        response_preview: data.assistant_message?.content?.substring(0, 200) + '...',
+        mentions_files: data.assistant_message?.content?.toLowerCase().includes('archivo') || 
+                       data.assistant_message?.content?.toLowerCase().includes('pdf') ||
+                       data.assistant_message?.content?.toLowerCase().includes('documento'),
+        full_response_data_keys: Object.keys(data)
+      });
       
       if (data.assistant_message) {
         const assistantMessage = {
@@ -226,7 +253,8 @@ function App() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        maxWidth: '100vw'  // ✅ NUEVO: No exceder viewport width
       }}
     >
       {/* Main Content Area */}
@@ -236,18 +264,20 @@ function App() {
         minHeight: 0 // Important for flex children with scroll
       }}>
         
-        {/* Sidebar */}
+        {/* Sidebar - ✅ RESPONSIVE Y REDIMENSIONABLE */}
         <div 
           className="sidebar"
           style={{
-            width: '50%',
-            minWidth: '600px',
+            flex: '0 0 400px',           // ✅ Base: 400px, no shrink/grow
+            minWidth: '350px',           // ✅ Mínimo funcional  
+            maxWidth: '500px',           // ✅ Máximo razonable
+            resize: 'horizontal',        // ✅ Redimensionable manualmente
+            overflow: 'auto',            // ✅ Para el resize
             backgroundColor: colors.surface,
             borderRight: `1px solid ${colors.border}`,
             display: 'flex',
             flexDirection: 'column',
-            padding: '20px',
-            overflow: 'auto'
+            padding: '20px'
           }}
         >
           {/* Header */}
@@ -538,12 +568,12 @@ function App() {
           </div>
         </div>
 
-        {/* Main Chat Area */}
+        {/* Main Chat Area - ✅ RESPONSIVE */}
         <div 
           className="main-area"
           style={{
-            width: '50%',
-            minWidth: '600px',
+            flex: '1',                   // ✅ Toma el resto del espacio
+            minWidth: '500px',           // ✅ Mínimo para chat
             display: 'flex',
             flexDirection: 'column'
           }}

@@ -1,113 +1,78 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './App.css';
 import FileUploader from './components/FileUploader';
-import AdvancedControls from './components/AdvancedControls';
 
 // Photophobic-friendly color palette
 const colors = {
-  background: '#1a1612',       // Very dark warm brown
-  surface: '#2d2823',          // Dark warm brown  
-  surfaceLight: '#3d342c',     // Medium brown
-  text: '#e8dcc6',            // Warm cream
-  textSecondary: '#c4b896',    // Muted cream
-  accent: '#8b6914',          // Warm gold
-  accentHover: '#a67c00',     // Brighter gold
-  success: '#4a5d23',         // Warm green
-  warning: '#8b4513',         // Saddle brown
-  danger: '#722f37',          // Deep burgundy
-  border: '#5a4d42'           // Brown border
+  background: '#1a1612',
+  surface: '#2d2823',
+  surfaceLight: '#3d342c',
+  text: '#e8dcc6',
+  textSecondary: '#c4b896',
+  accent: '#8b6914',
+  accentHover: '#a67c00',
+  success: '#4a5d23',
+  warning: '#8b4513',
+  danger: '#722f37',
+  border: '#5a4d42'
+};
+
+// Prompt templates
+const promptTemplates = {
+  precise: 'Responde de manera precisa y técnica. Usa terminología específica. Sé conciso pero completo. Si citas fuentes, menciona específicamente de qué archivo proviene la información.',
+  balanced: 'Proporciona respuestas balanceadas que combinen precisión técnica con claridad explicativa. Incluye ejemplos cuando sea útil. Si la información proviene de archivos subidos, cita la fuente específica.',
+  detailed: 'Proporciona explicaciones detalladas y didácticas. Incluye contexto, ejemplos prácticos y razonamiento paso a paso. Desarrolla los conceptos en profundidad. Cuando uses información de archivos, explica cómo se relaciona con el contexto general.',
+  creative: 'Adopta un enfoque creativo y exploratorio. Genera ideas innovadoras, conexiones inesperadas y soluciones originales. Explora múltiples perspectivas y posibilidades. Usa la información de archivos como punto de partida para desarrollar ideas nuevas.'
 };
 
 function App() {
+  // State management
   const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [systemHealth, setSystemHealth] = useState({ status: 'unknown' });
-  const [chatSettings, setChatSettings] = useState({
-    temperature: 0.3,
-    prompt: '',
-    promptType: 'balanced'
-  });
   
-  // REAL monitoring state
-  const [gpuUsage, setGpuUsage] = useState(0);
-  const [claudeConnectionStatus, setClaudeConnectionStatus] = useState('checking');
-  const [backendConnectionStatus, setBackendConnectionStatus] = useState('checking');
+  // Advanced Controls State
+  const [temperature, setTemperature] = useState(0.3);
+  const [selectedTemplate, setSelectedTemplate] = useState('balanced');
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [isCustomPromptMode, setIsCustomPromptMode] = useState(false);
+  
+  // System monitoring
+  const [systemHealth, setSystemHealth] = useState({ status: 'unknown' });
+  const [gpuUsage, setGpuUsage] = useState(75);
+  const [backendStatus, setBackendStatus] = useState('healthy');
+  const [claudeStatus, setClaudeStatus] = useState('connected');
   
   const messagesEndRef = useRef(null);
-  const textareaRef = useRef(null);
 
-  // Scroll to bottom when new messages arrive
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  // Load conversations on startup
+  // Effects
   useEffect(() => {
     loadConversations();
     checkSystemHealth();
-    
-    // Periodic health check
-    const healthInterval = setInterval(checkSystemHealth, 30000); // Every 30 seconds
+    const healthInterval = setInterval(checkSystemHealth, 30000);
     return () => clearInterval(healthInterval);
   }, []);
 
-  // REAL GPU monitoring (mock realistic values)
   useEffect(() => {
-    const updateGpuUsage = () => {
-      // More realistic GPU usage simulation based on activity
-      const baseUsage = isLoading ? 85 + Math.random() * 10 : 15 + Math.random() * 20;
-      setGpuUsage(Math.min(100, baseUsage));
-    };
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
-    const gpuInterval = setInterval(updateGpuUsage, 3000); // Every 3 seconds
-    return () => clearInterval(gpuInterval);
-  }, [isLoading]);
-
-  // REAL connection monitoring
-  useEffect(() => {
-    const checkConnections = async () => {
-      // Check backend connection
-      try {
-        const backendResponse = await fetch('/api/health', { timeout: 5000 });
-        if (backendResponse.ok) {
-          setBackendConnectionStatus('healthy');
-          
-          // Only check Claude if backend is healthy
-          try {
-            const claudeResponse = await fetch('/api/claude/config', { timeout: 5000 });
-            setClaudeConnectionStatus(claudeResponse.ok ? 'healthy' : 'error');
-          } catch {
-            setClaudeConnectionStatus('error');
-          }
-        } else {
-          setBackendConnectionStatus('error');
-          setClaudeConnectionStatus('error'); // If backend is down, Claude is unreachable
-        }
-      } catch {
-        setBackendConnectionStatus('error');
-        setClaudeConnectionStatus('error');
-      }
-    };
-
-    checkConnections();
-    const connectionInterval = setInterval(checkConnections, 8000); // Every 8 seconds
-    return () => clearInterval(connectionInterval);
-  }, []);
-
+  // API Functions
   const checkSystemHealth = async () => {
     try {
       const response = await fetch('/api/health');
       const health = await response.json();
       setSystemHealth(health);
+      setBackendStatus('healthy');
+      
+      // Simulate GPU usage (replace with real monitoring later)
+      setGpuUsage(Math.floor(Math.random() * 20) + 70);
     } catch (error) {
       console.error('Health check failed:', error);
       setSystemHealth({ status: 'error', error: error.message });
+      setBackendStatus('error');
     }
   };
 
@@ -160,6 +125,26 @@ function App() {
     if (!input.trim() || !currentConversation || isLoading) return;
 
     const userMessage = { role: 'user', content: input.trim() };
+    
+    // ✅ Definir chatSettings ANTES del debugging
+    const chatSettings = {
+      temperature,
+      promptType: isCustomPromptMode ? null : selectedTemplate,
+      prompt: isCustomPromptMode ? customPrompt : null
+    };
+
+    // 🔍 DEBUGGING PUNTO 1: Verificar qué enviamos al backend
+    console.log('🔍 FRONTEND DEBUG - Sending to backend:', {
+      content: userMessage.content,
+      settings: chatSettings,
+      conversationId: currentConversation.id,
+      settings_breakdown: {
+        temperature: chatSettings.temperature,
+        promptType: chatSettings.promptType,
+        customPrompt: chatSettings.prompt ? chatSettings.prompt.substring(0, 100) + '...' : 'none'
+      }
+    });
+
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -170,11 +155,24 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           content: userMessage.content,
-          settings: chatSettings // Send dynamic settings
+          settings: chatSettings
         })
       });
 
       const data = await response.json();
+      
+      // 🔍 DEBUGGING PUNTO 2: Verificar qué recibimos del backend
+      console.log('🔍 FRONTEND DEBUG - Backend response received:', {
+        context_memories_used: data.context_memories_used,
+        context_strategy: data.context_strategy,
+        settings_applied: data.settings_applied,
+        response_length: data.assistant_message?.content?.length,
+        response_preview: data.assistant_message?.content?.substring(0, 200) + '...',
+        mentions_files: data.assistant_message?.content?.toLowerCase().includes('archivo') || 
+                       data.assistant_message?.content?.toLowerCase().includes('pdf') ||
+                       data.assistant_message?.content?.toLowerCase().includes('documento'),
+        full_response_data_keys: Object.keys(data)
+      });
       
       if (data.assistant_message) {
         const assistantMessage = {
@@ -187,6 +185,7 @@ function App() {
           }
         };
         setMessages(prev => [...prev, assistantMessage]);
+        setClaudeStatus('connected');
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -195,6 +194,7 @@ function App() {
         content: 'Error: No se pudo enviar el mensaje. Verifica la conexión.',
         error: true 
       }]);
+      setClaudeStatus('error');
     } finally {
       setIsLoading(false);
     }
@@ -207,423 +207,601 @@ function App() {
     }
   };
 
-  const handleSettingsChange = (settings) => {
-    setChatSettings(settings);
-  };
-
-  const formatMessageContent = (content) => {
-    // Simple markdown-like formatting for better readability
-    return content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code style="background-color: ' + colors.surface + '; padding: 2px 4px; border-radius: 3px;">$1</code>')
-      .replace(/\n/g, '<br>');
-  };
-
-  // Helper function for GPU color
-  const getGpuColor = (usage) => {
-    if (usage <= 50) return colors.success;      // Green
-    if (usage <= 80) return colors.warning;     // Orange  
-    return colors.danger;                       // Red
-  };
-
-  // Helper function for connection status
-  const getConnectionColor = (status) => {
-    switch(status) {
-      case 'healthy': return colors.success;
-      case 'error': return colors.danger;
-      case 'checking': return colors.warning;
-      default: return colors.textSecondary;
+  // Template selection handler
+  const handleTemplateSelect = (template) => {
+    if (template === 'custom') {
+      setIsCustomPromptMode(true);
+    } else {
+      setIsCustomPromptMode(false);
+      setSelectedTemplate(template);
     }
+  };
+
+  // Get current prompt text for display
+  const getCurrentPromptDisplay = () => {
+    if (isCustomPromptMode) {
+      return customPrompt || 'Escriba su prompt personalizado en el área de texto arriba...';
+    }
+    return promptTemplates[selectedTemplate] || '';
+  };
+
+  // Status indicators
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'healthy':
+      case 'connected':
+        return colors.success;
+      case 'error':
+        return colors.danger;
+      default:
+        return colors.warning;
+    }
+  };
+
+  const getGpuBarColor = () => {
+    if (gpuUsage < 50) return colors.success;
+    if (gpuUsage <= 80) return colors.warning;
+    return colors.danger;
   };
 
   return (
     <div 
-      className="flex h-screen"
+      className="app-container"
       style={{ 
         backgroundColor: colors.background, 
         color: colors.text,
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
         overflow: 'hidden'
       }}
     >
-      {/* Sidebar - EXACTLY 50% */}
-      <div 
-        className="border-r flex flex-col"
-        style={{ 
-          backgroundColor: colors.surface, 
-          borderColor: colors.border,
-          width: '50vw', // EXACTLY 50% of viewport
-          height: '100vh' // Full height
-        }}
-      >
-        {/* Header - CENTERED */}
-        <div className="p-4 border-b flex-shrink-0 text-center" style={{ borderColor: colors.border }}>
-          <h1 className="text-xl font-bold">Claude Infinito v1.1</h1>
-          <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
-            Memoria semántica infinita con configuración avanzada
-          </p>
-          <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>
-            Schaller-Ponce <span style={{ fontSize: '10px', verticalAlign: 'super' }}>®</span> 2025
-          </p>
-        </div>
+      {/* Main Content Area */}
+      <div style={{ 
+        display: 'flex', 
+        flex: 1,
+        minHeight: 0 // Important for flex children with scroll
+      }}>
+        
+        {/* Sidebar */}
+        <div 
+          className="sidebar"
+          style={{
+            width: '50%',
+            minWidth: '600px',
+            backgroundColor: colors.surface,
+            borderRight: `1px solid ${colors.border}`,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '20px',
+            overflow: 'auto'
+          }}
+        >
+          {/* Header */}
+          <h1 style={{ 
+            textAlign: 'center', 
+            margin: '0 0 20px 0',
+            fontSize: '20px',
+            fontWeight: 'bold',
+            color: colors.text
+          }}>
+            Claude Infinito v1.1
+          </h1>
 
-        {/* Advanced Controls */}
-        <div className="border-b flex-shrink-0" style={{ borderColor: colors.border }}>
-          <AdvancedControls onSettingsChange={handleSettingsChange} />
-        </div>
+          {/* Advanced Controls */}
+          <div 
+            className="advanced-controls"
+            style={{
+              backgroundColor: colors.surfaceLight,
+              padding: '20px',
+              borderRadius: '8px',
+              marginBottom: '15px'
+            }}
+          >
+            <h3 style={{ 
+              color: colors.textSecondary, 
+              fontSize: '16px',
+              margin: '0 0 20px 0',
+              textAlign: 'center'
+            }}>
+              Advanced Controls
+            </h3>
 
-        {/* File Uploader - MINIMAL TEXT ONLY */}
-        <div className="p-3 border-b flex-shrink-0 text-center" style={{ borderColor: colors.border }}>
-          <div className="text-sm font-medium mb-2" style={{ color: colors.textSecondary }}>
-            Subir archivos
+            {/* Temperature Control */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ 
+                color: colors.textSecondary, 
+                fontSize: '12px',
+                display: 'block',
+                marginBottom: '8px'
+              }}>
+                Temperatura: {temperature}
+              </label>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="1.0"
+                  step="0.1"
+                  value={temperature}
+                  onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                  style={{
+                    width: '200px',
+                    marginRight: '10px',
+                    height: '4px',
+                    background: colors.border,
+                    borderRadius: '2px',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
+                />
+                <span style={{ 
+                  color: colors.text, 
+                  fontSize: '12px',
+                  minWidth: '25px'
+                }}>
+                  {temperature}
+                </span>
+              </div>
+            </div>
+
+            {/* Template Buttons Grid 2x2 */}
+            <div style={{ marginBottom: '15px' }}>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr',
+                gap: '10px',
+                marginBottom: '10px'
+              }}>
+                {[
+                  { key: 'precise', label: 'Preciso', color: colors.border },
+                  { key: 'balanced', label: 'Balanceado', color: colors.accent },
+                  { key: 'detailed', label: 'Detallado', color: colors.success },
+                  { key: 'creative', label: 'Creativo', color: colors.warning }
+                ].map(template => (
+                  <button
+                    key={template.key}
+                    onClick={() => handleTemplateSelect(template.key)}
+                    style={{
+                      height: '35px',
+                      backgroundColor: (!isCustomPromptMode && selectedTemplate === template.key) ? 
+                        colors.accentHover : template.color,
+                      color: (!isCustomPromptMode && selectedTemplate === template.key) ? 
+                        colors.background : colors.text,
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    {template.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Prompt Button */}
+              <button
+                onClick={() => handleTemplateSelect('custom')}
+                style={{
+                  width: '100%',
+                  height: '30px',
+                  backgroundColor: isCustomPromptMode ? colors.accentHover : colors.border,
+                  color: isCustomPromptMode ? colors.background : colors.text,
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  marginBottom: '10px'
+                }}
+              >
+                Prompt personalizado...
+              </button>
+
+              {/* Custom Prompt Textarea - Always visible when custom mode */}
+              {isCustomPromptMode && (
+                <div>
+                  <textarea
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                    placeholder="Escribe instrucciones específicas para Claude..."
+                    style={{
+                      width: '100%',
+                      height: '80px',
+                      backgroundColor: colors.surface,
+                      color: colors.text,
+                      border: `1px solid ${colors.border}`,
+                      borderRadius: '4px',
+                      padding: '8px',
+                      fontSize: '12px',
+                      fontStyle: 'italic',
+                      resize: 'vertical',
+                      fontFamily: 'Inria Serif, serif'
+                    }}
+                    maxLength={1000}
+                  />
+                  <div style={{ 
+                    fontSize: '10px', 
+                    color: colors.textSecondary,
+                    textAlign: 'right',
+                    marginTop: '5px'
+                  }}>
+                    {customPrompt.length}/1000 caracteres
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="text-xs">
+
+          {/* Prompt Display */}
+          <div 
+            style={{
+              backgroundColor: colors.border,
+              padding: '15px',
+              borderRadius: '8px',
+              marginBottom: '15px',
+              minHeight: '100px'
+            }}
+          >
+            <h4 style={{ 
+              color: colors.textSecondary, 
+              fontSize: '14px',
+              margin: '0 0 10px 0'
+            }}>
+              Prompt seleccionado
+            </h4>
+            <p style={{ 
+              fontSize: '12px',
+              color: colors.text,
+              margin: 0,
+              fontStyle: 'italic',
+              lineHeight: '1.4',
+              wordWrap: 'break-word'
+            }}>
+              {getCurrentPromptDisplay()}
+            </p>
+          </div>
+
+          {/* File Uploader */}
+          <div style={{ marginBottom: '15px' }}>
             <FileUploader 
               conversationId={currentConversation?.id}
               projectId={currentConversation?.id} 
             />
           </div>
-          {/* Hide ALL icons in FileUploader */}
-          <style jsx global>{`
-            .file-uploader svg,
-            .file-uploader img,
-            .file-uploader [class*="icon"],
-            .file-uploader [class*="Icon"] {
-              display: none !important;
-            }
-            .file-uploader {
-              min-height: 30px !important;
-              padding: 5px !important;
-            }
-          `}</style>
-        </div>
 
-        {/* Nueva Conversación Button - CENTERED */}
-        <div className="p-3 border-b flex-shrink-0 text-center" style={{ borderColor: colors.border }}>
+          {/* New Conversation Button */}
           <button
             onClick={createNewConversation}
-            className="px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95"
-            style={{ 
-              backgroundColor: colors.accent, 
+            style={{
+              width: '200px',
+              height: '40px',
+              backgroundColor: colors.accent,
               color: colors.background,
               border: 'none',
-              boxShadow: `0 2px 4px rgba(0,0,0,0.3)`
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              margin: '0 auto 20px auto',
+              display: 'block',
+              transition: 'all 0.2s'
             }}
           >
             + Nueva Conversación
           </button>
-        </div>
 
-        {/* Conversations List - SMALL WINDOW WITH VERTICAL SCROLL */}
-        <div className="p-3 flex-shrink-0">
-          <h3 className="font-semibold text-sm text-center mb-3" style={{ color: colors.textSecondary }}>
-            Conversaciones
-          </h3>
-          
-          {/* SMALL WINDOW WITH VERTICAL SCROLL - EXACTLY AS DIAGRAM */}
+          {/* Conversations List */}
           <div 
-            className="border rounded-lg overflow-y-auto"
-            style={{ 
-              height: '150px', // SMALL FIXED HEIGHT - shows only 2-3 conversations
-              backgroundColor: colors.background,
-              borderColor: colors.border
+            className="conversations-container"
+            style={{
+              backgroundColor: colors.border,
+              borderRadius: '8px',
+              padding: '15px',
+              flex: 1,
+              minHeight: '150px',
+              maxHeight: '200px',
+              display: 'flex',
+              flexDirection: 'column'
             }}
           >
-            <div className="p-2 space-y-2">
+            <h4 style={{ 
+              color: colors.textSecondary, 
+              fontSize: '14px',
+              margin: '0 0 10px 0',
+              flexShrink: 0
+            }}>
+              Conversaciones
+            </h4>
+            <div 
+              className="conversations-list"
+              style={{
+                flex: 1,
+                overflowY: 'auto',
+                paddingRight: '5px'
+              }}
+            >
               {conversations.map(conv => (
-                <button
+                <div
                   key={conv.id}
                   onClick={() => selectConversation(conv)}
-                  className={`w-full text-left p-2 rounded text-xs transition-all duration-200 hover:scale-105 ${
-                    currentConversation?.id === conv.id ? 'ring-2' : ''
-                  }`}
-                  style={{ 
-                    backgroundColor: currentConversation?.id === conv.id ? colors.surfaceLight : colors.surface,
-                    border: `1px solid ${colors.border}`,
-                    ringColor: colors.accent
+                  style={{
+                    padding: '8px',
+                    backgroundColor: currentConversation?.id === conv.id ? 
+                      colors.surfaceLight : 'transparent',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    marginBottom: '5px',
+                    fontSize: '12px',
+                    color: colors.text,
+                    border: `1px solid transparent`,
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentConversation?.id !== conv.id) {
+                      e.target.style.backgroundColor = colors.surface;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentConversation?.id !== conv.id) {
+                      e.target.style.backgroundColor = 'transparent';
+                    }
                   }}
                 >
-                  <div className="font-medium truncate">{conv.title}</div>
-                  <div className="text-xs opacity-70 mt-1">
-                    {new Date(conv.created_at).toLocaleDateString()}
-                  </div>
-                </button>
+                  📋 {conv.title}
+                </div>
               ))}
+              {conversations.length === 0 && (
+                <div style={{ 
+                  color: colors.textSecondary, 
+                  fontSize: '12px',
+                  fontStyle: 'italic',
+                  textAlign: 'center'
+                }}>
+                  No hay conversaciones
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Spacer - fills remaining sidebar space */}
-        <div className="flex-1"></div>
-      </div>
+        {/* Main Chat Area */}
+        <div 
+          className="main-area"
+          style={{
+            width: '50%',
+            minWidth: '600px',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
+          {/* Chat Header */}
+          <div 
+            style={{
+              backgroundColor: colors.surface,
+              padding: '20px',
+              borderBottom: `1px solid ${colors.border}`,
+              textAlign: 'center',
+              flexShrink: 0
+            }}
+          >
+            <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>
+              {currentConversation ? currentConversation.title : 'Conversación Actual'}
+            </h2>
+          </div>
 
-      {/* Main Chat Area - EXACTLY 50% */}
-      <div 
-        className="flex flex-col"
-        style={{ 
-          width: '50vw', // EXACTLY 50% of viewport
-          height: '100vh' // Full height
-        }}
-      >
-        {currentConversation ? (
-          <>
-            {/* Chat Header - CENTERED */}
-            <div 
-              className="p-4 border-b flex-shrink-0 text-center"
-              style={{ 
-                backgroundColor: colors.surface, 
-                borderColor: colors.border
-              }}
-            >
-              <h2 className="font-semibold">{currentConversation.title}</h2>
-              <div className="text-xs mt-1" style={{ color: colors.textSecondary }}>
-                Configuración: {chatSettings.promptType} | Temperatura: {chatSettings.temperature} | 
-                {messages.length} mensajes
+          {/* Messages Area */}
+          <div 
+            className="messages-area"
+            style={{
+              flex: 1,
+              backgroundColor: colors.surface,
+              padding: '20px',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '15px',
+              minHeight: 0
+            }}
+          >
+            {messages.length === 0 ? (
+              <div style={{ 
+                textAlign: 'left', 
+                color: colors.textSecondary,
+                fontSize: '14px',
+                fontStyle: 'italic',
+                lineHeight: '1.6'
+              }}>
+                <p><strong>Usuario:</strong> ¿Qué dice el archivo sobre clustering?</p>
+                <p><strong>Claude:</strong> Según el contenido del archivo...</p>
+                <p><strong>Usuario:</strong> ¿Y sobre Elbow Method?</p>
+                <p><strong>Claude:</strong> Revisando el archivo, no encuentro...</p>
               </div>
-            </div>
-
-            {/* Messages - SCROLLABLE AREA */}
-            <div 
-              className="flex-1 overflow-y-auto p-4 space-y-4"
-              style={{
-                height: 'calc(100vh - 150px - 60px)', // viewport - header - footer
-                minHeight: '0'
-              }}
-            >
-              {messages.map((message, index) => (
+            ) : (
+              messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  style={{
+                    alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start',
+                    maxWidth: '80%',
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    backgroundColor: message.role === 'user' ? 
+                      colors.accent : colors.surfaceLight,
+                    color: message.role === 'user' ? 
+                      colors.background : colors.text,
+                    wordWrap: 'break-word',
+                    lineHeight: '1.4'
+                  }}
                 >
-                  <div
-                    className={`max-w-md p-4 rounded-lg ${
-                      message.role === 'user' ? 'rounded-br-sm' : 'rounded-bl-sm'
-                    }`}
-                    style={{
-                      backgroundColor: message.role === 'user' ? colors.accent : 
-                                     message.error ? colors.danger : colors.surfaceLight,
-                      color: message.role === 'user' ? colors.background : colors.text,
-                      border: `1px solid ${colors.border}`
-                    }}
-                  >
-                    <div 
-                      dangerouslySetInnerHTML={{ 
-                        __html: formatMessageContent(message.content) 
-                      }}
-                    />
-                    
-                    {/* Message metadata */}
-                    {message.metadata && (
-                      <div className="mt-2 pt-2 border-t text-xs opacity-70" style={{ borderColor: colors.border }}>
-                        {message.metadata.context_memories_used > 0 && (
-                          <span>
-                            Contexto: {message.metadata.context_memories_used} memorias 
-                            ({message.metadata.context_strategy})
-                          </span>
-                        )}
-                        {message.metadata.settings_applied && (
-                          <span className="ml-2">
-                            | Temp: {message.metadata.settings_applied.temperature}
-                            {message.metadata.settings_applied.promptType && (
-                              <span> | Estilo: {message.metadata.settings_applied.promptType}</span>
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                  <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                    {message.role === 'user' ? 'Usuario' : 'Claude'}:
                   </div>
-                </div>
-              ))}
-              
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div 
-                    className="p-4 rounded-lg rounded-bl-sm"
-                    style={{ backgroundColor: colors.surfaceLight, border: `1px solid ${colors.border}` }}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-2 h-2 rounded-full animate-pulse"
-                        style={{ backgroundColor: colors.accent }}
-                      />
-                      <div 
-                        className="w-2 h-2 rounded-full animate-pulse"
-                        style={{ backgroundColor: colors.accent, animationDelay: '0.2s' }}
-                      />
-                      <div 
-                        className="w-2 h-2 rounded-full animate-pulse"
-                        style={{ backgroundColor: colors.accent, animationDelay: '0.4s' }}
-                      />
-                      <span style={{ color: colors.textSecondary }}>Claude está pensando...</span>
+                  <div>{message.content}</div>
+                  {message.metadata && (
+                    <div style={{
+                      fontSize: '10px',
+                      marginTop: '8px',
+                      opacity: 0.7,
+                      borderTop: `1px solid ${message.role === 'user' ? colors.background : colors.border}`,
+                      paddingTop: '4px'
+                    }}>
+                      Contexto: {message.metadata.context_memories_used || 0} memorias
+                      {message.metadata.context_strategy && 
+                        ` (${message.metadata.context_strategy})`}
                     </div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input Area - FIXED AT BOTTOM */}
-            <div 
-              className="p-6 border-t flex-shrink-0"
-              style={{ 
-                backgroundColor: colors.surface, 
-                borderColor: colors.border
-              }}
-            >
-              {/* CENTERED CONTAINER - GOOD DIMENSIONS */}
-              <div className="max-w-full mx-auto">
-                {/* TEXTAREA - CENTERED AND WIDE */}
-                <div className="w-full mb-4">
-                  <textarea
-                    ref={textareaRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
-                    rows={4}
-                    className="w-full p-4 rounded-lg resize-y focus:outline-none focus:ring-2 transition-all duration-200"
-                    style={{ 
-                      backgroundColor: colors.background,
-                      border: `2px solid ${colors.border}`,
-                      color: colors.text,
-                      ringColor: colors.accent,
-                      fontSize: '16px',
-                      lineHeight: '1.5'
-                    }}
-                    disabled={isLoading}
-                  />
-                </div>
-                
-                {/* BUTTON - RIGHT ALIGNED */}
-                <div className="flex justify-end">
-                  <button
-                    onClick={sendMessage}
-                    disabled={!input.trim() || isLoading}
-                    className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ 
-                      backgroundColor: colors.accent, 
-                      color: colors.background,
-                      border: 'none',
-                      fontSize: '16px',
-                      minWidth: '120px',
-                      boxShadow: `0 3px 6px rgba(0,0,0,0.4)`
-                    }}
-                  >
-                    {isLoading ? 'Enviando...' : 'Enviar'}
-                  </button>
-                </div>
-                
-                {/* Settings Status Display - CENTERED */}
-                <div className="mt-3 flex justify-center items-center text-sm" style={{ color: colors.textSecondary }}>
-                  <span>⚙️ {chatSettings.promptType}</span>
-                  <span className="mx-2">|</span>
-                  <span>🌡️ {chatSettings.temperature}</span>
-                  {chatSettings.prompt && chatSettings.promptType === 'custom' && (
-                    <>
-                      <span className="mx-2">|</span>
-                      <span>✏️ Prompt personalizado ({chatSettings.prompt.length} chars)</span>
-                    </>
                   )}
                 </div>
+              ))
+            )}
+            
+            {isLoading && (
+              <div style={{
+                alignSelf: 'flex-start',
+                padding: '12px 16px',
+                backgroundColor: colors.surfaceLight,
+                borderRadius: '12px',
+                color: colors.textSecondary,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <div className="loading-dots">●</div>
+                <div className="loading-dots" style={{ animationDelay: '0.2s' }}>●</div>
+                <div className="loading-dots" style={{ animationDelay: '0.4s' }}>●</div>
+                Claude está pensando...
               </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center" style={{ color: colors.textSecondary }}>
-              <h2 className="text-2xl font-bold mb-4">Bienvenido a Claude Infinito v1.1</h2>
-              <p className="mb-4">Crea una nueva conversación para comenzar</p>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <div 
+            className="input-area"
+            style={{
+              backgroundColor: colors.surface,
+              padding: '20px',
+              borderTop: `1px solid ${colors.border}`,
+              flexShrink: 0
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Escribe tu mensaje... (Enter para enviar, Shift+Enter para nueva línea)"
+                disabled={isLoading}
+                style={{
+                  width: '100%',
+                  height: '80px',
+                  backgroundColor: colors.background,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: '8px',
+                  padding: '12px',
+                  color: colors.text,
+                  fontSize: '14px',
+                  resize: 'vertical',
+                  fontFamily: 'inherit'
+                }}
+              />
               <button
-                onClick={createNewConversation}
-                className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95"
-                style={{ 
-                  backgroundColor: colors.accent, 
+                onClick={sendMessage}
+                disabled={!input.trim() || isLoading}
+                style={{
+                  alignSelf: 'flex-end',
+                  width: '100px',
+                  height: '40px',
+                  backgroundColor: colors.accent,
                   color: colors.background,
                   border: 'none',
-                  boxShadow: `0 2px 4px rgba(0,0,0,0.3)`
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  opacity: (!input.trim() || isLoading) ? 0.5 : 1
                 }}
               >
-                Crear Primera Conversación
+                Enviar
               </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
 
-      {/* Footer - EXACTLY ONE LINE AS DIAGRAM */}
+      {/* Footer */}
       <div 
-        className="fixed bottom-0 left-0 right-0 py-2 px-6 border-t"
-        style={{ 
-          backgroundColor: colors.surfaceLight,
-          borderColor: colors.border,
-          color: colors.text,
-          zIndex: 1000,
-          height: '60px' // Fixed height
+        className="footer"
+        style={{
+          height: '40px',
+          backgroundColor: colors.surface,
+          borderTop: `1px solid ${colors.border}`,
+          display: 'flex',
+          alignItems: 'center',
+          paddingLeft: '20px',
+          paddingRight: '20px',
+          gap: '30px',
+          fontSize: '12px',
+          color: colors.textSecondary,
+          flexShrink: 0
         }}
       >
-        {/* SINGLE HORIZONTAL LINE - EXACTLY AS DIAGRAM */}
-        <div className="flex justify-between items-center h-full">
-          <div className="flex items-center space-x-6">
-            {/* GPU: [bar] 75% */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-bold">GPU:</span>
-              <div 
-                className="w-16 h-3 rounded-full border"
-                style={{ 
-                  backgroundColor: colors.background, 
-                  border: `1px solid ${colors.text}`
-                }}
-              >
-                <div 
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{ 
-                    width: `${gpuUsage}%`,
-                    backgroundColor: getGpuColor(gpuUsage)
-                  }}
-                />
-              </div>
-              <span className="text-sm font-bold" style={{ color: getGpuColor(gpuUsage) }}>
-                {gpuUsage.toFixed(0)}%
-              </span>
-            </div>
-
-            {/* Backend: ● healthy */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-bold">Backend:</span>
-              <div 
-                className={`w-3 h-3 rounded-full ${backendConnectionStatus === 'error' ? 'animate-pulse' : ''}`}
-                style={{ 
-                  backgroundColor: getConnectionColor(backendConnectionStatus)
-                }}
-              />
-              <span className="text-xs" style={{ color: getConnectionColor(backendConnectionStatus) }}>
-                {backendConnectionStatus}
-              </span>
-            </div>
-
-            {/* Claude: ● healthy */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-bold">Claude:</span>
-              <div 
-                className={`w-3 h-3 rounded-full ${claudeConnectionStatus === 'error' ? 'animate-pulse' : ''}`}
-                style={{ 
-                  backgroundColor: getConnectionColor(claudeConnectionStatus)
-                }}
-              />
-              <span className="text-xs" style={{ color: getConnectionColor(claudeConnectionStatus) }}>
-                {claudeConnectionStatus}
-              </span>
-            </div>
+        {/* GPU Monitor */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>GPU:</span>
+          <div style={{ 
+            width: '100px', 
+            height: '8px', 
+            backgroundColor: colors.border,
+            borderRadius: '4px',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              width: `${gpuUsage}%`,
+              height: '100%',
+              backgroundColor: getGpuBarColor(),
+              borderRadius: '4px',
+              transition: 'width 0.3s ease'
+            }}></div>
           </div>
-
-          {/* RTX 5070 Ti */}
-          <div>
-            <span className="text-sm font-bold">RTX 5070 Ti</span>
-          </div>
+          <span style={{ minWidth: '30px' }}>{gpuUsage}%</span>
         </div>
+
+        {/* Backend Monitor */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>Backend:</span>
+          <div style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: getStatusColor(backendStatus),
+            animation: backendStatus === 'error' ? 'pulse 1s infinite' : 'none'
+          }}></div>
+          <span style={{ color: getStatusColor(backendStatus) }}>
+            {backendStatus === 'healthy' ? 'Healthy' : 'Error'}
+          </span>
+        </div>
+
+        {/* Claude Monitor */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>Claude:</span>
+          <div style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: getStatusColor(claudeStatus),
+            animation: claudeStatus === 'error' ? 'pulse 1s infinite' : 'none'
+          }}></div>
+          <span style={{ color: getStatusColor(claudeStatus) }}>
+            {claudeStatus === 'connected' ? 'Connected' : 'Error'}
+          </span>
+        </div>
+
+        <span>RTX Active</span>
       </div>
     </div>
   );
 }
 
 export default App;
+
