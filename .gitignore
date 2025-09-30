@@ -42,3 +42,21 @@ Thumbs.db
 
 # ChromaDB local data
 chroma/
+
+# Environment backups (contienen API keys)
+.env.backup*
+.env.save
+
+# Archivos de backup temporales
+*.backup
+*.backup.*
+*.backup-*
+*.old
+*.save
+*.save.*
+*.corrupted
+*.broken
+*.broken-*
+
+# Directorios de backup completos
+src.backup.pre-bge/

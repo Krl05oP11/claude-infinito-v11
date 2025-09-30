@@ -133,18 +133,6 @@ function App() {
       prompt: isCustomPromptMode ? customPrompt : null
     };
 
-    // DEBUGGING PUNTO 1: Verificar qué enviamos al backend
-    console.log('🔍 FRONTEND DEBUG - Sending to backend:', {
-      content: userMessage.content,
-      settings: chatSettings,
-      conversationId: currentConversation.id,
-      settings_breakdown: {
-        temperature: chatSettings.temperature,
-        promptType: chatSettings.promptType,
-        customPrompt: chatSettings.prompt ? chatSettings.prompt.substring(0, 100) + '...' : 'none'
-      }
-    });
-
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -162,7 +150,6 @@ function App() {
       const data = await response.json();
       
       // DEBUGGING PUNTO 2: Verificar qué recibimos del backend
-      console.log('🔍 FRONTEND DEBUG - Backend response received:', {
         context_memories_used: data.context_memories_used,
         context_strategy: data.context_strategy,
         settings_applied: data.settings_applied,
