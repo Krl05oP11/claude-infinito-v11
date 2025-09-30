@@ -1,11 +1,18 @@
 -- Claude Infinito v1.1 Database Schema
--- Inicialización completa con datos de ejemplo
+-- Inicialización completa con Conversational RAG + Knowledge Base
+-- Versión: 3.0 - 29/09/2025
 
--- Enable UUID extension
+-- ============================================================
+-- EXTENSIONS
+-- ============================================================
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+CREATE EXTENSION IF NOT EXISTS "vector";
 
--- Projects table
+-- ============================================================
+-- SISTEMA BASE - Projects & Conversations
+-- ============================================================
+
 CREATE TABLE projects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL UNIQUE,
@@ -15,7 +22,6 @@ CREATE TABLE projects (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Conversations table
 CREATE TABLE conversations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
@@ -27,7 +33,6 @@ CREATE TABLE conversations (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Messages table
 CREATE TABLE messages (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
@@ -40,133 +45,214 @@ CREATE TABLE messages (
     timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Memory contexts for RAG
 CREATE TABLE memory_contexts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-    context_type VARCHAR(50) NOT NULL, -- 'conversation', 'decision', 'code', 'architecture'
+    context_type VARCHAR(50) NOT NULL,
     title VARCHAR(500),
     summary TEXT NOT NULL,
     content TEXT NOT NULL,
-    embedding_id VARCHAR(255), -- ChromaDB embedding ID
-    relevance_score FLOAT DEFAULT 0.0,
-    usage_count INTEGER DEFAULT 0,
-    last_used TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    confidence_score FLOAT DEFAULT 0.0,
+    relevance_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Artifacts (code, documents, etc.)
-CREATE TABLE artifacts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
-    type VARCHAR(50) NOT NULL, -- 'code', 'document', 'architecture', 'config'
-    title VARCHAR(500),
+-- ============================================================
+-- KNOWLEDGE BASE RAG LAYER - Documents & Chunks
+-- ============================================================
+
+CREATE TABLE documents (
+    id SERIAL PRIMARY KEY,
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    filename VARCHAR(500) NOT NULL,
+    file_type VARCHAR(50),
+    file_size BIGINT,
+    content TEXT,
+    metadata JSONB DEFAULT '{}',
+    upload_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    processed BOOLEAN DEFAULT FALSE,
+    processed_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE document_chunks (
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER REFERENCES documents(id) ON DELETE CASCADE,
+    chunk_index INTEGER NOT NULL,
     content TEXT NOT NULL,
-    language VARCHAR(50),
-    filename VARCHAR(255),
+    embedding vector(1024),
     metadata JSONB DEFAULT '{}',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- RAG usage tracking
-CREATE TABLE rag_usage (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
-    message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
-    context_ids UUID[] NOT NULL,
-    similarity_scores FLOAT[] NOT NULL,
-    injection_successful BOOLEAN DEFAULT TRUE,
+CREATE TABLE document_summaries (
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER REFERENCES documents(id) ON DELETE CASCADE,
+    summary_text TEXT NOT NULL,
+    summary_embedding vector(1024),
+    summary_type VARCHAR(50) DEFAULT 'auto_generated',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- API usage tracking
+-- ============================================================
+-- CONVERSATIONAL RAG LAYER - Conversation Memory
+-- ============================================================
+
+CREATE TABLE conversation_threads (
+    id SERIAL PRIMARY KEY,
+    conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    thread_summary TEXT,
+    thread_embedding vector(1024),
+    message_count INTEGER DEFAULT 0,
+    start_time TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_message_time TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE message_pairs (
+    id SERIAL PRIMARY KEY,
+    conversation_thread_id INTEGER REFERENCES conversation_threads(id) ON DELETE CASCADE,
+    user_message_id UUID REFERENCES messages(id) ON DELETE CASCADE,
+    assistant_message_id UUID REFERENCES messages(id) ON DELETE CASCADE,
+    pair_content TEXT NOT NULL,
+    pair_embedding vector(1024),
+    context_metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE conversation_summaries (
+    id SERIAL PRIMARY KEY,
+    conversation_thread_id INTEGER REFERENCES conversation_threads(id) ON DELETE CASCADE,
+    summary_text TEXT NOT NULL,
+    summary_embedding vector(1024),
+    summary_level VARCHAR(50) DEFAULT 'thread',
+    token_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================================
+-- CROSS-REFERENCES - Relaciones entre Conversaciones y Documentos
+-- ============================================================
+
+CREATE TABLE conversation_document_refs (
+    conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
+    document_id INTEGER REFERENCES documents(id) ON DELETE CASCADE,
+    relevance_score FLOAT DEFAULT 0.0,
+    access_count INTEGER DEFAULT 0,
+    last_referenced TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    PRIMARY KEY (conversation_id, document_id)
+);
+
+-- ============================================================
+-- MONITORING & ANALYTICS
+-- ============================================================
+
 CREATE TABLE api_usage (
+    id SERIAL PRIMARY KEY,
+    conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
+    api_type VARCHAR(50),
+    tokens_used INTEGER,
+    cost DECIMAL(10, 6),
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE rag_usage (
+    id SERIAL PRIMARY KEY,
+    conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
+    query_type VARCHAR(50),
+    query_text TEXT,
+    results_count INTEGER,
+    execution_time_ms INTEGER,
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE artifacts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
-    endpoint VARCHAR(100) NOT NULL,
-    model VARCHAR(100),
-    tokens_input INTEGER DEFAULT 0,
-    tokens_output INTEGER DEFAULT 0,
-    response_time_ms INTEGER,
-    success BOOLEAN DEFAULT TRUE,
-    error_message TEXT,
+    artifact_type VARCHAR(100),
+    content TEXT NOT NULL,
+    metadata JSONB DEFAULT '{}',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Indexes for performance
-CREATE INDEX idx_conversations_project_id ON conversations(project_id);
-CREATE INDEX idx_conversations_created_at ON conversations(created_at DESC);
-CREATE INDEX idx_messages_conversation_id ON messages(conversation_id);
-CREATE INDEX idx_messages_timestamp ON messages(timestamp DESC);
-CREATE INDEX idx_memory_contexts_project_id ON memory_contexts(project_id);
-CREATE INDEX idx_memory_contexts_type ON memory_contexts(context_type);
-CREATE INDEX idx_memory_contexts_last_used ON memory_contexts(last_used DESC);
-CREATE INDEX idx_artifacts_conversation_id ON artifacts(conversation_id);
-CREATE INDEX idx_artifacts_type ON artifacts(type);
-CREATE INDEX idx_rag_usage_conversation_id ON rag_usage(conversation_id);
-CREATE INDEX idx_api_usage_created_at ON api_usage(created_at DESC);
+-- ============================================================
+-- INDEXES - Optimización de Búsquedas
+-- ============================================================
 
--- Full text search indexes
+-- Indexes básicos
+CREATE INDEX idx_conversations_project ON conversations(project_id);
+CREATE INDEX idx_conversations_created ON conversations(created_at DESC);
+CREATE INDEX idx_messages_conversation ON messages(conversation_id);
+CREATE INDEX idx_messages_timestamp ON messages(timestamp DESC);
+CREATE INDEX idx_memory_contexts_project ON memory_contexts(project_id);
+CREATE INDEX idx_memory_contexts_type ON memory_contexts(context_type);
+
+-- Indexes para Knowledge Base RAG
+CREATE INDEX idx_documents_project ON documents(project_id);
+CREATE INDEX idx_documents_filename ON documents(filename);
+CREATE INDEX idx_document_chunks_document ON document_chunks(document_id);
+CREATE INDEX idx_document_chunks_embedding ON document_chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+
+-- Indexes para Conversational RAG
+CREATE INDEX idx_conversation_threads_conv ON conversation_threads(conversation_id);
+CREATE INDEX idx_conversation_threads_project ON conversation_threads(project_id);
+CREATE INDEX idx_conversation_threads_embedding ON conversation_threads USING ivfflat (thread_embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX idx_message_pairs_thread ON message_pairs(conversation_thread_id);
+CREATE INDEX idx_message_pairs_embedding ON message_pairs USING ivfflat (pair_embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX idx_conversation_summaries_thread ON conversation_summaries(conversation_thread_id);
+CREATE INDEX idx_conversation_summaries_embedding ON conversation_summaries USING ivfflat (summary_embedding vector_cosine_ops) WITH (lists = 100);
+
+-- Indexes para Cross-References
+CREATE INDEX idx_conv_doc_refs_conv ON conversation_document_refs(conversation_id);
+CREATE INDEX idx_conv_doc_refs_doc ON conversation_document_refs(document_id);
+CREATE INDEX idx_conv_doc_refs_score ON conversation_document_refs(relevance_score DESC);
+
+-- Full-text search indexes
 CREATE INDEX idx_conversations_title_fts ON conversations USING gin(to_tsvector('english', title));
 CREATE INDEX idx_messages_content_fts ON messages USING gin(to_tsvector('english', content));
 CREATE INDEX idx_memory_contexts_content_fts ON memory_contexts USING gin(to_tsvector('english', summary || ' ' || content));
+CREATE INDEX idx_documents_content_fts ON documents USING gin(to_tsvector('english', content));
 
--- Trigger functions for updated_at
+-- ============================================================
+-- TRIGGERS - Actualización Automática de Timestamps
+-- ============================================================
+
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
--- Apply triggers
 CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON projects
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_conversations_updated_at BEFORE UPDATE ON conversations
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Insert default project
-INSERT INTO projects (id, name, description, settings) VALUES (
-    uuid_generate_v4(),
-    'General',
-    'Default project for general conversations',
-    '{
-        "auto_rag": true,
-        "max_context_messages": 10,
-        "embedding_model": "nomic-embed-text",
-        "claude_model": "claude-3-5-sonnet-20241022"
-    }'::jsonb
+-- ============================================================
+-- DATOS INICIALES - Proyecto Default
+-- ============================================================
+
+INSERT INTO projects (name, description, settings) 
+VALUES (
+    'default',
+    'Proyecto por defecto de Claude Infinito',
+    '{"theme": "dark", "embedding_model": "bge-large", "max_context_tokens": 8000}'::jsonb
 );
 
--- Grant permissions to application user
+-- ============================================================
+-- PERMISOS - Usuario claude_user
+-- ============================================================
+
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO claude_user;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO claude_user;
 
--- Insert sample conversation for testing
+-- Permisos para futuras tablas
 DO $$
-DECLARE
-    project_id UUID;
-    conversation_id UUID;
 BEGIN
-    -- Get default project ID
-    SELECT id INTO project_id FROM projects WHERE name = 'General';
-    
-    -- Create sample conversation
-    INSERT INTO conversations (id, project_id, title, summary) 
-    VALUES (
-        uuid_generate_v4(),
-        project_id,
-        'Welcome to Claude Infinito v1.1',
-        'Initial setup and testing conversation'
-    ) RETURNING id INTO conversation_id;
-    
-    -- Add welcome message
-    INSERT INTO messages (conversation_id, role, content, model) VALUES (
-        conversation_id,
-        'assistant',
-        'Welcome to Claude Infinito v1.1! This system provides unlimited context and memory across conversations. How can I help you today?',
-        'claude-3-5-sonnet-20241022'
-    );
-END $$;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO claude_user;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO claude_user;
+END
+$$;

@@ -1,12 +1,33 @@
 // backend/src/api/routes/upload.ts
+// INTEGRADO CON KNOWLEDGEBASERAG - Fase 3
 
 import express from 'express';
+import { Pool } from 'pg';
 import { FileProcessorService } from '../../services/file-processor.service';
+import { KnowledgeBaseRAGService } from '../../services/knowledge-base-rag.service';
 import { createLogger } from '../../utils/logger';
 
 const router = express.Router();
-const fileProcessor = new FileProcessorService();
 const logger = createLogger();
+
+// Crear Pool para KnowledgeBaseRAG
+const ragPool = new Pool({
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5433'),
+  user: process.env.DB_USER || 'claude_user',
+  password: process.env.DB_PASSWORD || 'claude_password',
+  database: process.env.DB_NAME || 'claude_infinito'
+});
+
+// Inicializar KnowledgeBaseRAG
+const knowledgeBaseRAG = new KnowledgeBaseRAGService(
+  ragPool,
+  process.env.OLLAMA_HOST || 'localhost',
+  parseInt(process.env.OLLAMA_PORT || '11434')
+);
+
+// Crear FileProcessor con KnowledgeBaseRAG
+const fileProcessor = new FileProcessorService(knowledgeBaseRAG);
 
 // Configurar middleware de upload
 const upload = fileProcessor.getUploadMiddleware();
@@ -25,17 +46,33 @@ router.post('/file', upload.single('file'), async (req: express.Request, res: ex
       return;
     }
 
-    if (!projectId || !conversationId) {
+    if (!conversationId) {
       res.status(400).json({ 
         success: false, 
-        error: 'projectId and conversationId are required' 
+        error: 'conversationId is required' 
       });
       return;
     }
 
+    // Obtener el project_id correcto desde la conversación
+    const conversationResult = await ragPool.query(
+      'SELECT project_id FROM conversations WHERE id = $1',
+      [conversationId]
+    );
+    
+    if (!conversationResult.rows[0]) {
+      res.status(404).json({
+        success: false,
+        error: 'Conversation not found'
+      });
+      return;
+    }
+    
+    const realProjectId = conversationResult.rows[0].project_id;
+
     logger.info(`📄 Processing uploaded file: ${file.originalname} (${file.size} bytes)`);
 
-    const result = await fileProcessor.processFile(file, projectId, conversationId);
+    const result = await fileProcessor.processFile(file, realProjectId, conversationId);
 
     if (result.success) {
       res.json({
@@ -77,20 +114,36 @@ router.post('/files', upload.array('files', 10), async (req: express.Request, re
       return;
     }
 
-    if (!projectId || !conversationId) {
+    if (!conversationId) {
       res.status(400).json({ 
         success: false, 
-        error: 'projectId and conversationId are required' 
+        error: 'conversationId is required' 
       });
       return;
     }
+
+    // Obtener el project_id correcto desde la conversación
+    const conversationResult = await ragPool.query(
+      'SELECT project_id FROM conversations WHERE id = $1',
+      [conversationId]
+    );
+    
+    if (!conversationResult.rows[0]) {
+      res.status(404).json({
+        success: false,
+        error: 'Conversation not found'
+      });
+      return;
+    }
+    
+    const realProjectId = conversationResult.rows[0].project_id;
 
     logger.info(`📄 Processing ${files.length} uploaded files`);
 
     const results = [];
 
     for (const file of files) {
-      const result = await fileProcessor.processFile(file, projectId, conversationId);
+      const result = await fileProcessor.processFile(file, realProjectId, conversationId);
       
       results.push({
         filename: file.originalname,
@@ -159,28 +212,24 @@ router.get('/search', async (req: express.Request, res: express.Response): Promi
       return;
     }
 
-    // Usar el RAG service para buscar en archivos
-    const ragService = fileProcessor['ragService'];
-    const memories = await ragService.searchRelevantContext(
-      query as string, 
-      projectId as string, 
-      parseInt(limit as string)
-    );
-
-    const fileMemories = memories.filter(m => 
-      m.metadata.source_type === 'file_upload'
+    // Usar KnowledgeBaseRAG para buscar en documentos
+    const searchResults = await knowledgeBaseRAG.searchDocuments(
+      query as string,
+      projectId as string,
+      parseInt(limit as string),
+      0.3 // threshold bajo para búsquedas de archivos
     );
 
     res.json({
       success: true,
       query: query as string,
-      results: fileMemories.map(memory => ({
-        filename: memory.metadata.file_name,
-        section: memory.metadata.section,
-        content: memory.content.substring(0, 200) + '...',
-        similarity: memory.metadata.similarity,
-        fileType: memory.metadata.fileType,
-        chunkIndex: memory.metadata.chunkIndex
+      results: searchResults.map((result: any) => ({
+        filename: result.fileName,
+        section: result.section || 'Content',
+        content: result.content.substring(0, 200) + '...',
+        similarity: result.similarity,
+        documentId: result.documentId,
+        chunkIndex: result.chunkIndex
       }))
     });
 

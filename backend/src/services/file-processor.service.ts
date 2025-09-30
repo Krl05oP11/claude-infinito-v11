@@ -1,10 +1,10 @@
-// backend/src/services/file-processor.service.ts - CORRECTED VERSION
+// backend/src/services/file-processor.service.ts
+// INTEGRADO CON KNOWLEDGEBASERAG - Fase 3
 
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs/promises';
-import { RAGService } from './rag.service';
-const pdfParse = require('pdf-parse'); // PDF parsing library
+import { KnowledgeBaseRAGService } from './knowledge-base-rag.service';
+const pdfParse = require('pdf-parse');
 
 interface FileChunk {
   id: string;
@@ -21,17 +21,17 @@ interface FileChunk {
 }
 
 export class FileProcessorService {
-  private ragService: RAGService;
+  private knowledgeBaseRAG: KnowledgeBaseRAGService;
   private supportedTypes = [
-    '.txt', '.md', '.pdf', '.docx',           // Documentos
-    '.js', '.ts', '.py', '.json',             // Código
-    '.ipynb',                                 // Jupyter notebooks
-    '.css', '.html', '.htm',                  // Web
-    '.log', '.yml', '.yaml', '.xml'           // Configuración/logs
+    '.txt', '.md', '.pdf', '.docx',
+    '.js', '.ts', '.py', '.json',
+    '.ipynb',
+    '.css', '.html', '.htm',
+    '.log', '.yml', '.yaml', '.xml'
   ];
 
-  constructor() {
-    this.ragService = new RAGService();
+  constructor(knowledgeBaseRAG: KnowledgeBaseRAGService) {
+    this.knowledgeBaseRAG = knowledgeBaseRAG;
   }
 
   // Configurar multer para upload
@@ -54,7 +54,7 @@ export class FileProcessorService {
     });
   }
 
-  // FIXED: Procesar archivo según su tipo
+  // Procesar archivo según su tipo
   async processFile(
     file: Express.Multer.File, 
     projectId: string, 
@@ -65,17 +65,14 @@ export class FileProcessorService {
       
       const fileExtension = path.extname(file.originalname).toLowerCase();
       
-      // FIXED: Don't convert binary files to UTF-8
       let content: string = '';
       let chunks: FileChunk[] = [];
       
       switch (fileExtension) {
         case '.pdf':
-          // FIXED: Handle PDFs with proper text extraction and metadata
           chunks = await this.processPDFFile(file.buffer, file.originalname);
           break;
         case '.docx':
-          // TODO: Implement DOCX processing (future enhancement)
           console.warn(`⚠️ DOCX processing not implemented yet for ${file.originalname}`);
           chunks = await this.processGenericFile(file.buffer.toString('utf-8'), file.originalname);
           break;
@@ -115,29 +112,40 @@ export class FileProcessorService {
           chunks = await this.processGenericFile(content, file.originalname);
       }
 
-      // Almacenar chunks en ChromaDB
-      let storedCount = 0;
-      for (const chunk of chunks) {
-        const success = await this.ragService.addMemory(
-          "global_knowledge_base",
-          "global", 
-          chunk.content,
-          {
-            ...chunk.metadata,
-            source_type: 'file_upload',
-            file_name: file.originalname,
-            upload_timestamp: new Date().toISOString()
-          }
-        );
-        
-        if (success) storedCount++;
-      }
-
-      console.log(`✅ Processed ${file.originalname}: ${storedCount}/${chunks.length} chunks stored`);
+      // ============================================================
+      // NUEVO: Almacenar usando KnowledgeBaseRAG
+      // ============================================================
+      
+      console.log(`📊 Storing ${chunks.length} chunks using KnowledgeBaseRAG...`);
+      
+      // Concatenar todos los chunks para obtener el contenido completo
+      const fullContent = chunks.map(c => c.content).join('\n\n');
+      
+      // Crear metadata del documento
+      const documentMetadata = {
+        uploadTimestamp: new Date().toISOString(),
+        conversationId: conversationId,
+        totalChunks: chunks.length,
+        originalChunkCount: chunks.length
+      };
+      
+      // Procesar documento con KnowledgeBaseRAG
+      // Parámetros: projectId, filename, fileType, fileSize, content, metadata
+      const documentId = await this.knowledgeBaseRAG.processAndStoreDocument(
+        projectId,
+        file.originalname,
+        fileExtension.substring(1),
+        file.size,
+        fullContent,
+        documentMetadata
+      );
+      
+      console.log(`✅ Document stored with ID: ${documentId}`);
+      console.log(`✅ Processed ${file.originalname}: ${chunks.length} chunks stored successfully`);
       
       return {
         success: true,
-        chunksProcessed: storedCount
+        chunksProcessed: chunks.length
       };
 
     } catch (error: any) {
@@ -150,29 +158,19 @@ export class FileProcessorService {
     }
   }
 
-  // FIXED: Process PDF files with proper text extraction and ChromaDB-compatible metadata
-// FIXED: Process PDF files with proper text extraction and character normalization
+  // Process PDF files with proper text extraction
   private async processPDFFile(buffer: Buffer, filename: string): Promise<FileChunk[]> {
     console.log(`📄 Processing PDF: ${filename}`);
     
     try {
-      // Extract text from PDF using pdf-parse with proper configuration
-      const data = await pdfParse(buffer, {
-        // Normalize whitespace and handle text extraction properly
-        normalizeWhitespace: true,
-        disableCombineTextItems: false,
-        // Additional options for better text extraction
-        max: 0, // Process all pages
-        version: 'v1.10.100'
-      });
-      
-      let extractedText = data.text;
+      const data = await pdfParse(buffer);
+      const extractedText = data.text;
       
       if (!extractedText || extractedText.trim().length === 0) {
         console.warn(`⚠️ No text extracted from PDF: ${filename}`);
         return [{
           id: `${filename}_empty`,
-          content: `PDF file "${filename}" processed but no readable text found. This might be a scanned document or image-based PDF.`,
+          content: `PDF file "${filename}" processed but no readable text found.`,
           metadata: {
             filename,
             fileType: 'pdf',
@@ -180,34 +178,17 @@ export class FileProcessorService {
             totalChunks: 1,
             section: 'Empty PDF',
             language: 'text',
-            pages: data.numpages || 0,
-            pdfTitle: (data.info && data.info.Title) ? String(data.info.Title) : '',
-            pdfAuthor: (data.info && data.info.Author) ? String(data.info.Author) : '',
-            pdfSubject: (data.info && data.info.Subject) ? String(data.info.Subject) : '',
-            pdfCreator: (data.info && data.info.Creator) ? String(data.info.Creator) : ''
+            pages: data.numpages || 0
           }
         }];
       }
 
-      // 🛠️ CRITICAL FIX: Clean corrupted characters that cause search failures
-      console.log(`🔧 Original text preview: "${extractedText.substring(0, 200)}..."`);
-      
-      // Fix common PDF text extraction corruptions
-      extractedText = this.cleanPDFText(extractedText);
-      
-      console.log(`🔧 Cleaned text preview: "${extractedText.substring(0, 200)}..."`);
       console.log(`📊 PDF ${filename}: ${data.numpages} pages, ${extractedText.length} characters extracted`);
 
-      // Split text into logical chunks
       const chunks: FileChunk[] = [];
       const maxChunkSize = 1500;
       const textChunks = this.chunkText(extractedText, maxChunkSize);
       
-      // Extract only primitive values from PDF info
-      const pdfTitle = (data.info && data.info.Title) ? String(data.info.Title) : '';
-      const pdfAuthor = (data.info && data.info.Author) ? String(data.info.Author) : '';
-      const pdfSubject = (data.info && data.info.Subject) ? String(data.info.Subject) : '';
-      const pdfCreator = (data.info && data.info.Creator) ? String(data.info.Creator) : '';
       const totalPages = data.numpages || 0;
       
       textChunks.forEach((chunk, i) => {
@@ -224,11 +205,7 @@ export class FileProcessorService {
             section: `Page ~${estimatedPage}`,
             language: 'text',
             pages: totalPages,
-            estimatedPage: estimatedPage,
-            pdfTitle: pdfTitle,
-            pdfAuthor: pdfAuthor,
-            pdfSubject: pdfSubject,
-            pdfCreator: pdfCreator
+            estimatedPage: estimatedPage
           }
         });
       });
@@ -238,11 +215,9 @@ export class FileProcessorService {
 
     } catch (error: any) {
       console.error(`❌ Error processing PDF ${filename}:`, error.message);
-      
-      // Fallback: create error chunk
       return [{
         id: `${filename}_error`,
-        content: `Error processing PDF "${filename}": ${error.message}. The file might be corrupted, password-protected, or in an unsupported format.`,
+        content: `Error processing PDF "${filename}": ${error.message}`,
         metadata: {
           filename,
           fileType: 'pdf',
@@ -257,59 +232,7 @@ export class FileProcessorService {
     }
   }
 
-  // 🛠️ NEW METHOD: Clean corrupted PDF text extraction
-  private cleanPDFText(text: string): string {
-    let cleanedText = text;
-    
-    // Fix specific character corruptions found in PDF extraction
-    const characterFixes = [
-      // Greek theta (Ɵ) replacing "ti" combinations
-      { from: /Ɵ/g, to: 'ti' },
-      
-      // Other common PDF extraction issues
-      { from: /ﬁ/g, to: 'fi' },   // Ligature fi
-      { from: /ﬂ/g, to: 'fl' },   // Ligature fl
-      { from: /ﬀ/g, to: 'ff' },   // Ligature ff
-      { from: /ﬃ/g, to: 'ffi' },  // Ligature ffi
-      { from: /ﬄ/g, to: 'ffl' },  // Ligature ffl
-      
-      // Unicode normalization issues
-      { from: /'/g, to: "'" },     // Curly apostrophe to straight
-      { from: /"/g, to: '"' },     // Curly quotes to straight
-      { from: /"/g, to: '"' },
-      { from: /–/g, to: '-' },     // En dash to hyphen
-      { from: /—/g, to: '-' },     // Em dash to hyphen
-      
-      // Remove excessive whitespace and normalize line breaks
-      { from: /\s+/g, to: ' ' },   // Multiple spaces to single space
-      { from: /\n\s*\n/g, to: '\n\n' }, // Normalize paragraph breaks
-    ];
-    
-    // Apply all character fixes
-    characterFixes.forEach(fix => {
-      cleanedText = cleanedText.replace(fix.from, fix.to);
-    });
-    
-    // Unicode normalization (NFC = Canonical Decomposition + Canonical Composition)
-    cleanedText = cleanedText.normalize('NFC');
-    
-    // Trim excessive whitespace
-    cleanedText = cleanedText.trim();
-    
-    // Log if significant changes were made
-    if (cleanedText.length !== text.length || cleanedText !== text) {
-      console.log(`🔧 Text cleaning applied: ${text.length} → ${cleanedText.length} characters`);
-      
-      // Log specific problematic patterns found
-      if (text.includes('Ɵ')) {
-        const thetaCount = (text.match(/Ɵ/g) || []).length;
-        console.log(`🔧 Fixed ${thetaCount} theta (Ɵ) → ti replacements`);
-      }
-    }
-    
-    return cleanedText;
-  }
-  // Procesar Jupyter Notebook (.ipynb)
+  // Procesar Jupyter Notebook
   private async processJupyterNotebook(content: string, filename: string): Promise<FileChunk[]> {
     const chunks: FileChunk[] = [];
     
@@ -334,46 +257,16 @@ export class FileProcessorService {
               filename,
               fileType: 'jupyter_notebook',
               chunkIndex: chunkIndex++,
-              totalChunks: 0, // Se actualizará al final
+              totalChunks: 0,
               section: `Cell ${i + 1}`,
               cellType,
               cellIndex: i
             }
           });
         }
-
-        // Si es código con output, agregar el output también
-        if (cellType === 'code' && cell.outputs && cell.outputs.length > 0) {
-          const outputText = cell.outputs
-            .map((output: any) => {
-              if (output.text) return Array.isArray(output.text) ? output.text.join('') : output.text;
-              if (output.data && output.data['text/plain']) return output.data['text/plain'];
-              return '';
-            })
-            .filter(Boolean)
-            .join('\n');
-
-          if (outputText.trim()) {
-            chunks.push({
-              id: `${filename}_output_${i}`,
-              content: `[OUTPUT CELL ${i + 1}]\n${outputText}`,
-              metadata: {
-                filename,
-                fileType: 'jupyter_notebook',
-                chunkIndex: chunkIndex++,
-                totalChunks: 0,
-                section: `Cell ${i + 1} Output`,
-                cellType: 'output',
-                cellIndex: i
-              }
-            });
-          }
-        }
       }
 
-      // Actualizar totalChunks
       chunks.forEach(chunk => chunk.metadata.totalChunks = chunks.length);
-      
       return chunks;
     } catch (error) {
       console.error('Error parsing Jupyter notebook:', error);
@@ -384,8 +277,6 @@ export class FileProcessorService {
   // Procesar archivo CSS
   private async processCSSFile(content: string, filename: string): Promise<FileChunk[]> {
     const chunks: FileChunk[] = [];
-    
-    // Dividir por reglas CSS principales
     const cssRules = content.split(/(?=\s*[.#@][^{]*\{)/);
     
     let chunkIndex = 0;
@@ -393,8 +284,7 @@ export class FileProcessorService {
     for (let i = 0; i < cssRules.length; i++) {
       const rule = cssRules[i].trim();
       
-      if (rule && rule.length > 10) { // Filtrar reglas muy pequeñas
-        // Extraer selector si es posible
+      if (rule && rule.length > 10) {
         const selectorMatch = rule.match(/^([^{]+)\{/);
         const selector = selectorMatch ? selectorMatch[1].trim() : 'Global styles';
         
@@ -421,7 +311,6 @@ export class FileProcessorService {
   private async processHTMLFile(content: string, filename: string): Promise<FileChunk[]> {
     const chunks: FileChunk[] = [];
     
-    // Dividir por secciones principales de HTML
     const sections = [
       { pattern: /<head[^>]*>[\s\S]*?<\/head>/i, name: 'HEAD' },
       { pattern: /<title[^>]*>[\s\S]*?<\/title>/i, name: 'TITLE' },
@@ -430,13 +319,10 @@ export class FileProcessorService {
       { pattern: /<main[^>]*>[\s\S]*?<\/main>/gi, name: 'MAIN' },
       { pattern: /<section[^>]*>[\s\S]*?<\/section>/gi, name: 'SECTION' },
       { pattern: /<article[^>]*>[\s\S]*?<\/article>/gi, name: 'ARTICLE' },
-      { pattern: /<footer[^>]*>[\s\S]*?<\/footer>/gi, name: 'FOOTER' },
-      { pattern: /<script[^>]*>[\s\S]*?<\/script>/gi, name: 'SCRIPT' },
-      { pattern: /<style[^>]*>[\s\S]*?<\/style>/gi, name: 'STYLE' }
+      { pattern: /<footer[^>]*>[\s\S]*?<\/footer>/gi, name: 'FOOTER' }
     ];
 
     let chunkIndex = 0;
-    let processedContent = content;
     
     for (const section of sections) {
       const matches = Array.from(content.matchAll(new RegExp(section.pattern.source, section.pattern.flags)));
@@ -456,47 +342,21 @@ export class FileProcessorService {
             language: 'html'
           }
         });
-        
-        // Remover del contenido procesado
-        processedContent = processedContent.replace(match, '');
       }
-    }
-
-    // Procesar contenido restante en chunks de 1000 caracteres
-    const remainingContent = processedContent.replace(/<[^>]*>/g, ' ').trim();
-    if (remainingContent.length > 100) {
-      const textChunks = this.chunkText(remainingContent, 1000);
-      
-      textChunks.forEach((chunk, i) => {
-        chunks.push({
-          id: `${filename}_content_${i}`,
-          content: chunk,
-          metadata: {
-            filename,
-            fileType: 'html',
-            chunkIndex: chunkIndex++,
-            totalChunks: 0,
-            section: `Text Content ${i + 1}`,
-            language: 'html'
-          }
-        });
-      });
     }
 
     chunks.forEach(chunk => chunk.metadata.totalChunks = chunks.length);
     return chunks.length > 0 ? chunks : this.processGenericFile(content, filename);
   }
 
-  // Procesar archivos de código (JS/TS)
+  // Procesar archivos de código
   private async processCodeFile(content: string, filename: string, extension: string): Promise<FileChunk[]> {
     const chunks: FileChunk[] = [];
     
-    // Dividir por funciones/clases/exports principales
     const patterns = [
       /(?:export\s+)?(?:async\s+)?function\s+\w+[\s\S]*?(?=(?:export\s+)?(?:async\s+)?function|\nexport|\n\/\/|$)/g,
       /(?:export\s+)?class\s+\w+[\s\S]*?(?=(?:export\s+)?class|\nexport|\n\/\/|$)/g,
-      /(?:export\s+)?const\s+\w+\s*=[\s\S]*?(?=(?:export\s+)?const|\nexport|\n\/\/|$)/g,
-      /\/\*[\s\S]*?\*\//g  // Comentarios de bloque
+      /(?:export\s+)?const\s+\w+\s*=[\s\S]*?(?=(?:export\s+)?const|\nexport|\n\/\/|$)/g
     ];
 
     let chunkIndex = 0;
@@ -536,8 +396,6 @@ export class FileProcessorService {
   // Procesar archivos Markdown
   private async processMarkdownFile(content: string, filename: string): Promise<FileChunk[]> {
     const chunks: FileChunk[] = [];
-    
-    // Dividir por headers
     const sections = content.split(/^(#{1,6}\s+.+)$/gm);
     
     let chunkIndex = 0;
@@ -575,7 +433,6 @@ export class FileProcessorService {
     try {
       const jsonData = JSON.parse(content);
       
-      // Si es un objeto, dividir por claves principales
       if (typeof jsonData === 'object' && !Array.isArray(jsonData)) {
         let chunkIndex = 0;
         
@@ -594,7 +451,6 @@ export class FileProcessorService {
           });
         }
       } else {
-        // Array o estructura simple
         chunks.push({
           id: `${filename}_content`,
           content: JSON.stringify(jsonData, null, 2),

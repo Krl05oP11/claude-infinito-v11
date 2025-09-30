@@ -1,91 +1,132 @@
-
+//-------------------index.ts
+//-------------------index.ts
+//-------------------index.ts
+//-------------------index.ts
+//-------------------index.ts
+// FASE 3 INTEGRADA: Conversational RAG System v3.0
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import dotenv from 'dotenv';
+import { Pool } from 'pg';
 import { createLogger } from './utils/logger';
 import { DatabaseService } from './services/database.service';
-import { RAGService } from './services/rag.service';
+import ragService from './services/rag.service';
 import uploadRoutes from './api/routes/upload';
 
-dotenv.config();
+// ============================================================
+// NUEVOS IMPORTS - CONVERSATIONAL RAG SYSTEM
+// ============================================================
+import { QueryRouterService } from './services/query-router.service';
+import { ConversationalRAGService } from './services/conversational-rag.service';
+import { KnowledgeBaseRAGService } from './services/knowledge-base-rag.service';
+
+dotenv.config({ path: "../.env" });
 
 const app = express();
 const port = process.env.BACKEND_PORT || 3001;
 const logger = createLogger();
 const dbService = new DatabaseService();
-const ragService = new RAGService();
 
-// Connect to database
-dbService.connect().catch(err => logger.error('DB connection failed:', err));
+// ============================================================
+// INICIALIZACION DE SERVICIOS RAG
+// ============================================================
 
-// Middleware
-app.use(helmet());
-app.use(cors());
-app.use(compression());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
-
-app.use('/api/upload', uploadRoutes);
-
-// Chat routes
-app.use('/api/chat', require('./api/routes/chat').default);
-
-// Conversations endpoints
-app.get('/api/conversations', async (req: express.Request, res: express.Response): Promise<void> => {
-  try {
-    const conversations = await dbService.getConversations();
-    res.json({ conversations });
-  } catch (error) {
-    logger.error('Error fetching conversations:', error);
-    res.status(500).json({ error: 'Database error' });
-  }
+// Crear Pool separado para servicios RAG (necesitan conexiones concurrentes)
+const ragPool = new Pool({
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5433'),
+  user: process.env.DB_USER || 'claude_user',
+  password: process.env.DB_PASSWORD || 'claude_password',
+  database: process.env.DB_NAME || 'claude_infinito'
 });
 
-app.post('/api/conversations', async (req: express.Request, res: express.Response): Promise<void> => {
-  try {
-    const { title, project_id } = req.body;
-    const conversation = await dbService.createConversation(title || 'New Conversation', project_id);
-    res.json(conversation);
-  } catch (error) {
-    logger.error('Error creating conversation:', error);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
+const queryRouter = new QueryRouterService(ragPool);
+const conversationalRAG = new ConversationalRAGService(
+  ragPool,
+  process.env.OLLAMA_HOST || 'host.docker.internal',
+  parseInt(process.env.OLLAMA_PORT || '11434')
+);
+const knowledgeBaseRAG = new KnowledgeBaseRAGService(
+  ragPool,
+  process.env.OLLAMA_HOST || 'host.docker.internal',
+  parseInt(process.env.OLLAMA_PORT || '11434')
+);
 
-// Helper function to detect if this is a file-related question
+logger.info('✅ Servicios Conversational RAG inicializados');
+
+// ================================================================================================
+// FUNCIONES AUXILIARES - EXTRAIDAS PARA MEJOR ORGANIZACION
+// ================================================================================================
+
+/**
+ * Detecta si una pregunta está relacionada con archivos subidos
+ * @param content - Contenido del mensaje del usuario
+ * @returns true si la pregunta se refiere a archivos
+ */
 function isFileRelatedQuestion(content: string): boolean {
-  const fileKeywords = ['archivo', 'libro', 'pdf', 'documento', 'text', 'file', 'subí', 'uploaded', 'capítulo', 'página'];
-  const lowerContent = content.toLowerCase();
-  return fileKeywords.some(keyword => lowerContent.includes(keyword));
-}
-
-// Helper function to extract keywords from question for context filtering
-function extractQuestionKeywords(content: string): string[] {
-  // Stop words expandidos - palabras que NO queremos como keywords
-  const stopWords = [
-    // Español básico
-    'que', 'qué', 'el', 'la', 'de', 'en', 'y', 'a', 'un', 'una', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son', 'con', 'para', 'como', 'pero', 'sus', 'del', 'las', 'los', 'una', 'este', 'esta', 'estos', 'estas', 'ese', 'esa', 'esos', 'esas', 
-    'desde', 'hasta', 'cuando', 'donde', 'quien', 'cual', 'cuales', 'muy', 'más', 'menos', 'también', 'tan', 'tanto', 'toda', 'todo', 'todos', 'todas',
-    'me', 'mi', 'mis', 'nos', 'nuestro', 'nuestra', 'nuestros', 'nuestras',
-    'ser', 'estar', 'tener', 'hacer', 'poder', 'decir', 'ir', 'ver', 'dar', 'saber', 'querer', 'llegar', 'poner', 'parecer', 'seguir', 'encontrar', 'llamar', 'venir', 'pensar', 'salir', 'volver', 'tomar', 'conocer', 'vivir', 'sentir', 'tratar', 'dejar', 'llevar',
-    
-    // Palabras genéricas de conversación
-    'hola', 'claude', 'resume', 'resumen', 'unas', 'pocas', 'líneas', 'cuáles', 'ventajas', 'debes', 'debe', 'debo', 'tener', 'acceso', 'collection', 'subido', 'subida',
-    
-    // English básico
-    'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'
+  console.log('🔍 DETECTION DEBUG - Input:', content);
+  
+  const fileKeywords = [
+    'archivo', 'document', 'pdf', 'file', 'libro', 'book',
+    'qué dice', 'what does', 'según el', 'según', 'according to',
+    'en el documento', 'in the document', 'texto', 'contenido',
+    'explica', 'explains', 'menciona', 'mentions', 'describe',
+    'fancyhdr', 'package', 'latex'
   ];
   
-  // Palabras clave importantes que siempre queremos preservar
+  const lowerContent = content.toLowerCase();
+  console.log('🔍 DETECTION DEBUG - Lowercase:', lowerContent);
+  
+  for (const keyword of fileKeywords) {
+    if (lowerContent.includes(keyword)) {
+      console.log('🔍 DETECTION DEBUG - MATCH:', keyword);
+      return true;
+    }
+  }
+  
+  console.log('🔍 DETECTION DEBUG - NO MATCH');
+  return false;
+}
+
+/**
+ * Extrae palabras clave relevantes de una pregunta para filtrado de contexto
+ * @param content - Contenido del mensaje del usuario  
+ * @returns Array de keywords relevantes (máximo 8)
+ */
+function extractQuestionKeywords(content: string): string[] {
+  // Palabras vacías que se deben ignorar
+  const stopWords = [
+    // Español básico
+    'que', 'qué', 'el', 'la', 'de', 'en', 'y', 'a', 'un', 'una', 'es', 'se', 'no', 
+    'te', 'lo', 'le', 'da', 'su', 'por', 'son', 'con', 'para', 'como', 'pero', 
+    'sus', 'del', 'las', 'los', 'este', 'esta', 'estos', 'estas', 'ese', 'esa',
+    'desde', 'hasta', 'cuando', 'donde', 'quien', 'cual', 'cuales', 'muy', 'más', 
+    'menos', 'también', 'tan', 'tanto', 'toda', 'todo', 'todos', 'todas',
+    'me', 'mi', 'mis', 'nos', 'nuestro', 'nuestra', 'nuestros', 'nuestras',
+    
+    // Verbos comunes
+    'ser', 'estar', 'tener', 'hacer', 'poder', 'decir', 'ir', 'ver', 'dar', 
+    'saber', 'querer', 'llegar', 'poner', 'parecer', 'seguir', 'encontrar',
+    
+    // Palabras genéricas de conversación
+    'hola', 'claude', 'resume', 'resumen', 'unas', 'pocas', 'líneas', 'cuáles', 
+    'ventajas', 'debes', 'debe', 'debo', 'tener', 'acceso',
+    
+    // English básico
+    'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 
+    'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new'
+  ];
+  
+  // Palabras clave importantes que siempre se deben preservar
   const importantKeywords = [
     // Autores y nombres propios
     'mitchell', 'melanie', 'darwin', 'holland', 'goldberg', 'koza', 'fogel',
     
     // Términos técnicos de algoritmos genéticos
     'algoritmos', 'genéticos', 'genetic', 'algorithm', 'algorithms',
-    'fitness', 'selección', 'selection', 'mutación', 'mutation', 'crossover', 'cruzamiento',
+    'fitness', 'selección', 'selection', 'mutación', 'mutation', 'crossover',
     'población', 'population', 'generación', 'generation', 'cromosoma', 'chromosome',
     'evolución', 'evolution', 'adaptación', 'adaptation', 'supervivencia', 'survival',
     
@@ -100,18 +141,16 @@ function extractQuestionKeywords(content: string): string[] {
     
     // Conceptos específicos
     'optimización', 'optimization', 'búsqueda', 'search', 'heurística', 'heuristic',
-    'convergencia', 'convergence', 'diversidad', 'diversity', 'exploración', 'exploration',
-    'explotación', 'exploitation', 'parámetros', 'parameters'
+    'convergencia', 'convergence', 'diversidad', 'diversity', 'exploración', 'exploration'
   ];
   
-  // Limpiar y procesar el contenido
+  // Procesar y limpiar el contenido
   const words = content
     .toLowerCase()
-    .replace(/[^\w\sáéíóúñü]/g, ' ') // Preservar caracteres españoles
+    .replace(/[^\w\sáéíóúñü]/g, ' ')
     .split(/\s+/)
-    .filter(word => word.length > 2); // Mínimo 3 caracteres
+    .filter(word => word.length > 2);
   
-  // Extraer keywords con priorización inteligente
   const extractedKeywords: string[] = [];
   
   // 1. Primero: palabras importantes identificadas específicamente
@@ -127,7 +166,7 @@ function extractQuestionKeywords(content: string): string[] {
         !stopWords.includes(word) && 
         !importantKeywords.includes(word) &&
         !extractedKeywords.includes(word) &&
-        extractedKeywords.length < 8) { // Límite total de 8 keywords
+        extractedKeywords.length < 8) {
       
       // Priorizar palabras que parecen técnicas o específicas
       if (word.includes('tion') || word.includes('sion') || word.includes('ción') ||
@@ -150,336 +189,334 @@ function extractQuestionKeywords(content: string): string[] {
     });
   }
   
-  return extractedKeywords.slice(0, 8); // Máximo 8 keywords
+  return extractedKeywords.slice(0, 8);
 }
-// Messages endpoint with RAG integration and DYNAMIC CONFIGURATION SUPPORT
+
+/**
+ * Detecta si el historial de conversación contiene respuestas contradictorias
+ * que podrían causar problemas al inyectar contexto de archivos
+ * @param messages - Mensajes recientes de la conversación
+ * @returns true si se detectan contradicciones
+ */
+function hasContradictoryHistory(messages: any[]): boolean {
+  return messages.some(msg => {
+    if (msg.role !== 'assistant') return false;
+    
+    const content = msg.content.toLowerCase();
+    return (
+      content.includes('no veo archivos') ||
+      content.includes('no tengo acceso') ||
+      content.includes('no puedo acceder') ||
+      content.includes('sorry, could not generate') ||
+      content.includes('no dispongo de') ||
+      content.includes('content": []') ||
+      content.includes('cannot generate response')
+    );
+  });
+}
+
+/**
+ * Construye el contexto de archivos basado en la estrategia seleccionada
+ * @param strategy - Estrategia de contexto (full, filtered, minimal, standard)
+ * @param fileMemories - Memorias de archivos encontradas
+ * @param conversationMemories - Memorias de conversaciones encontradas
+ * @param currentProjectId - ID del proyecto actual
+ * @returns Contexto construido como string
+ */
+function buildContextualMemory(
+  strategy: string,
+  fileMemories: any[],
+  conversationMemories: any[],
+  currentProjectId: string
+): string {
+  const contextSections: string[] = [];
+  
+  if (strategy === 'full' || strategy === 'standard') {
+    // Contexto completo para primera pregunta o seguimiento estándar
+    if (fileMemories.length > 0) {
+      const priorityFileMemories = fileMemories.slice(0, 6);
+      const fileParts = priorityFileMemories.map((memory, index) => {
+        const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
+        const section = memory.metadata?.section || 'contenido';
+        const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+        const chunkInfo = memory.metadata?.chunkIndex !== undefined ? 
+          ` (parte ${memory.metadata.chunkIndex + 1}/${memory.metadata.totalChunks})` : '';
+        const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown';
+        const isCurrent = projectId === currentProjectId ? 'PROYECTO ACTUAL' : 'OTRO PROYECTO';
+        const projectInfo = ` [${isCurrent}]`;
+        
+        return `**${fileName}** ${chunkInfo}${projectInfo}\nSeccion: ${section}\nRelevancia: ${similarity}%\n\n${memory.content}`;
+      });
+      
+      contextSections.push(`--- ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n────────────\n\n')}`);
+    }
+    
+    // Agregar contexto conversacional si es necesario
+    const maxTotalMemories = 8;
+    const usedSlots = Math.min(fileMemories.length, 6);
+    const conversationSlots = Math.min(Math.max(maxTotalMemories - usedSlots, 0), 2);
+    
+    if (conversationMemories.length > 0 && conversationSlots > 0) {
+      const priorityConversationMemories = conversationMemories.slice(0, conversationSlots);
+      const conversationParts = priorityConversationMemories.map(memory => {
+        const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+        const timestamp = memory.metadata?.timestamp || 'tiempo desconocido';
+        return `[${similarity}% similitud | ${timestamp}]\n${memory.content}`;
+      });
+      
+      contextSections.push(`--- CONTEXTO CONVERSACIONAL (${priorityConversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
+    }
+  } else if (strategy === 'filtered' || strategy === 'minimal') {
+    // Contexto enfocado para preguntas específicas de seguimiento
+    if (fileMemories.length > 0) {
+      const focusedMemories = fileMemories.slice(0, 3);
+      const fileParts = focusedMemories.map(memory => {
+        const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
+        const section = memory.metadata?.section || 'contenido';
+        return `**${fileName}** - ${section}\n\n${memory.content}`;
+      });
+      
+      contextSections.push(`--- CONTENIDO RELEVANTE ---\n${fileParts.join('\n\n---\n\n')}`);
+    }
+  }
+  
+  if (contextSections.length > 0) {
+    return `\n\n${contextSections.join('\n\n════════════════════════════════════\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
+  }
+  
+  return '';
+}
+
+// ================================================================================================
+// CONFIGURACION DE LA APLICACION
+// ================================================================================================
+
+// Conectar a la base de datos
+dbService.connect().catch(err => logger.error('Error de conexión a BD:', err));
+
+// Middleware de seguridad y optimización
+app.use(helmet());
+app.use(cors());
+app.use(compression());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Rutas de upload
+app.use('/api/upload', uploadRoutes);
+
+// Rutas de chat (legacy)
+app.use('/api/chat', require('./api/routes/chat').default);
+
+// ================================================================================================
+// ENDPOINTS DE CONVERSACIONES
+// ================================================================================================
+
+/**
+ * Obtiene todas las conversaciones del usuario
+ */
+app.get('/api/conversations', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const conversations = await dbService.getConversations();
+    res.json({ conversations });
+  } catch (error) {
+    logger.error('Error al obtener conversaciones:', error);
+    res.status(500).json({ error: 'Error de base de datos' });
+  }
+});
+
+/**
+ * Crea una nueva conversación
+ */
+app.post('/api/conversations', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const { title, project_id } = req.body;
+    const conversation = await dbService.createConversation(
+      title || 'Nueva Conversación', 
+      project_id
+    );
+    res.json(conversation);
+  } catch (error) {
+    logger.error('Error al crear conversación:', error);
+    res.status(500).json({ error: 'Error de base de datos' });
+  }
+});
+
+/**
+ * Obtiene una conversación específica por ID
+ */
+app.get('/api/conversations/:id', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const conversationId = req.params.id;
+    const conversation = await dbService.getConversationById(conversationId);
+    
+    if (!conversation) {
+      res.status(404).json({ error: 'Conversación no encontrada' });
+      return;
+    }
+    
+    res.json(conversation);
+  } catch (error) {
+    logger.error('Error al obtener conversación:', error);
+    res.status(500).json({ error: 'Error de base de datos' });
+  }
+});
+
+/**
+ * Obtiene los mensajes de una conversación específica
+ */
+app.get('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const conversationId = req.params.id;
+    const messages = await dbService.getMessages(conversationId);
+    res.json({ messages });
+  } catch (error) {
+    logger.error('Error al obtener mensajes:', error);
+    res.status(500).json({ error: 'Error de base de datos' });
+  }
+});
+
+// ================================================================================================
+// ENDPOINT PRINCIPAL DE MENSAJES - CONVERSATIONAL RAG INTEGRATION
+// ================================================================================================
+
+/**
+ * Procesa un nuevo mensaje del usuario con Conversational RAG completo
+ * FASE 3: Sistema inteligente que combina memoria conversacional y knowledge base
+ */
 app.post('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const conversationId = req.params.id;
-    const { content, settings } = req.body; // ✅ ADDED: settings support
+    const { content, settings } = req.body;
 
     if (!content) {
-      res.status(400).json({ error: 'Message content required' });
+      res.status(400).json({ error: 'Contenido del mensaje requerido' });
       return;
     }
 
-    // ✅ NEW: Extract and validate dynamic settings
+    // Extraer y validar configuración dinámica
     const claudeSettings = settings || {};
     
-    logger.info(`Processing message for conversation ${conversationId}`);
+    logger.info(`Procesando mensaje para conversación ${conversationId}`);
     if (settings) {
-      logger.info(`Using dynamic settings: temp=${claudeSettings.temperature || 'default'}, promptType=${claudeSettings.promptType || 'none'}`);
+      logger.info(`Usando configuración dinámica: temp=${claudeSettings.temperature || 'default'}, promptType=${claudeSettings.promptType || 'none'}`);
     }
 
-    // 1. Save user message
+    // 1. Guardar mensaje del usuario
     const userMessage = await dbService.addMessage(conversationId, 'user', content);
     
-    // 2. Get recent messages from current conversation
-    const recentMessages = await dbService.getMessages(conversationId, 10); // Increased to better detect context
+    // 2. Obtener mensajes recientes de la conversación actual
+    const recentMessages = await dbService.getMessages(conversationId, 10);
     
-    // 3. Get conversation info to determine current project
+    // 3. Obtener información de la conversación para determinar el proyecto actual
     const conversation = await dbService.getConversationById(conversationId);
     const currentProjectId = conversation?.project_id || conversationId;
     
-    // 4. Smart context detection: Analyze conversation history for file context
-    const isCurrentFileQuestion = isFileRelatedQuestion(content);
-    // Calculate file context variables
-    const previousFileQuestions = recentMessages.filter(msg => 
-      msg.role === 'user' && isFileRelatedQuestion(msg.content)
-    ).length;
-    const hasEstablishedFileContext = previousFileQuestions > 0;
-    const isFirstFileQuestion = previousFileQuestions <= 1 && isCurrentFileQuestion;
+    // ============================================================
+    // CONVERSATIONAL RAG - NUEVO SISTEMA INTELIGENTE
+    // ============================================================
     
-    // 5. Initialize variables for RAG
-    let relevantMemories: any[] = [];
+    logger.info('[RAG] Iniciando análisis con QueryRouter...');
+    
+    // 4. QueryRouter analiza la query y determina estrategia
+    const queryContext = await queryRouter.analyzeQuery(
+      content,
+      conversationId,
+      currentProjectId
+    );
+    
+    const searchStrategy = queryRouter.determineSearchStrategy(queryContext);
+    queryRouter.logQueryAnalysis(content, queryContext, searchStrategy);
+    
+    // 5. Ejecutar búsquedas según estrategia determinada
+    let conversationalResults: any[] = [];
+    let knowledgeResults: any[] = [];
     let contextualMemory: string = '';
-    let contextStrategy: string = 'none';
-
-// 🛠️ COMPREHENSIVE FIX: Check contradictions BEFORE filtering
-console.log('🔍 CONTRADICTION CHECK DEBUG:');
-console.log('  isCurrentFileQuestion:', isCurrentFileQuestion);
-console.log('  recentMessages count:', recentMessages.length);
-
-let hasContradictoryHistory = false;
-if (isCurrentFileQuestion) {
-  console.log('🔍 Checking for contradictory history...');
-  
-  // Check each message for contradictory content
-  recentMessages.forEach((msg, index) => {
-    if (msg.role === 'assistant') {
-      const content = msg.content.toLowerCase();
-      
-      const hasContradiction = (
-        content.includes('no veo archivos') ||
-        content.includes('no tengo acceso') ||
-        content.includes('no puedo acceder') ||
-        content.includes('sorry, could not generate') ||
-        content.includes('no dispongo de') ||
-        content.includes('content": []') ||
-        content.includes('cannot generate response')
-      );
-      
-      if (hasContradiction) {
-        console.log(`⚠️ CONTRADICTION FOUND in message ${index}: "${content.substring(0, 100)}..."`);
-        hasContradictoryHistory = true;
-      }
-    }
-  });
-  
-  if (hasContradictoryHistory) {
-    console.log('⚠️ CONTRADICTION DETECTED: Skipping ALL file context search to avoid contradictions');
-    // Skip the entire file search process
-    relevantMemories = [];
-    contextualMemory = '';
-    contextStrategy = 'contradiction_skip';
-  }
-}    
     
-    // 6. Search for semantic context with INTELLIGENT STRATEGY
     try {
-      if (isCurrentFileQuestion && !hasContradictoryHistory) {
-        logger.info('Searching for relevant context across all projects...');
-        console.log('🚀 CALLING searchAllProjects...');
-    // DESPUÉS - Pasar threshold del usuario:
-
-    const userThreshold = claudeSettings.temperature; // Temperature del slider UI
-    const allMemories = await ragService.searchAllProjects(content, 20, userThreshold);
-        console.log('🚀 searchAllProjects RETURNED:', allMemories.length, 'memories');
-
-        if (allMemories.length > 0) {
-          logger.info(`Found ${allMemories.length} total memories across all projects`);
-          
-          // Separate current project from other projects
-          const currentProjectMemories = allMemories.filter(memory => {
-            const memoryProjectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
-    
-            return memoryProjectId === currentProjectId;
-          });
-          
-          const otherProjectsMemories = allMemories.filter(memory => {
-            const memoryProjectId = memory.metadata?.project_id || memory.metadata?.conversation_id;
-            return memoryProjectId !== currentProjectId;
-          });
-          
-          logger.info(`Found ${currentProjectMemories.length} memories in CURRENT project`);
-          logger.info(`Found ${otherProjectsMemories.length} memories in OTHER projects`);
-          
-          // PRIORITIZATION LOGIC: Current project FIRST
-          let finalMemories: any[] = [];
-          
-          if (currentProjectMemories.length > 0) {
-            finalMemories = [...currentProjectMemories.slice(0, 12)];
-            const remainingSlots = Math.max(15 - finalMemories.length, 0);
-            if (remainingSlots > 0 && otherProjectsMemories.length > 0) {
-              finalMemories = [...finalMemories, ...otherProjectsMemories.slice(0, Math.min(3, remainingSlots))];
-            }
-            logger.info(`PRIORITIZED: ${currentProjectMemories.length} from current project, ${Math.min(3, Math.max(15 - currentProjectMemories.slice(0, 12).length, 0))} from other projects`);
-          } else {
-            finalMemories = otherProjectsMemories.slice(0, 15);
-            logger.info(`FALLBACK: Using ${finalMemories.length} memories from other projects`);
-          }
-          
-          relevantMemories = finalMemories;
-          
-          // SMART CONTEXT FILTERING: Filter by question relevance for subsequent questions
-          if (hasEstablishedFileContext && !isFirstFileQuestion) {
-            const questionKeywords = extractQuestionKeywords(content);
-            logger.info(`FILTERING by keywords: ${questionKeywords.join(', ')}`);
-            
-            // Filter memories by relevance to specific question
-          const keywordFilteredMemories = relevantMemories.filter(memory => {
-            // ✅ PRESERVE ALL FILES regardless of keywords
-            const isFile = memory.metadata?.source_type === 'file_upload' || 
-                           memory.metadata?.file_name || 
-                           memory.metadata?.filename ||
-                           memory.metadata?.fileType;
-  
-            if (isFile) {
-              console.log('🔍 PRESERVING FILE:', memory.metadata?.file_name || 'unknown_file');
-              return true; // Always keep files
-            }
-  
-            // Filter conversations by keywords
-            const memoryText = memory.content.toLowerCase();
-            const hasKeywords = questionKeywords.some(keyword => memoryText.includes(keyword));
-  
-            if (hasKeywords) {
-              console.log('🔍 KEEPING CONVERSATION by keywords');
-            }
-  
-            return hasKeywords;
-          });            
-            if (keywordFilteredMemories.length > 0) {
-              relevantMemories = keywordFilteredMemories.slice(0, 8); // Reduced for focused context
-              contextStrategy = 'filtered';
-              logger.info(`FILTERED to ${relevantMemories.length} relevant memories for specific question`);
-            } else {
-              relevantMemories = relevantMemories.slice(0, 5); // Even more reduced if no keyword matches
-              contextStrategy = 'minimal';
-              logger.info(`No keyword matches, using minimal context (${relevantMemories.length} memories)`);
-            }
-          } else {
-            contextStrategy = isFirstFileQuestion ? 'full' : 'standard';
-          }
-          
-          // Separate file content from conversation history
-          const fileMemories = relevantMemories.filter(memory => {
-          const sourceType = memory.metadata?.source_type;
-          const fileName = memory.metadata?.file_name || memory.metadata?.filename;
-          const fileType = memory.metadata?.fileType;
-          const isFile = sourceType === 'file_upload' || fileName || fileType;
-  
-          // 🔍 DEBUG FILTRADO
-          console.log('🔍 FILTERING DEBUG:', {
-            sourceType,
-            fileName, 
-            fileType,
-            isFile,
-            fullMetadata: memory.metadata
-          });
-  
-          return isFile;
-        });          
-          const conversationMemories = relevantMemories.filter(memory => {
-            const sourceType = memory.metadata?.source_type;
-            const fileName = memory.metadata?.file_name || memory.metadata?.filename;
-            const fileType = memory.metadata?.fileType;
-            return !(sourceType === 'file_upload' || fileName || fileType);
-          });
-          
-          logger.info(`Found ${fileMemories.length} file memories`);
-          logger.info(`Found ${conversationMemories.length} conversation memories`);
-          
-          // File details logging
-          if (fileMemories.length > 0) {
-            fileMemories.forEach((memory, index) => {
-              const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'unknown_file';
-              const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown_project';
-              const isCurrent = projectId === currentProjectId ? 'CURRENT' : 'OTHER';
-              const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
-              logger.info(`File ${index + 1}: ${fileName} ${isCurrent} (similarity: ${similarity}%)`);
-            });
-          }
-          
-          // CONTEXT BUILDING: Adapt based on strategy
-          let contextSections: string[] = [];
-          
-          if (contextStrategy === 'full' || contextStrategy === 'standard') {
-            // FULL CONTEXT for first question or standard follow-ups
-            if (fileMemories.length > 0) {
-              const priorityFileMemories = fileMemories.slice(0, 6);
-              const fileParts = priorityFileMemories.map((memory, index) => {
-                const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
-                const section = memory.metadata?.section || 'contenido';
-                const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
-                const chunkInfo = memory.metadata?.chunkIndex !== undefined ? 
-                  ` (parte ${memory.metadata.chunkIndex + 1}/${memory.metadata.totalChunks})` : '';
-                const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown';
-                const isCurrent = projectId === currentProjectId ? 'PROYECTO ACTUAL' : 'OTRO PROYECTO';
-                const projectInfo = ` [${isCurrent}]`;
-                
-                return `**${fileName}** ${chunkInfo}${projectInfo}\nSeccion: ${section}\nRelevancia: ${similarity}%\n\n${memory.content}`;
-              });
-              
-              contextSections.push(`--- ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n─────────────\n\n')}`);
-            }
-            
-            // Add conversation context if needed
-            const maxTotalMemories = 8;
-            const usedSlots = Math.min(fileMemories.length, 6);
-            const conversationSlots = Math.min(Math.max(maxTotalMemories - usedSlots, 0), 2);
-            
-            if (conversationMemories.length > 0 && conversationSlots > 0) {
-              const priorityConversationMemories = conversationMemories.slice(0, conversationSlots);
-              const conversationParts = priorityConversationMemories.map(memory => {
-                const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
-                const timestamp = memory.metadata?.timestamp || 'tiempo desconocido';
-                return `[${similarity}% similitud | ${timestamp}]\n${memory.content}`;
-              });
-              
-              contextSections.push(`--- CONTEXTO CONVERSACIONAL (${priorityConversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
-            }
-          } else if (contextStrategy === 'filtered' || contextStrategy === 'minimal') {
-            // FOCUSED CONTEXT for specific follow-up questions
-            if (fileMemories.length > 0) {
-              const focusedMemories = fileMemories.slice(0, 3); // Reduced number
-              const fileParts = focusedMemories.map(memory => {
-                const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
-                const section = memory.metadata?.section || 'contenido';
-                return `**${fileName}** - ${section}\n\n${memory.content}`;
-              });
-              
-              contextSections.push(`--- CONTENIDO RELEVANTE ---\n${fileParts.join('\n\n---\n\n')}`);
-            }
-          }
-          
-          // Build final context
-          if (contextSections.length > 0) {
-            contextualMemory = `\n\n${contextSections.join('\n\n════════════════════════════════════════\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
-            
-            logger.info(`Injecting ${contextualMemory.length} characters of context (strategy: ${contextStrategy})`);
-            logger.info(`Final summary: ${fileMemories.length} archivos, ${conversationMemories.length} conversaciones`);
-          }
-        } else {
-          logger.info('No relevant context found in any project');
+      // Búsqueda en memoria conversacional si la estrategia lo indica
+      if (searchStrategy.useConversationalRAG) {
+        logger.info(`[RAG] Buscando en memoria conversacional (max: ${searchStrategy.maxResults})...`);
+        conversationalResults = await conversationalRAG.searchConversations(
+          content,
+          currentProjectId,
+          undefined, // conversationId opcional
+          searchStrategy.maxResults,
+          searchStrategy.similarityThreshold
+        );
+        logger.info(`[RAG] Encontradas ${conversationalResults.length} memorias conversacionales`);
+      }
+      
+      // Búsqueda en knowledge base (documentos) si la estrategia lo indica
+      if (searchStrategy.useKnowledgeBaseRAG) {
+        logger.info(`[RAG] Buscando en knowledge base (max: ${searchStrategy.maxResults})...`);
+        knowledgeResults = await knowledgeBaseRAG.searchDocuments(
+          content,
+          currentProjectId,
+          searchStrategy.maxResults,
+          searchStrategy.similarityThreshold
+        );
+        logger.info(`[RAG] Encontrados ${knowledgeResults.length} chunks de documentos`);
+      }
+      
+      // 6. Combinar y construir contexto
+      const allResults = [
+        ...knowledgeResults.map(r => ({ ...r, source_type: 'knowledge_base' })),
+        ...conversationalResults.map(r => ({ ...r, source_type: 'conversation' }))
+      ];
+      
+      if (allResults.length > 0) {
+        logger.info(`[RAG] Total de resultados combinados: ${allResults.length}`);
+        
+        // Separar por tipo para construcción de contexto
+        const fileMemories = knowledgeResults;
+        const conversationMemories = conversationalResults;
+        
+        // Usar estrategia para determinar cómo construir el contexto
+        const contextStrategy = searchStrategy.useConversationalRAG && searchStrategy.useKnowledgeBaseRAG ? 
+          'hybrid' : searchStrategy.useKnowledgeBaseRAG ? 'knowledge_focus' : 'conversation_focus';
+        
+        contextualMemory = buildContextualMemory(
+          contextStrategy,
+          fileMemories,
+          conversationMemories,
+          currentProjectId
+        );
+        
+        if (contextualMemory) {
+          logger.info(`[RAG] Contexto construido: ${contextualMemory.length} caracteres`);
         }
       } else {
-        logger.info('Non-file question, skipping file context search');
+        logger.info('[RAG] No se encontró contexto relevante');
       }
+      
     } catch (ragError) {
-      logger.warn('RAG search failed, continuing without context:', ragError);
+      logger.warn('[RAG] Error en búsqueda, continuando sin contexto:', ragError);
     }
 
-    // AGREGAR EN index.ts alrededor de la línea 340, antes de la inyección de contexto
-
-    // 🛠️ ENHANCED CONTRADICTION DETECTION with DEBUGGING
-    console.log('🔍 CONTRADICTION CHECK DEBUG:');
-    console.log('  isCurrentFileQuestion:', isCurrentFileQuestion);
-    console.log('  contextualMemory length:', contextualMemory ? contextualMemory.length : 0);
-    console.log('  recentMessages count:', recentMessages.length);
-
-
-    // 7. Build messages for Claude
+    // 7. Construir mensajes para Claude
     const claudeMessages = recentMessages.map(msg => ({
       role: msg.role as 'user' | 'assistant',
       content: msg.content
     }));
 
-// 🛠️ HANDLE CONTRADICTIONS: Modify prompt when contradictions detected
-    if (hasContradictoryHistory && claudeMessages.length > 0) {
-      const lastUserIndex = claudeMessages.length - 1;
-      if (claudeMessages[lastUserIndex].role === 'user') {
-        const originalQuestion = claudeMessages[lastUserIndex].content;
-        claudeMessages[lastUserIndex].content = `CONTEXTO: Hubo respuestas anteriores donde mencioné no tener acceso a archivos. Esa información puede estar desactualizada. 
-
-Pregunta actual del usuario: ${originalQuestion}
-
-INSTRUCCIÓN: Responde de manera directa y útil sobre el estado actual del sistema. Si se refiere a archivos, explica honestamente las capacidades actuales sin referencias contradictorias al historial.`;
-        
-        console.log('🛠️ APPLIED CONTRADICTION PROMPT MODIFICATION');
-      }
-    }
-
-    // 8. ✅ ENHANCED: Context injection with DYNAMIC PROMPT SUPPORT
-    if (claudeMessages.length > 0) {
+    // 8. Inyección de contexto si se encontró información relevante
+    if (claudeMessages.length > 0 && contextualMemory) {
       const lastUserIndex = claudeMessages.length - 1;
       if (claudeMessages[lastUserIndex].role === 'user') {
         let baseInstruction = '';
         
-        // Build base instruction based on context strategy and settings
-        if (isCurrentFileQuestion && contextualMemory) {
-          if (contextStrategy === 'full') {
-            baseInstruction = `${contextualMemory}\nINSTRUCCION IMPORTANTE: Tienes acceso a archivos que el usuario ha subido al PROYECTO ACTUAL. USA PRIORITARIAMENTE la informacion de estos archivos del proyecto actual para responder. Si la pregunta se refiere a contenido de archivos, cita especificamente de que archivo del proyecto actual proviene la informacion.`;
-          } else if (contextStrategy === 'filtered') {
-            baseInstruction = `${contextualMemory}\nINSTRUCCION: Ya tienes el contexto del archivo. La pregunta especifica del usuario se refiere a: "${content}". Enfocate en responder especificamente esta nueva pregunta basandote en el contenido mas relevante del archivo.`;
-          } else if (contextStrategy === 'minimal') {
-            baseInstruction = `${contextualMemory}\nINSTRUCCION: Responde la nueva pregunta especifica del usuario basandote en el archivo que ya conoces del contexto de la conversacion.`;
-          } else {
-            baseInstruction = `${contextualMemory}\nINFORMACION: Tienes acceso a archivos subidos. Responde basandote en el contenido disponible.`;
-          }
+        // Construir instrucción base según tipo de query
+        if (queryContext.type === 'knowledge') {
+          baseInstruction = `${contextualMemory}\nINSTRUCCIÓN: Tienes acceso a documentos del usuario. Responde basándote específicamente en el contenido proporcionado arriba.`;
+        } else if (queryContext.type === 'conversational') {
+          baseInstruction = `${contextualMemory}\nINSTRUCCIÓN: El usuario pregunta sobre conversaciones previas. Usa la información del contexto conversacional proporcionado.`;
+        } else if (queryContext.type === 'hybrid') {
+          baseInstruction = `${contextualMemory}\nINSTRUCCIÓN: Combina información de documentos y conversaciones previas para responder de manera completa.`;
+        } else {
+          baseInstruction = `${contextualMemory}\nINFORMACIÓN DISPONIBLE: Usa el contexto proporcionado para responder.`;
         }
         
-        // ✅ NEW: Apply custom prompt/template if provided
+        // Aplicar prompt personalizado si se proporciona
         let finalInstruction = baseInstruction;
         if (claudeSettings.prompt) {
           finalInstruction = `${baseInstruction}\n\n--- INSTRUCCIONES ADICIONALES ---\n${claudeSettings.prompt}`;
@@ -488,125 +525,99 @@ INSTRUCCIÓN: Responde de manera directa y útil sobre el estado actual del sist
         finalInstruction += `\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
         claudeMessages[lastUserIndex].content = finalInstruction;
         
-        logger.info(`Applied context injection strategy: ${contextStrategy}${claudeSettings.promptType ? `, promptType: ${claudeSettings.promptType}` : ''}`);
+        logger.info(`[RAG] Contexto inyectado - Tipo: ${queryContext.type}, Intent: ${queryContext.intent}`);
       }
     }
 
-    // 9. ✅ ENHANCED: Send to Claude API with dynamic settings
+    // 9. Enviar a Claude API con configuración dinámica
     const { ClaudeService } = require('./services/claude.service');
     const claudeService = new ClaudeService();
     
-    // Validate settings before sending
+    // Validar configuración antes de enviar
     const validation = claudeService.validateSettings(claudeSettings);
     if (!validation.valid) {
-      logger.warn('Invalid Claude settings provided:', validation.errors);
-      res.status(400).json({ error: 'Invalid settings', details: validation.errors });
+      logger.warn('Configuración Claude inválida proporcionada:', validation.errors);
+      res.status(400).json({ error: 'Configuración inválida', details: validation.errors });
       return;
     }
     
-    logger.info('API Key status: CONFIGURED');
-    logger.info('Sending to Claude API with context...');
-    console.log('🔍 PROMPT DEBUG - Final messages being sent to Claude:');
-    console.log(JSON.stringify(claudeMessages, null, 2));
+    logger.info('Estado de API Key: CONFIGURADA');
+    logger.info('Enviando a Claude API con contexto...');
+    
     const claudeResponse = await claudeService.sendMessage(claudeMessages, claudeSettings);
-    console.log('🔍 CLAUDE RESPONSE DEBUG:', JSON.stringify(claudeResponse, null, 2));
-    const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
-    //const assistantContent = claudeResponse.content[0]?.text || 'Sorry, could not generate response.';
+    const assistantContent = claudeResponse.content[0]?.text || 'Lo siento, no se pudo generar una respuesta.';
 
-    // 10. Save Claude's response with settings metadata
+    // 10. Guardar respuesta de Claude con metadatos de configuración
     const assistantMessage = await dbService.addMessage(conversationId, 'assistant', assistantContent, { 
       model: claudeResponse.model,
       usage: claudeResponse.usage,
-      context_used: relevantMemories?.length || 0,
-      context_strategy: contextStrategy,
-      settings_used: claudeSettings // ✅ NEW: Store settings used
+      context_used: (conversationalResults.length + knowledgeResults.length),
+      query_type: queryContext.type,
+      query_intent: queryContext.intent,
+      settings_used: claudeSettings
     });
 
-    // 11. Store new messages in ChromaDB for future searches
+    // ============================================================
+    // ALMACENAMIENTO POST-RESPUESTA - CONVERSATIONAL RAG
+    // ============================================================
+    
     try {
-      const projectId = conversation?.project_id || conversationId;
+      logger.info('[RAG] Almacenando par conversacional para futuras búsquedas...');
       
-      // Store user message
-      await ragService.addMemory(
-        projectId, 
-        conversationId, 
+      await conversationalRAG.storeConversationPair(
+        conversationId,
+        currentProjectId,
+        userMessage.id,
         content,
-        { 
-          role: 'user',
-          timestamp: new Date().toISOString(),
-          conversation_title: conversation?.title || 'Untitled'
-        }
+        assistantMessage.id,
+        assistantContent
       );
-
-      // Store assistant response
-      await ragService.addMemory(
-        projectId, 
-        conversationId, 
-        assistantContent,
-        { 
-          role: 'assistant',
-          timestamp: new Date().toISOString(),
-          conversation_title: conversation?.title || 'Untitled',
-          model: claudeResponse.model
-        }
-      );
-
-      logger.info('Stored messages in ChromaDB for future context');
+      
+      logger.info('✅ Par conversacional almacenado exitosamente');
     } catch (storageError) {
-      logger.warn('Failed to store in ChromaDB:', storageError);
+      logger.warn('⚠️ Fallo al almacenar par conversacional:', storageError);
     }
 
-    // 12. ✅ ENHANCED: Respond with configuration info
+    // 11. Logging final
+    logger.info(`✅ Mensaje procesado exitosamente`);
+    logger.info(`   - Tipo de query: ${queryContext.type}`);
+    logger.info(`   - Intent: ${queryContext.intent}`);
+    logger.info(`   - Memorias conversacionales: ${conversationalResults.length}`);
+    logger.info(`   - Documentos: ${knowledgeResults.length}`);
+    logger.info(`   - Contexto total: ${conversationalResults.length + knowledgeResults.length} items`);
+
+    // 12. Responder con información completa
     res.json({
       user_message: userMessage,
       assistant_message: assistantMessage,
       usage: claudeResponse.usage,
-      context_memories_used: relevantMemories?.length || 0,
-      context_strategy: contextStrategy,
-      settings_applied: claudeSettings // ✅ NEW: Return applied settings
+      context_memories_used: conversationalResults.length + knowledgeResults.length,
+      query_analysis: {
+        type: queryContext.type,
+        intent: queryContext.intent,
+        confidence: queryContext.confidence
+      },
+      settings_applied: claudeSettings,
+      success: true
     });
 
-    logger.info(`Message processed successfully. Context memories used: ${relevantMemories?.length || 0}, Strategy: ${contextStrategy}, Settings: ${JSON.stringify(claudeSettings)}`);
-
   } catch (error) {
-    logger.error('Error processing message:', error);
-    res.status(500).json({ error: 'Failed to process message' });
+    logSystemError(error, 'procesamiento de mensajes');
+    res.status(500).json({ error: 'Fallo al procesar mensaje' });
   }
 });
 
-// Get messages from conversation
-app.get('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
-  try {
-    const conversationId = req.params.id;
-    const messages = await dbService.getMessages(conversationId);
-    res.json({ messages });
-  } catch (error) {
-    logger.error('Error fetching messages:', error);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
+// ================================================================================================
+// ENDPOINTS DE CONFIGURACION Y ESTADO
+// ================================================================================================
 
-// Get conversation by id
-app.get('/api/conversations/:id', async (req: express.Request, res: express.Response): Promise<void> => {
-  try {
-    const conversationId = req.params.id;
-    const conversation = await dbService.getConversationById(conversationId);
-    if (!conversation) {
-      res.status(404).json({ error: 'Conversation not found' });
-      return;
-    }
-    res.json(conversation);
-  } catch (error) {
-    logger.error('Error fetching conversation:', error);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-// ✅ NEW: Endpoint to get available Claude configuration options
+/**
+ * Obtiene opciones de configuración disponibles para Claude
+ */
 app.get('/api/claude/config', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const { ClaudeService } = require('./services/claude.service');
-    const claudeAPI = new ClaudeService(); // ✅ FIXED: Same variable name pattern
+    const claudeAPI = new ClaudeService();
     
     res.json({
       templates: claudeAPI.getPromptTemplates(),
@@ -617,49 +628,158 @@ app.get('/api/claude/config', async (req: express.Request, res: express.Response
       }
     });
   } catch (error) {
-    logger.error('Error getting Claude config:', error);
-    res.status(500).json({ error: 'Failed to get configuration' });
+    logger.error('Error obteniendo configuración Claude:', error);
+    res.status(500).json({ error: 'Fallo al obtener configuración' });
   }
 });
 
-// Health check endpoints
+/**
+ * Endpoint de verificación de salud del sistema
+ */
 app.get('/api/health', async (req, res) => {
-  const ragHealth = await ragService.healthCheck();
-  
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV,
     services: {
-      database: 'connected',
-      chromadb: ragHealth ? 'healthy' : 'unhealthy'
+      database: 'conectada',
+      conversational_rag: 'activo',
+      knowledge_base_rag: 'activo',
+      query_router: 'activo'
     }
   });
 });
 
+/**
+ * Información sobre la aplicación
+ */
 app.get('/api/info', (req, res) => {
   res.json({
     name: 'Claude Infinito v1.1 Backend',
     version: '1.1.0',
-    features: ['RAG Integration', 'Persistent Memory', 'Cross-Project Context', 'File Upload Support', 'Intelligent Context Management', 'Dynamic Configuration']
+    features: [
+      'Conversational RAG System', 
+      'Knowledge Base RAG', 
+      'Query Router Inteligente',
+      'Memoria Persistente', 
+      'Contexto Cross-Proyecto', 
+      'Soporte Upload de Archivos', 
+      'Gestión Inteligente de Contexto', 
+      'Configuración Dinámica'
+    ]
   });
 });
 
+/**
+ * Endpoint raíz con información básica
+ */
 app.get('/', (req, res) => {
   res.json({ 
-    message: 'Claude Infinito v1.1 Backend - Memory Enabled', 
-    status: 'running'
+    message: 'Claude Infinito v1.1 Backend - Conversational RAG System Activo', 
+    status: 'ejecutándose'
   });
 });
 
+// ================================================================================================
+// SISTEMA DE MONITOREO DE ERRORES
+// ================================================================================================
+
+/**
+ * Endpoint para obtener información de errores recientes del sistema
+ */
+app.get('/api/system/errors', (req: express.Request, res: express.Response): void => {
+  try {
+    const errorInfo = {
+      last_error: (global as any).lastSystemError || null,
+      error_type: (global as any).lastErrorType || null,
+      error_count: (global as any).errorCount || 0,
+      last_updated: (global as any).lastErrorTime || null,
+      system_status: (global as any).lastSystemError ? 'error' : 'ok'
+    };
+    
+    res.json(errorInfo);
+  } catch (error) {
+    logger.error('Error obteniendo información de errores del sistema:', error);
+    res.status(500).json({ error: 'No se pudo obtener información de errores' });
+  }
+});
+
+/**
+ * Endpoint para limpiar errores del sistema (útil para testing)
+ */
+app.post('/api/system/errors/clear', (req: express.Request, res: express.Response): void => {
+  try {
+    (global as any).lastSystemError = null;
+    (global as any).lastErrorType = null;
+    (global as any).errorCount = 0;
+    (global as any).lastErrorTime = null;
+    
+    logger.info('Errores del sistema limpiados manualmente');
+    res.json({ success: true, message: 'Errores del sistema limpiados' });
+  } catch (error) {
+    logger.error('Error limpiando errores del sistema:', error);
+    res.status(500).json({ error: 'No se pudieron limpiar los errores' });
+  }
+});
+
+/**
+ * Función auxiliar para registrar errores del sistema
+ * @param error - Error capturado
+ * @param context - Contexto donde ocurrió el error
+ */
+function logSystemError(error: any, context: string): void {
+  let errorMessage = 'Error desconocido';
+  let errorType = 'unknown';
+  
+  // Clasificar tipos de errores específicos
+  if (error.message?.includes('529') || error.message?.includes('overloaded')) {
+    errorMessage = 'API Claude: Servidor sobrecargado';
+    errorType = 'api_overload';
+  } else if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
+    errorMessage = 'API Claude: Error de autenticación';
+    errorType = 'auth_error';
+  } else if (error.message?.includes('403') || error.message?.includes('forbidden')) {
+    errorMessage = 'API Claude: Acceso denegado';
+    errorType = 'access_denied';
+  } else if (error.message?.includes('429') || error.message?.includes('rate limit')) {
+    errorMessage = 'API Claude: Límite de velocidad excedido';
+    errorType = 'rate_limit';
+  } else if (error.message?.includes('500') || error.message?.includes('internal server error')) {
+    errorMessage = 'API Claude: Error interno del servidor';
+    errorType = 'server_error';
+  } else if (error.message?.includes('network') || error.message?.includes('ECONNREFUSED')) {
+    errorMessage = 'Error de conectividad de red';
+    errorType = 'network_error';
+  } else if (error.message?.includes('timeout')) {
+    errorMessage = 'Timeout de conexión';
+    errorType = 'timeout_error';
+  } else {
+    errorMessage = `Error en ${context}: ${error.message || 'Error desconocido'}`;
+    errorType = 'system_error';
+  }
+  
+  // Guardar en variables globales para exposición via API
+  (global as any).lastSystemError = errorMessage;
+  (global as any).lastErrorType = errorType;
+  (global as any).lastErrorTime = new Date().toISOString();
+  (global as any).errorCount = ((global as any).errorCount || 0) + 1;
+  
+  logger.error(`[${context.toUpperCase()}] ${errorMessage}`, error);
+}
+
+// ================================================================================================
+// INICIALIZACION DEL SERVIDOR
+// ================================================================================================
+
 app.listen(port, () => {
-  logger.info(`Claude Infinito Backend running on port ${port}`);
-  logger.info('RAG-enabled memory system active');
-  logger.info('File upload integration enabled');
-  logger.info('Intelligent context management enabled');
-  logger.info('Dynamic configuration support enabled'); // ✅ NEW
+  logger.info(`Claude Infinito Backend ejecutándose en puerto ${port}`);
+  logger.info('✅ Conversational RAG System ACTIVO');
+  logger.info('✅ Knowledge Base RAG ACTIVO');
+  logger.info('✅ Query Router ACTIVO');
+  logger.info('Integración de upload de archivos habilitada');
+  logger.info('Gestión inteligente de contexto habilitada');
+  logger.info('Soporte de configuración dinámica habilitado');
 });
 
 export default app;
-
