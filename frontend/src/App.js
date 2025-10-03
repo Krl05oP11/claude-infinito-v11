@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import FileUploader from './components/FileUploader';
+import EnhancedFooter from './components/EnhancedFooter';
 
 // Photophobic-friendly color palette
 const colors = {
@@ -44,6 +45,15 @@ function App() {
   const [gpuUsage, setGpuUsage] = useState(75);
   const [backendStatus, setBackendStatus] = useState('healthy');
   const [claudeStatus, setClaudeStatus] = useState('connected');
+  const [systemErrors, setSystemErrors] = useState({ 
+    last_error: null, 
+    error_type: null,
+    error_count: 0,
+    system_status: 'ok'
+  });
+  
+  // RAG Metrics State - NUEVO
+  const [lastQueryMetrics, setLastQueryMetrics] = useState(null);
   
   const messagesEndRef = useRef(null);
 
@@ -51,7 +61,13 @@ function App() {
   useEffect(() => {
     loadConversations();
     checkSystemHealth();
-    const healthInterval = setInterval(checkSystemHealth, 30000);
+    fetchSystemErrors();
+    
+    const healthInterval = setInterval(() => {
+      checkSystemHealth();
+      fetchSystemErrors();
+    }, 60000);
+    
     return () => clearInterval(healthInterval);
   }, []);
 
@@ -73,6 +89,24 @@ function App() {
       console.error('Health check failed:', error);
       setSystemHealth({ status: 'error', error: error.message });
       setBackendStatus('error');
+    }
+  };
+
+  const fetchSystemErrors = async () => {
+    try {
+      const response = await fetch('/api/system/errors');
+      if (response.ok) {
+        const data = await response.json();
+        setSystemErrors(data);
+        
+        if (data.last_error && data.error_type && data.error_type.includes('api')) {
+          setClaudeStatus('error');
+        } else if (!data.last_error) {
+          setClaudeStatus('connected');
+        }
+      }
+    } catch (error) {
+      // Silently ignore if endpoint doesn't respond
     }
   };
 
@@ -126,7 +160,6 @@ function App() {
 
     const userMessage = { role: 'user', content: input.trim() };
     
-    // Definir chatSettings ANTES del debugging
     const chatSettings = {
       temperature,
       promptType: isCustomPromptMode ? null : selectedTemplate,
@@ -149,18 +182,6 @@ function App() {
 
       const data = await response.json();
       
-      // DEBUGGING PUNTO 2: Verificar qué recibimos del backend
-        context_memories_used: data.context_memories_used,
-        context_strategy: data.context_strategy,
-        settings_applied: data.settings_applied,
-        response_length: data.assistant_message?.content?.length,
-        response_preview: data.assistant_message?.content?.substring(0, 200) + '...',
-        mentions_files: data.assistant_message?.content?.toLowerCase().includes('archivo') || 
-                       data.assistant_message?.content?.toLowerCase().includes('pdf') ||
-                       data.assistant_message?.content?.toLowerCase().includes('documento'),
-        full_response_data_keys: Object.keys(data)
-      });
-      
       if (data.assistant_message) {
         const assistantMessage = {
           role: 'assistant',
@@ -173,6 +194,25 @@ function App() {
         };
         setMessages(prev => [...prev, assistantMessage]);
         setClaudeStatus('connected');
+        
+        // CAPTURAR MÉTRICAS RAG - NUEVO
+        if (data.query_analysis || data.rag_metrics) {
+          setLastQueryMetrics({
+            queryAnalysis: data.query_analysis,
+            contextMemoriesUsed: data.context_memories_used || 0,
+            ragMetrics: data.rag_metrics,
+            timestamp: new Date().toISOString()
+          });
+          
+          console.log('📊 Métricas RAG capturadas:', {
+            queryType: data.query_analysis?.query_type,
+            confidence: data.query_analysis?.confidence,
+            threshold: data.rag_metrics?.threshold_used,
+            responseTime: data.rag_metrics?.response_time_ms,
+            conversationalResults: data.rag_metrics?.conversational_results,
+            knowledgeResults: data.rag_metrics?.knowledge_results
+          });
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -212,25 +252,6 @@ function App() {
     return promptTemplates[selectedTemplate] || '';
   };
 
-  // Status indicators
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'healthy':
-      case 'connected':
-        return colors.success;
-      case 'error':
-        return colors.danger;
-      default:
-        return colors.warning;
-    }
-  };
-
-  const getGpuBarColor = () => {
-    if (gpuUsage < 50) return colors.success;
-    if (gpuUsage <= 80) return colors.warning;
-    return colors.danger;
-  };
-
   return (
     <div 
       className="app-container"
@@ -241,25 +262,25 @@ function App() {
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        maxWidth: '100vw'  // ✅ NUEVO: No exceder viewport width
+        maxWidth: '100vw'
       }}
     >
       {/* Main Content Area */}
       <div style={{ 
         display: 'flex', 
         flex: 1,
-        minHeight: 0 // Important for flex children with scroll
+        minHeight: 0
       }}>
         
-        {/* Sidebar - ✅ RESPONSIVE Y REDIMENSIONABLE */}
+        {/* Sidebar */}
         <div 
           className="sidebar"
           style={{
-            flex: '0 0 400px',           // ✅ Base: 400px, no shrink/grow
-            minWidth: '350px',           // ✅ Mínimo funcional  
-            maxWidth: '500px',           // ✅ Máximo razonable
-            resize: 'horizontal',        // ✅ Redimensionable manualmente
-            overflow: 'auto',            // ✅ Para el resize
+            flex: '0 0 400px',
+            minWidth: '350px',
+            maxWidth: '500px',
+            resize: 'horizontal',
+            overflow: 'auto',
             backgroundColor: colors.surface,
             borderRight: `1px solid ${colors.border}`,
             display: 'flex',
@@ -388,7 +409,7 @@ function App() {
                 Prompt personalizado...
               </button>
 
-              {/* Custom Prompt Textarea - Always visible when custom mode */}
+              {/* Custom Prompt Textarea */}
               {isCustomPromptMode && (
                 <div>
                   <textarea
@@ -555,12 +576,12 @@ function App() {
           </div>
         </div>
 
-        {/* Main Chat Area - ✅ RESPONSIVE */}
+        {/* Main Chat Area */}
         <div 
           className="main-area"
           style={{
-            flex: '1',                   // ✅ Toma el resto del espacio
-            minWidth: '500px',           // ✅ Mínimo para chat
+            flex: '1',
+            minWidth: '500px',
             display: 'flex',
             flexDirection: 'column'
           }}
@@ -719,79 +740,15 @@ function App() {
         </div>
       </div>
 
-      {/* Footer */}
-      <div 
-        className="footer"
-        style={{
-          height: '40px',
-          backgroundColor: colors.surface,
-          borderTop: `1px solid ${colors.border}`,
-          display: 'flex',
-          alignItems: 'center',
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          gap: '30px',
-          fontSize: '12px',
-          color: colors.textSecondary,
-          flexShrink: 0
-        }}
-      >
-        {/* GPU Monitor */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span>GPU:</span>
-          <div style={{ 
-            width: '100px', 
-            height: '8px', 
-            backgroundColor: colors.border,
-            borderRadius: '4px',
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              width: `${gpuUsage}%`,
-              height: '100%',
-              backgroundColor: getGpuBarColor(),
-              borderRadius: '4px',
-              transition: 'width 0.3s ease'
-            }}></div>
-          </div>
-          <span style={{ minWidth: '30px' }}>{gpuUsage}%</span>
-        </div>
-
-        {/* Backend Monitor */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span>Backend:</span>
-          <div style={{
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            backgroundColor: getStatusColor(backendStatus),
-            animation: backendStatus === 'error' ? 'pulse 1s infinite' : 'none'
-          }}></div>
-          <span style={{ color: getStatusColor(backendStatus) }}>
-            {backendStatus === 'healthy' ? 'Healthy' : 'Error'}
-          </span>
-        </div>
-
-        {/* Claude Monitor */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span>Claude:</span>
-          <div style={{
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            backgroundColor: getStatusColor(claudeStatus),
-            animation: claudeStatus === 'error' ? 'pulse 1s infinite' : 'none'
-          }}></div>
-          <span style={{ color: getStatusColor(claudeStatus) }}>
-            {claudeStatus === 'connected' ? 'Connected' : 'Error'}
-          </span>
-        </div>
-
-        <span>RTX Active</span>
-      </div>
+      {/* Enhanced Footer - 3 Lines */}
+      <EnhancedFooter 
+        systemHealth={systemHealth}
+        lastQueryMetrics={lastQueryMetrics}
+        colors={colors}
+        systemError={systemErrors.last_error}
+      />
     </div>
   );
 }
 
 export default App;
-
