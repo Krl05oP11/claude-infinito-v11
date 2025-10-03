@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import FileUploader from './components/FileUploader';
 import EnhancedFooter from './components/EnhancedFooter';
+import KnowledgeBaseViewer from './components/KnowledgeBaseViewer';
 
 // Photophobic-friendly color palette
 const colors = {
@@ -52,7 +53,7 @@ function App() {
     system_status: 'ok'
   });
   
-  // RAG Metrics State - NUEVO
+  // RAG Metrics State
   const [lastQueryMetrics, setLastQueryMetrics] = useState(null);
   
   const messagesEndRef = useRef(null);
@@ -195,7 +196,7 @@ function App() {
         setMessages(prev => [...prev, assistantMessage]);
         setClaudeStatus('connected');
         
-        // CAPTURAR MÉTRICAS RAG - NUEVO
+        // CAPTURAR MÉTRICAS RAG
         if (data.query_analysis || data.rag_metrics) {
           setLastQueryMetrics({
             queryAnalysis: data.query_analysis,
@@ -477,7 +478,7 @@ function App() {
           <div style={{ marginBottom: '15px' }}>
             <FileUploader 
               conversationId={currentConversation?.id}
-              projectId={currentConversation?.id} 
+              projectId={currentConversation?.project_id} 
             />
           </div>
 
@@ -509,11 +510,11 @@ function App() {
               backgroundColor: colors.border,
               borderRadius: '8px',
               padding: '15px',
-              flex: 1,
               minHeight: '150px',
               maxHeight: '200px',
               display: 'flex',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              marginBottom: '15px'
             }}
           >
             <h4 style={{ 
@@ -574,6 +575,15 @@ function App() {
               )}
             </div>
           </div>
+
+          {/* Knowledge Base Viewer - NUEVO */}
+          <KnowledgeBaseViewer 
+            projectId={currentConversation?.project_id}
+            colors={colors}
+            onDocumentDeleted={(docId) => {
+              console.log(`Documento ${docId} eliminado de Knowledge Base`);
+            }}
+          />
         </div>
 
         {/* Main Chat Area */}
