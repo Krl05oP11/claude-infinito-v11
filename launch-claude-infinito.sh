@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Claude Infinito v1.1 Desktop Launcher - FIXED VERSION
+# Claude Infinito v1.1 Desktop Launcher
 # Auto-start script with complete system initialization
 # Optimized for Ubuntu 24.04 LTS - Carlos Environment
-# 🛠️ FIXES: Backend stability + Health check tolerance
+# Using pgvector in PostgreSQL (ChromaDB removed)
 
 # Colors for terminal output (photophobic-friendly warm colors)
 export BROWN='\033[0;33m'      # Warm brown
@@ -16,7 +16,6 @@ PROJECT_DIR="$HOME/Projects/claude-infinito-v11"
 LOG_DIR="$PROJECT_DIR/logs"
 FRONTEND_PORT=3000
 BACKEND_PORT=3001
-CHROMADB_PORT=8001
 POSTGRES_PORT=5433
 
 # Create logs directory if it doesn't exist
@@ -95,7 +94,7 @@ kill_port() {
 wait_for_service() {
     local service_name=$1
     local url=$2
-    local max_attempts=45  # 🛠️ FIX: Increased timeout for backend compilation
+    local max_attempts=45
     local attempt=1
     
     print_status "Waiting for $service_name to be ready..."
@@ -171,8 +170,8 @@ start_docker_services() {
     # Stop any existing containers
     docker-compose down 2>/dev/null
     
-    # Start services
-    if docker-compose up -d postgres chromadb redis >> "$DOCKER_LOG" 2>&1; then
+    # Start services (PostgreSQL + Redis only, no ChromaDB)
+    if docker-compose up -d postgres redis >> "$DOCKER_LOG" 2>&1; then
         print_success "Docker services started"
     else
         print_error "Failed to start Docker services"
@@ -180,8 +179,9 @@ start_docker_services() {
         return 1
     fi
     
-    # Wait for services to be ready
-    wait_for_service "ChromaDB" "http://localhost:$CHROMADB_PORT/api/v2/heartbeat"
+    # Wait for PostgreSQL to be ready
+    print_status "Waiting for PostgreSQL..."
+    sleep 5
     
     # Check Ollama service
     print_status "Checking Ollama service..."
@@ -202,7 +202,7 @@ start_docker_services() {
     fi
 }
 
-# 🛠️ FINAL FIX: Function to start backend - COMPILE TYPESCRIPT FIRST
+# Function to start backend - Compile TypeScript first
 start_backend() {
     print_status "Starting backend service..."
     
@@ -217,7 +217,7 @@ start_backend() {
         npm install >> "$BACKEND_LOG" 2>&1
     fi
     
-    # 🛠️ SOLUTION: Compile TypeScript first, then run with node
+    # Compile TypeScript first
     print_status "Compiling TypeScript backend..."
     
     # Clear previous log content for this session
@@ -241,11 +241,11 @@ start_backend() {
     
     print_status "Starting compiled backend with Node.js..."
     
-    # 🛠️ FIX: Use plain node with compiled JS (much more stable with nohup)
+    # Use plain node with compiled JS (stable with nohup)
     nohup node dist/index.js >> "$BACKEND_LOG" 2>&1 &
     local backend_pid=$!
     
-    # Wait for backend to be ready (compiled JS starts faster)
+    # Wait for backend to be ready
     print_status "Waiting for backend to start..."
     sleep 5
     
@@ -295,7 +295,6 @@ start_frontend() {
     # Clear previous log content for this session
     echo "=== Frontend startup $(date) ===" > "$FRONTEND_LOG"
     
-#    nohup npm start >> "$FRONTEND_LOG" 2>&1 &
     setsid nohup npm start >> "$FRONTEND_LOG" 2>&1 &
     local frontend_pid=$!
     
@@ -352,7 +351,7 @@ show_status() {
     # Docker services
     echo "Docker Services:"
     if command -v docker-compose >/dev/null 2>&1; then
-        docker-compose ps 2>/dev/null | grep -E "(postgres|chromadb|redis)" | while read line; do
+        docker-compose ps 2>/dev/null | grep -E "(postgres|redis)" | while read line; do
             if echo "$line" | grep -q "Up"; then
                 echo -e "  ${GREEN}✓${NC} $line"
             else
@@ -397,6 +396,11 @@ show_status() {
         echo -e "  ${ORANGE}✗${NC} Ollama service"
     fi
     
+    # Vector database info
+    echo
+    echo "Vector Database:"
+    echo -e "  ${GREEN}✓${NC} pgvector in PostgreSQL (port $POSTGRES_PORT)"
+    
     echo
     echo "Application URL: http://localhost:$FRONTEND_PORT"
     echo "Logs directory: $LOG_DIR"
@@ -405,10 +409,6 @@ show_status() {
 }
 
 # Function to cleanup on exit
-
-# Function to cleanup on exit - MEJORADA
-
-# Function to cleanup on exit - MEJORADA
 cleanup() {
     print_status "Cleaning up processes..."
     
@@ -435,7 +435,7 @@ cleanup() {
         rm -f "$LOG_DIR/frontend.pid"
     fi
     
-    # NUEVO: Limpiar procesos huérfanos específicos
+    # Clean orphan processes
     pkill -f "npm run dev" 2>/dev/null
     pkill -f "npm start" 2>/dev/null
     pkill -f "ts-node.*index.ts" 2>/dev/null
@@ -454,14 +454,15 @@ main() {
     echo "| |____| |/ _\` | | | |/ _\` |/ _ \  | || | | |  _| | | | | | || (_) |"
     echo " \_____|_|\__,_|_|_|_|\__,_|\___| |___|_| |_|_| |_|_| |_|_|\__\___/ "
     echo "                                                                   "
-    echo "                       v1.1 - Desktop Launcher (FIXED)"
+    echo "                       v1.1 - Desktop Launcher"
+    echo "                       Vector DB: pgvector in PostgreSQL"
     echo -e "${NC}"
     
     # Trap for cleanup
     trap cleanup EXIT INT TERM
     
     # Start logging
-    log_message "=== Claude Infinito v1.1 Launcher Started (FIXED VERSION) ==="
+    log_message "=== Claude Infinito v1.1 Launcher Started ==="
     
     # Execute startup sequence
     check_requirements
@@ -477,12 +478,12 @@ main() {
     print_status "Press Ctrl+C to stop all services"
     print_status "Health checks will run every 60 seconds"
     
-    # 🛠️ FIXED: Keep script running with MORE TOLERANT health checks
+    # Keep script running with tolerant health checks
     local consecutive_failures=0
     local max_consecutive_failures=3
     
     while true; do
-        sleep 60  # Check every 60 seconds instead of 30
+        sleep 60  # Check every 60 seconds
         
         local services_down=0
         local status_msg=""
@@ -540,7 +541,9 @@ elif [ "$1" = "--stop" ]; then
     print_success "All services stopped"
     exit 0
 elif [ "$1" = "--help" ]; then
-    echo "Claude Infinito v1.1 Launcher (FIXED VERSION)"
+    echo "Claude Infinito v1.1 Launcher"
+    echo "Using pgvector in PostgreSQL for vector storage"
+    echo ""
     echo "Usage: $0 [--status|--stop|--help]"
     echo ""
     echo "Options:"
@@ -550,12 +553,11 @@ elif [ "$1" = "--help" ]; then
     echo ""
     echo "Default: Start all services"
     echo ""
-    echo "FIXES Applied:"
-    echo "  ✓ Backend uses ts-node directly (no nodemon conflicts)"
-    echo "  ✓ Increased timeouts for TypeScript compilation"
-    echo "  ✓ More tolerant health checks (60s interval)"
-    echo "  ✓ Consecutive failure counting before exit"
-    echo "  ✓ Better logging and error reporting"
+    echo "Architecture:"
+    echo "  ✓ PostgreSQL 15 with pgvector extension"
+    echo "  ✓ Ollama for embeddings (bge-large-en-v1.5)"
+    echo "  ✓ Redis for caching"
+    echo "  ✓ Claude Sonnet 4 for LLM"
     exit 0
 else
     main

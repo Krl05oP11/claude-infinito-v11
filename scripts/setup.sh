@@ -2,6 +2,7 @@
 set -e
 
 echo "🚀 Setting up Claude Infinito v1.1..."
+echo "   Vector DB: pgvector in PostgreSQL"
 
 # Colors
 RED='\033[0;31m'
@@ -24,7 +25,6 @@ print_status "Installing dependencies..."
 npm install
 cd backend && npm install
 cd ..
-
 print_success "Dependencies installed"
 
 # Create .env if not exists
@@ -33,10 +33,12 @@ if [ ! -f .env ]; then
     print_status "Created .env file - Please add your Claude API key"
 fi
 
-# Create directories
-mkdir -p data/{postgres,chromadb,conversations,backups} logs
+# Create directories (no chromadb directory needed)
+mkdir -p data/{postgres,conversations,backups} logs
+print_success "Data directories created"
 
 # Check Ollama
+print_status "Checking Ollama service..."
 if curl -s http://localhost:11434/api/tags >/dev/null; then
     print_success "Ollama is running"
 else
@@ -44,4 +46,23 @@ else
     exit 1
 fi
 
-print_success "Setup complete! Next: npm run dev"
+# Check Docker
+print_status "Checking Docker..."
+if docker info >/dev/null 2>&1; then
+    print_success "Docker is running"
+else
+    print_error "Docker not running - Please start Docker first"
+    exit 1
+fi
+
+print_success "Setup complete!"
+echo ""
+echo "Next steps:"
+echo "  1. Edit .env and add your CLAUDE_API_KEY"
+echo "  2. Run: npm run dev"
+echo ""
+echo "Architecture:"
+echo "  • PostgreSQL 15 with pgvector extension"
+echo "  • Ollama for embeddings (bge-large-en-v1.5)"  
+echo "  • Redis for caching"
+echo "  • Claude Sonnet 4 for LLM"

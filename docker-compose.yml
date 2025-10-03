@@ -1,9 +1,9 @@
 #version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # PostgreSQL Database with pgvector
   postgres:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg15
     container_name: claude-infinito-postgres
     restart: unless-stopped
     environment:
@@ -25,30 +25,24 @@ services:
       timeout: 10s
       retries: 3
 
-  # ChromaDB Vector Database
-  chromadb:
-    image: ghcr.io/chroma-core/chroma:latest
-    container_name: claude-infinito-chromadb
-    restart: unless-stopped
-    environment:
-      - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_HTTP_PORT=8000
-      - PERSIST_DIRECTORY=/chroma/chroma
-#      - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.token.TokenAuthCredentialsProvider
-#      - CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER=X-Chroma-Token
-#      - CHROMA_AUTH_TOKEN_SECRET=claude-infinito-secret-key
-    ports:
-      - "8001:8000"
-    volumes:
-      - chromadb_data:/chroma/chroma
-      - ./data/chromadb:/backup
-    networks:
-      - claude-infinito
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 3
+  # ChromaDB Vector Database - DISABLED
+  # ChromaDB is not used in Claude Infinito v1.1 - using pgvector in PostgreSQL instead
+  # Keeping this section commented for reference only
+  # chromadb:
+  #   image: ghcr.io/chroma-core/chroma:latest
+  #   container_name: claude-infinito-chromadb
+  #   restart: unless-stopped
+  #   environment:
+  #     - CHROMA_SERVER_HOST=0.0.0.0
+  #     - CHROMA_SERVER_HTTP_PORT=8000
+  #     - PERSIST_DIRECTORY=/chroma/chroma
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - chromadb_data:/chroma/chroma
+  #     - ./data/chromadb:/backup
+  #   networks:
+  #     - claude-infinito
 
   # Backend API Server
   backend:
@@ -68,7 +62,7 @@ services:
       - POSTGRES_DB=claude_infinito
       - POSTGRES_USER=claude_user
       - POSTGRES_PASSWORD=claude_password
-      # ChromaDB
+      # ChromaDB - NOT USED (kept for compatibility)
       - CHROMADB_HOST=chromadb
       - CHROMADB_PORT=8000
       - CHROMA_AUTH_TOKEN=claude-infinito-secret-key
@@ -96,8 +90,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      chromadb:
-        condition: service_started
     networks:
       - claude-infinito
     extra_hosts:
@@ -150,8 +142,8 @@ services:
 volumes:
   postgres_data:
     driver: local
-  chromadb_data:
-    driver: local
+  # chromadb_data:  # DISABLED - not used, pgvector in PostgreSQL instead
+  #   driver: local
   redis_data:
     driver: local
   pgadmin_data:

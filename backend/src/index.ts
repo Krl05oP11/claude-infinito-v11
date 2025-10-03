@@ -3,7 +3,8 @@
 //-------------------index.ts
 //-------------------index.ts
 //-------------------index.ts
-// FASE 3 INTEGRADA: Conversational RAG System v3.0
+//-------------------index.ts
+// FASE 3 INTEGRADA: Conversational RAG System v3.0 - CON MÉTRICAS
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -12,8 +13,13 @@ import dotenv from 'dotenv';
 import { Pool } from 'pg';
 import { createLogger } from './utils/logger';
 import { DatabaseService } from './services/database.service';
-import ragService from './services/rag.service';
+import { RAGService } from './services/rag.service';
 import uploadRoutes from './api/routes/upload';
+
+// Para ejecutar comandos del sistema (GPU status)
+import { exec } from 'child_process';
+import { promisify } from 'util';
+const execAsync = promisify(exec);
 
 // ============================================================
 // NUEVOS IMPORTS - CONVERSATIONAL RAG SYSTEM
@@ -248,7 +254,7 @@ function buildContextualMemory(
         return `**${fileName}** ${chunkInfo}${projectInfo}\nSeccion: ${section}\nRelevancia: ${similarity}%\n\n${memory.content}`;
       });
       
-      contextSections.push(`--- ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n────────────\n\n')}`);
+      contextSections.push(`--- ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n─────────────\n\n')}`);
     }
     
     // Agregar contexto conversacional si es necesario
@@ -281,10 +287,69 @@ function buildContextualMemory(
   }
   
   if (contextSections.length > 0) {
-    return `\n\n${contextSections.join('\n\n════════════════════════════════════\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
+    return `\n\n${contextSections.join('\n\n╔════════════════════════════════════╗\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
   }
   
   return '';
+}
+
+/**
+ * Función auxiliar para obtener información de la GPU usando nvidia-smi
+ */
+async function getGPUStatus(): Promise<any> {
+  try {
+    // Comando nvidia-smi para obtener utilización y memoria
+    const { stdout: utilizationOutput } = await execAsync(
+      'nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total,temperature.gpu,name --format=csv,noheader,nounits'
+    );
+    
+    const lines = utilizationOutput.trim().split('\n');
+    if (lines.length > 0) {
+      const [usage, memoryUsed, memoryTotal, temperature, name] = lines[0].split(',').map(s => s.trim());
+      
+      // Verificar si es RTX 5070 Ti (o RTX 4070 Ti mientras esperamos la 5070 Ti)
+      const isRTX5070Ti = name.includes('5070') || name.includes('4070');
+      
+      return {
+        usage: parseFloat(usage) || 0,
+        memory_used: parseInt(memoryUsed) || 0,
+        memory_total: parseInt(memoryTotal) || 0,
+        temperature: parseInt(temperature) || 0,
+        gpu_name: name,
+        rtx5070Active: isRTX5070Ti,
+        timestamp: new Date().toISOString()
+      };
+    }
+    
+    throw new Error('No GPU data available');
+  } catch (error) {
+    // Si nvidia-smi no está disponible, intentar con Ollama
+    try {
+      const { stdout: ollamaOutput } = await execAsync('ollama ps');
+      
+      // Si Ollama está usando GPU, asumimos que está activa
+      const isUsingGPU = ollamaOutput.includes('GPU') || ollamaOutput.includes('CUDA');
+      
+      // Intentar estimar uso basado en si hay modelos cargados
+      const hasModelsLoaded = ollamaOutput.includes('bge-large') || 
+                              ollamaOutput.includes('llama') || 
+                              ollamaOutput.includes('mistral');
+      
+      return {
+        usage: hasModelsLoaded ? 30 : 0, // Estimación básica
+        memory_used: 0,
+        memory_total: 0,
+        temperature: 0,
+        gpu_name: 'GPU (Ollama detected)',
+        rtx5070Active: isUsingGPU,
+        timestamp: new Date().toISOString(),
+        source: 'ollama_estimate'
+      };
+    } catch (ollamaError) {
+      // Sin acceso a GPU info
+      throw new Error('GPU information not available');
+    }
+  }
 }
 
 // ================================================================================================
@@ -376,12 +441,13 @@ app.get('/api/conversations/:id/messages', async (req: express.Request, res: exp
 });
 
 // ================================================================================================
-// ENDPOINT PRINCIPAL DE MENSAJES - CONVERSATIONAL RAG INTEGRATION
+// ENDPOINT PRINCIPAL DE MENSAJES - CONVERSATIONAL RAG INTEGRATION CON MÉTRICAS
 // ================================================================================================
 
 /**
  * Procesa un nuevo mensaje del usuario con Conversational RAG completo
  * FASE 3: Sistema inteligente que combina memoria conversacional y knowledge base
+ * ACTUALIZADO: Con métricas RAG completas para el footer
  */
 app.post('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
@@ -392,6 +458,17 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       res.status(400).json({ error: 'Contenido del mensaje requerido' });
       return;
     }
+
+    // ============================================================
+    // NUEVAS VARIABLES PARA MÉTRICAS RAG
+    // ============================================================
+    const ragStartTime = Date.now(); // Para medir tiempo de respuesta
+    let similarityScores: number[] = []; // Para guardar todas las similitudes
+    let thresholdUsed = 0.3; // Valor por defecto
+    // Variables para estadísticas de similitud
+    let avgSimilarity = 0;
+    let maxSimilarity = 0;
+    let minSimilarity = 0;
 
     // Extraer y validar configuración dinámica
     const claudeSettings = settings || {};
@@ -436,6 +513,8 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       // Búsqueda en memoria conversacional si la estrategia lo indica
       if (searchStrategy.useConversationalRAG) {
         logger.info(`[RAG] Buscando en memoria conversacional (max: ${searchStrategy.maxResults})...`);
+        const startConvSearch = Date.now();
+        
         conversationalResults = await conversationalRAG.searchConversations(
           content,
           currentProjectId,
@@ -443,20 +522,55 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
           searchStrategy.maxResults,
           searchStrategy.similarityThreshold
         );
-        logger.info(`[RAG] Encontradas ${conversationalResults.length} memorias conversacionales`);
+        
+        // Capturar threshold usado
+        thresholdUsed = searchStrategy.similarityThreshold;
+        
+        // Extraer scores de similitud de resultados conversacionales
+        const convScores = conversationalResults.map((r: any) => r.similarity || 0);
+        similarityScores.push(...convScores);
+        
+        const convSearchTime = Date.now() - startConvSearch;
+        logger.info(`[RAG] Encontradas ${conversationalResults.length} memorias conversacionales en ${convSearchTime}ms`);
       }
       
       // Búsqueda en knowledge base (documentos) si la estrategia lo indica
       if (searchStrategy.useKnowledgeBaseRAG) {
         logger.info(`[RAG] Buscando en knowledge base (max: ${searchStrategy.maxResults})...`);
+        const startKbSearch = Date.now();
+        
         knowledgeResults = await knowledgeBaseRAG.searchDocuments(
           content,
           currentProjectId,
           searchStrategy.maxResults,
           searchStrategy.similarityThreshold
         );
-        logger.info(`[RAG] Encontrados ${knowledgeResults.length} chunks de documentos`);
+        
+        // Capturar threshold usado
+        thresholdUsed = searchStrategy.similarityThreshold;
+        
+        // Extraer scores de similitud de resultados de knowledge base
+        const kbScores = knowledgeResults.map((r: any) => r.similarity || 0);
+        similarityScores.push(...kbScores);
+        
+        const kbSearchTime = Date.now() - startKbSearch;
+        logger.info(`[RAG] Encontrados ${knowledgeResults.length} chunks de documentos en ${kbSearchTime}ms`);
       }
+      
+      // Calcular tiempo total de RAG
+      const ragEndTime = Date.now();
+      const ragResponseTime = ragEndTime - ragStartTime;
+      
+      // Calcular estadísticas de similitud
+      avgSimilarity = similarityScores.length > 0 
+        ? similarityScores.reduce((a, b) => a + b, 0) / similarityScores.length 
+        : 0;
+      maxSimilarity = similarityScores.length > 0 
+        ? Math.max(...similarityScores) 
+        : 0;
+      minSimilarity = similarityScores.length > 0 
+        ? Math.min(...similarityScores) 
+        : 0;
       
       // 6. Combinar y construir contexto
       const allResults = [
@@ -586,7 +700,11 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     logger.info(`   - Documentos: ${knowledgeResults.length}`);
     logger.info(`   - Contexto total: ${conversationalResults.length + knowledgeResults.length} items`);
 
-    // 12. Responder con información completa
+    // ============================================================
+    // 12. RESPONDER CON MÉTRICAS RAG COMPLETAS
+    // ============================================================
+    const ragResponseTime = Date.now() - ragStartTime; // Tiempo total final
+    
     res.json({
       user_message: userMessage,
       assistant_message: assistantMessage,
@@ -598,7 +716,21 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
         confidence: queryContext.confidence
       },
       settings_applied: claudeSettings,
-      success: true
+      success: true,
+      // ✅ NUEVAS MÉTRICAS AGREGADAS:
+      rag_metrics: {
+        response_time_ms: ragResponseTime || 0,
+        threshold_used: thresholdUsed,
+        similarity_scores: similarityScores.slice(0, 10), // Top 10 para no sobrecargar
+        similarity_stats: {
+          avg: avgSimilarity,
+          max: maxSimilarity,
+          min: minSimilarity,
+          count: similarityScores.length
+        },
+        conversational_results: conversationalResults.length,
+        knowledge_results: knowledgeResults.length
+      }
     });
 
   } catch (error) {
@@ -666,7 +798,8 @@ app.get('/api/info', (req, res) => {
       'Contexto Cross-Proyecto', 
       'Soporte Upload de Archivos', 
       'Gestión Inteligente de Contexto', 
-      'Configuración Dinámica'
+      'Configuración Dinámica',
+      'Métricas RAG en Tiempo Real'
     ]
   });
 });
@@ -723,6 +856,73 @@ app.post('/api/system/errors/clear', (req: express.Request, res: express.Respons
   }
 });
 
+// ================================================================================================
+// NUEVOS ENDPOINTS PARA MÉTRICAS DEL SISTEMA
+// ================================================================================================
+
+/**
+ * Endpoint para obtener el estado de la GPU
+ * Usa nvidia-smi para obtener información real de la RTX 5070 Ti
+ */
+app.get('/api/system/gpu-status', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    // Intentar obtener información de la GPU usando nvidia-smi
+    const gpuInfo = await getGPUStatus();
+    res.json(gpuInfo);
+  } catch (error) {
+    logger.error('Error obteniendo estado de GPU:', error);
+    res.json({
+      usage: 0,
+      memory_used: 0,
+      memory_total: 0,
+      temperature: 0,
+      rtx5070Active: false,
+      error: 'No se pudo acceder a la información de GPU'
+    });
+  }
+});
+
+/**
+ * Endpoint adicional para verificar específicamente Ollama GPU usage
+ */
+app.get('/api/system/ollama-status', async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const { stdout } = await execAsync('ollama ps');
+    
+    // Parsear la salida de ollama ps
+    const lines = stdout.split('\n').filter(line => line.trim());
+    const models: any[] = [];
+    
+    for (let i = 1; i < lines.length; i++) { // Saltar header
+      const parts = lines[i].split(/\s+/);
+      if (parts.length >= 4) {
+        models.push({
+          name: parts[0],
+          id: parts[1],
+          size: parts[2],
+          processor: parts[3] || 'CPU',
+          until: parts[4] || ''
+        });
+      }
+    }
+    
+    res.json({
+      status: 'ok',
+      models_loaded: models,
+      gpu_active: models.some(m => m.processor.includes('GPU')),
+      total_models: models.length
+    });
+  } catch (error) {
+    logger.error('Error obteniendo estado de Ollama:', error);
+    res.json({
+      status: 'error',
+      models_loaded: [],
+      gpu_active: false,
+      error: 'No se pudo acceder a Ollama'
+    });
+  }
+});
+
 /**
  * Función auxiliar para registrar errores del sistema
  * @param error - Error capturado
@@ -768,6 +968,133 @@ function logSystemError(error: any, context: string): void {
   logger.error(`[${context.toUpperCase()}] ${errorMessage}`, error);
 }
 
+// ============================================================================
+// ENDPOINT: GET /api/projects/:projectId/documents
+// Listar documentos de la Knowledge Base de un proyecto
+// ============================================================================
+// INSTRUCCIONES: Agregar este código en index.ts después de los otros endpoints
+// (aproximadamente línea 850, después del endpoint de health check)
+
+app.get('/api/projects/:projectId/documents', async (req, res) => {
+  const startTime = Date.now();
+  const { projectId } = req.params;
+
+  try {
+    logger.info(`📂 Solicitando documentos para proyecto: ${projectId}`);
+
+    // Validar que el projectId sea un UUID válido
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(projectId)) {
+      return res.status(400).json({
+        error: 'Invalid project ID format',
+        message: 'Project ID must be a valid UUID'
+      });
+    }
+
+    // Consultar documentos del proyecto con estadísticas de chunks
+    const query = `
+      SELECT 
+        d.id,
+        d.filename,
+        d.file_type,
+        d.file_size,
+        d.upload_date,
+        d.processed,
+        d.processed_at,
+        d.metadata,
+        (SELECT COUNT(*) FROM document_chunks dc WHERE dc.document_id = d.id) as chunk_count
+      FROM documents d
+      WHERE d.project_id = $1
+      ORDER BY d.upload_date DESC
+    `;
+    const result = await ragPool.query(query, [projectId]);
+
+    const documents = result.rows.map(row => ({
+      id: row.id,
+      filename: row.filename,
+      fileType: row.file_type,
+      fileSize: row.file_size,
+      uploadDate: row.upload_date,
+      processed: row.processed,
+      processedAt: row.processed_at,
+      chunkCount: parseInt(row.chunk_count) || 0,
+      metadata: row.metadata || {}
+    }));
+
+    const responseTime = Date.now() - startTime;
+
+    logger.info(`✅ Documentos recuperados: ${documents.length} documentos en ${responseTime}ms`);
+
+    return res.json({
+      success: true,
+      projectId,
+      documentCount: documents.length,
+      documents,
+      responseTime
+    });
+
+  } catch (error) {
+    const responseTime = Date.now() - startTime;
+    logger.error('Error al recuperar documentos:', error);
+
+    return res.status(500).json({
+      error: 'Failed to retrieve documents',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      responseTime
+    });
+  }
+});
+
+// ============================================================================
+// ENDPOINT: DELETE /api/documents/:documentId
+// Eliminar un documento de la Knowledge Base (opcional)
+// ============================================================================
+
+app.delete('/api/documents/:documentId', async (req, res) => {
+  const { documentId } = req.params;
+
+  try {
+    logger.info(`🗑️ Eliminando documento ID: ${documentId}`);
+
+    // Primero obtener información del documento
+    const docQuery = 'SELECT filename, project_id FROM documents WHERE id = $1';
+    const docResult = await ragPool.query(docQuery, [documentId]);
+
+    if (docResult.rows.length === 0) {
+      return res.status(404).json({
+        error: 'Document not found',
+        message: `No document found with ID ${documentId}`
+      });
+    }
+
+    const document = docResult.rows[0];
+
+    // Eliminar documento (CASCADE eliminará automáticamente los chunks)
+    const deleteQuery = 'DELETE FROM documents WHERE id = $1';
+    await ragPool.query(deleteQuery, [documentId]);
+
+    logger.info(`✅ Documento eliminado: ${document.filename}`);
+
+    return res.json({
+      success: true,
+      message: 'Document deleted successfully',
+      deletedDocument: {
+        id: documentId,
+        filename: document.filename,
+        projectId: document.project_id
+      }
+    });
+
+  } catch (error) {
+    logger.error('Error al eliminar documento:', error);
+
+    return res.status(500).json({
+      error: 'Failed to delete document',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
 // ================================================================================================
 // INICIALIZACION DEL SERVIDOR
 // ================================================================================================
@@ -777,6 +1104,7 @@ app.listen(port, () => {
   logger.info('✅ Conversational RAG System ACTIVO');
   logger.info('✅ Knowledge Base RAG ACTIVO');
   logger.info('✅ Query Router ACTIVO');
+  logger.info('✅ Métricas RAG en Tiempo Real ACTIVAS');
   logger.info('Integración de upload de archivos habilitada');
   logger.info('Gestión inteligente de contexto habilitada');
   logger.info('Soporte de configuración dinámica habilitado');
