@@ -199,29 +199,6 @@ function extractQuestionKeywords(content: string): string[] {
 }
 
 /**
- * Detecta si el historial de conversación contiene respuestas contradictorias
- * que podrían causar problemas al inyectar contexto de archivos
- * @param messages - Mensajes recientes de la conversación
- * @returns true si se detectan contradicciones
- */
-function hasContradictoryHistory(messages: any[]): boolean {
-  return messages.some(msg => {
-    if (msg.role !== 'assistant') return false;
-    
-    const content = msg.content.toLowerCase();
-    return (
-      content.includes('no veo archivos') ||
-      content.includes('no tengo acceso') ||
-      content.includes('no puedo acceder') ||
-      content.includes('sorry, could not generate') ||
-      content.includes('no dispongo de') ||
-      content.includes('content": []') ||
-      content.includes('cannot generate response')
-    );
-  });
-}
-
-/**
  * Construye el contexto de archivos basado en la estrategia seleccionada
  * @param strategy - Estrategia de contexto (full, filtered, minimal, standard)
  * @param fileMemories - Memorias de archivos encontradas
@@ -237,14 +214,15 @@ function buildContextualMemory(
 ): string {
   const contextSections: string[] = [];
   
-  if (strategy === 'full' || strategy === 'standard') {
+  if (strategy === 'full' || strategy === 'standard' || strategy === 'hybrid' || 
+      strategy === 'knowledge_focus' || strategy === 'conversation_focus') {
     // Contexto completo para primera pregunta o seguimiento estándar
     if (fileMemories.length > 0) {
       const priorityFileMemories = fileMemories.slice(0, 6);
       const fileParts = priorityFileMemories.map((memory, index) => {
         const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
         const section = memory.metadata?.section || 'contenido';
-        const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+        const similarity = ((memory.metadata?.similarity || memory.similarity || 0) * 100).toFixed(1);
         const chunkInfo = memory.metadata?.chunkIndex !== undefined ? 
           ` (parte ${memory.metadata.chunkIndex + 1}/${memory.metadata.totalChunks})` : '';
         const projectId = memory.metadata?.project_id || memory.metadata?.conversation_id || 'unknown';
@@ -265,7 +243,7 @@ function buildContextualMemory(
     if (conversationMemories.length > 0 && conversationSlots > 0) {
       const priorityConversationMemories = conversationMemories.slice(0, conversationSlots);
       const conversationParts = priorityConversationMemories.map(memory => {
-        const similarity = ((memory.metadata?.similarity || 0) * 100).toFixed(1);
+        const similarity = ((memory.metadata?.similarity || memory.similarity || 0) * 100).toFixed(1);
         const timestamp = memory.metadata?.timestamp || 'tiempo desconocido';
         return `[${similarity}% similitud | ${timestamp}]\n${memory.content}`;
       });
@@ -287,7 +265,7 @@ function buildContextualMemory(
   }
   
   if (contextSections.length > 0) {
-    return `\n\n${contextSections.join('\n\n╔════════════════════════════════════╗\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
+    return `\n\n${contextSections.join('\n\n════════════════════════════════════════\n\n')}\n\n--- FIN INFORMACION DISPONIBLE ---\n\n`;
   }
   
   return '';
@@ -448,6 +426,7 @@ app.get('/api/conversations/:id/messages', async (req: express.Request, res: exp
  * Procesa un nuevo mensaje del usuario con Conversational RAG completo
  * FASE 3: Sistema inteligente que combina memoria conversacional y knowledge base
  * ACTUALIZADO: Con métricas RAG completas para el footer
+ * ✅ FIX: Detección de contradicciones en historial implementada
  */
 app.post('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
@@ -489,6 +468,63 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     const currentProjectId = conversation?.project_id || conversationId;
     
     // ============================================================
+    // ✅ NUEVO: DETECCIÓN DE CONTRADICCIONES EN HISTORIAL
+    // ============================================================
+    
+    let hasContradictoryHistory = false;
+    
+    if (recentMessages.length > 0) {
+      logger.info('🔍 Checking for contradictions in conversation history...');
+      
+      // Patrones que indican que Claude previamente negó acceso a archivos
+      const contradictionPatterns = [
+        'sorry, could not generate',
+        'no tengo acceso',
+        'no puedo ver',
+        'no veo archivos',
+        'no he recibido',
+        'no tengo información sobre archivos',
+        'no puedo acceder',
+        'no dispongo de',
+        'no me has proporcionado',
+        'no has compartido',
+        'no está disponible',
+        'cannot access',
+        'do not have access',
+        'cannot see',
+        'haven\'t received'
+      ];
+      
+      // Revisar mensajes del asistente buscando contradicciones
+      recentMessages.forEach((msg, index) => {
+        if (msg.role === 'assistant') {
+          const msgContent = msg.content.toLowerCase();
+          
+          // Verificar cada patrón de contradicción
+          for (const pattern of contradictionPatterns) {
+            if (msgContent.includes(pattern)) {
+              hasContradictoryHistory = true;
+              logger.warn(`⚠️ CONTRADICTION DETECTED in message ${index + 1}: "${pattern}"`);
+              logger.warn(`⚠️ Previous response claimed no file access, but files may now be available`);
+              break;
+            }
+          }
+          
+          if (hasContradictoryHistory) {
+            return; // Break forEach
+          }
+        }
+      });
+      
+      if (hasContradictoryHistory) {
+        logger.warn('⚠️ CONTRADICTION DETECTED: Conversation history contains file access denial');
+        logger.warn('⚠️ SOLUTION: Will skip context injection to avoid confusing Claude');
+      } else {
+        logger.info('✅ No contradictions detected in conversation history');
+      }
+    }
+    
+    // ============================================================
     // CONVERSATIONAL RAG - NUEVO SISTEMA INTELIGENTE
     // ============================================================
     
@@ -505,56 +541,63 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     queryRouter.logQueryAnalysis(content, queryContext, searchStrategy);
     
     // 5. Ejecutar búsquedas según estrategia determinada
+    // ✅ MODIFICADO: Solo buscar si NO hay contradicciones
     let conversationalResults: any[] = [];
     let knowledgeResults: any[] = [];
     let contextualMemory: string = '';
     
     try {
-      // Búsqueda en memoria conversacional si la estrategia lo indica
-      if (searchStrategy.useConversationalRAG) {
-        logger.info(`[RAG] Buscando en memoria conversacional (max: ${searchStrategy.maxResults})...`);
-        const startConvSearch = Date.now();
+      // ✅ NUEVO: Prevenir búsqueda si hay contradicciones
+      if (hasContradictoryHistory) {
+        logger.warn('⚠️ SKIPPING ALL RAG SEARCHES due to contradictory history');
+        logger.warn('⚠️ This prevents confusing Claude with context that contradicts previous statements');
+      } else {
+        // Búsqueda en memoria conversacional si la estrategia lo indica
+        if (searchStrategy.useConversationalRAG) {
+          logger.info(`[RAG] Buscando en memoria conversacional (max: ${searchStrategy.maxResults})...`);
+          const startConvSearch = Date.now();
+          
+          conversationalResults = await conversationalRAG.searchConversations(
+            content,
+            currentProjectId,
+            undefined, // conversationId opcional
+            searchStrategy.maxResults,
+            searchStrategy.similarityThreshold
+          );
+          
+          // Capturar threshold usado
+          thresholdUsed = searchStrategy.similarityThreshold;
+          
+          // Extraer scores de similitud de resultados conversacionales
+          const convScores = conversationalResults.map((r: any) => r.similarity || 0);
+          similarityScores.push(...convScores);
+          
+          const convSearchTime = Date.now() - startConvSearch;
+          logger.info(`[RAG] Encontradas ${conversationalResults.length} memorias conversacionales en ${convSearchTime}ms`);
+        }
         
-        conversationalResults = await conversationalRAG.searchConversations(
-          content,
-          currentProjectId,
-          undefined, // conversationId opcional
-          searchStrategy.maxResults,
-          searchStrategy.similarityThreshold
-        );
-        
-        // Capturar threshold usado
-        thresholdUsed = searchStrategy.similarityThreshold;
-        
-        // Extraer scores de similitud de resultados conversacionales
-        const convScores = conversationalResults.map((r: any) => r.similarity || 0);
-        similarityScores.push(...convScores);
-        
-        const convSearchTime = Date.now() - startConvSearch;
-        logger.info(`[RAG] Encontradas ${conversationalResults.length} memorias conversacionales en ${convSearchTime}ms`);
-      }
-      
-      // Búsqueda en knowledge base (documentos) si la estrategia lo indica
-      if (searchStrategy.useKnowledgeBaseRAG) {
-        logger.info(`[RAG] Buscando en knowledge base (max: ${searchStrategy.maxResults})...`);
-        const startKbSearch = Date.now();
-        
-        knowledgeResults = await knowledgeBaseRAG.searchDocuments(
-          content,
-          currentProjectId,
-          searchStrategy.maxResults,
-          searchStrategy.similarityThreshold
-        );
-        
-        // Capturar threshold usado
-        thresholdUsed = searchStrategy.similarityThreshold;
-        
-        // Extraer scores de similitud de resultados de knowledge base
-        const kbScores = knowledgeResults.map((r: any) => r.similarity || 0);
-        similarityScores.push(...kbScores);
-        
-        const kbSearchTime = Date.now() - startKbSearch;
-        logger.info(`[RAG] Encontrados ${knowledgeResults.length} chunks de documentos en ${kbSearchTime}ms`);
+        // Búsqueda en knowledge base (documentos) si la estrategia lo indica
+        if (searchStrategy.useKnowledgeBaseRAG) {
+          logger.info(`[RAG] Buscando en knowledge base (max: ${searchStrategy.maxResults})...`);
+          const startKbSearch = Date.now();
+          
+          knowledgeResults = await knowledgeBaseRAG.searchDocuments(
+            content,
+            currentProjectId,
+            searchStrategy.maxResults,
+            searchStrategy.similarityThreshold
+          );
+          
+          // Capturar threshold usado
+          thresholdUsed = searchStrategy.similarityThreshold;
+          
+          // Extraer scores de similitud de resultados de knowledge base
+          const kbScores = knowledgeResults.map((r: any) => r.similarity || 0);
+          similarityScores.push(...kbScores);
+          
+          const kbSearchTime = Date.now() - startKbSearch;
+          logger.info(`[RAG] Encontrados ${knowledgeResults.length} chunks de documentos en ${kbSearchTime}ms`);
+        }
       }
       
       // Calcular tiempo total de RAG
@@ -578,7 +621,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
         ...conversationalResults.map(r => ({ ...r, source_type: 'conversation' }))
       ];
       
-      if (allResults.length > 0) {
+      if (allResults.length > 0 && !hasContradictoryHistory) {
         logger.info(`[RAG] Total de resultados combinados: ${allResults.length}`);
         
         // Separar por tipo para construcción de contexto
@@ -599,6 +642,8 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
         if (contextualMemory) {
           logger.info(`[RAG] Contexto construido: ${contextualMemory.length} caracteres`);
         }
+      } else if (hasContradictoryHistory) {
+        logger.info('[RAG] Contexto omitido debido a contradicciones en historial');
       } else {
         logger.info('[RAG] No se encontró contexto relevante');
       }
@@ -614,20 +659,37 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     }));
 
     // 8. Inyección de contexto si se encontró información relevante
-    if (claudeMessages.length > 0 && contextualMemory) {
+    // ✅ MODIFICADO: Manejo especial para conversaciones con contradicciones
+    if (claudeMessages.length > 0) {
       const lastUserIndex = claudeMessages.length - 1;
       if (claudeMessages[lastUserIndex].role === 'user') {
         let baseInstruction = '';
         
+        // ✅ NUEVO: Caso especial para conversaciones con contradicciones
+        if (hasContradictoryHistory) {
+          baseInstruction = `NOTA IMPORTANTE: Esta conversación tiene historial previo donde no tenías acceso completo a archivos o información. 
+AHORA puedes tener acceso a archivos que han sido subidos recientemente al sistema. 
+Por favor, responde la pregunta del usuario de la mejor manera posible con la información actualmente disponible.
+
+Si la pregunta se refiere a archivos específicos y no tienes acceso a ellos en este momento, 
+informa al usuario que puede obtener mejores resultados creando una NUEVA conversación 
+donde tendrás acceso completo al contenido de los archivos desde el inicio.
+
+`;
+          logger.info('📝 Added contradiction resolution note to prompt');
+        }
+        
         // Construir instrucción base según tipo de query
-        if (queryContext.type === 'knowledge') {
-          baseInstruction = `${contextualMemory}\nINSTRUCCIÓN: Tienes acceso a documentos del usuario. Responde basándote específicamente en el contenido proporcionado arriba.`;
-        } else if (queryContext.type === 'conversational') {
-          baseInstruction = `${contextualMemory}\nINSTRUCCIÓN: El usuario pregunta sobre conversaciones previas. Usa la información del contexto conversacional proporcionado.`;
-        } else if (queryContext.type === 'hybrid') {
-          baseInstruction = `${contextualMemory}\nINSTRUCCIÓN: Combina información de documentos y conversaciones previas para responder de manera completa.`;
-        } else {
-          baseInstruction = `${contextualMemory}\nINFORMACIÓN DISPONIBLE: Usa el contexto proporcionado para responder.`;
+        if (contextualMemory && !hasContradictoryHistory) {
+          if (queryContext.type === 'knowledge') {
+            baseInstruction += `${contextualMemory}\nINSTRUCCIÓN: Tienes acceso a documentos del usuario. Responde basándote específicamente en el contenido proporcionado arriba.`;
+          } else if (queryContext.type === 'conversational') {
+            baseInstruction += `${contextualMemory}\nINSTRUCCIÓN: El usuario pregunta sobre conversaciones previas. Usa la información del contexto conversacional proporcionado.`;
+          } else if (queryContext.type === 'hybrid') {
+            baseInstruction += `${contextualMemory}\nINSTRUCCIÓN: Combina información de documentos y conversaciones previas para responder de manera completa.`;
+          } else {
+            baseInstruction += `${contextualMemory}\nINFORMACIÓN DISPONIBLE: Usa el contexto proporcionado para responder.`;
+          }
         }
         
         // Aplicar prompt personalizado si se proporciona
@@ -639,7 +701,11 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
         finalInstruction += `\n\nPregunta del usuario:\n${claudeMessages[lastUserIndex].content}`;
         claudeMessages[lastUserIndex].content = finalInstruction;
         
-        logger.info(`[RAG] Contexto inyectado - Tipo: ${queryContext.type}, Intent: ${queryContext.intent}`);
+        if (hasContradictoryHistory) {
+          logger.info(`[RAG] Prompt ajustado para manejar contradicción histórica`);
+        } else if (contextualMemory) {
+          logger.info(`[RAG] Contexto inyectado - Tipo: ${queryContext.type}, Intent: ${queryContext.intent}`);
+        }
       }
     }
 
@@ -662,13 +728,15 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     const assistantContent = claudeResponse.content[0]?.text || 'Lo siento, no se pudo generar una respuesta.';
 
     // 10. Guardar respuesta de Claude con metadatos de configuración
+    // ✅ MODIFICADO: Agregar flag de contradicción a metadata
     const assistantMessage = await dbService.addMessage(conversationId, 'assistant', assistantContent, { 
       model: claudeResponse.model,
       usage: claudeResponse.usage,
       context_used: (conversationalResults.length + knowledgeResults.length),
       query_type: queryContext.type,
       query_intent: queryContext.intent,
-      settings_used: claudeSettings
+      settings_used: claudeSettings,
+      contradiction_detected: hasContradictoryHistory  // ✅ NUEVO: Flag de contradicción
     });
 
     // ============================================================
@@ -699,6 +767,9 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     logger.info(`   - Memorias conversacionales: ${conversationalResults.length}`);
     logger.info(`   - Documentos: ${knowledgeResults.length}`);
     logger.info(`   - Contexto total: ${conversationalResults.length + knowledgeResults.length} items`);
+    if (hasContradictoryHistory) {
+      logger.info(`   - ⚠️ Contradicción detectada: Contexto omitido`);
+    }
 
     // ============================================================
     // 12. RESPONDER CON MÉTRICAS RAG COMPLETAS
@@ -717,7 +788,8 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       },
       settings_applied: claudeSettings,
       success: true,
-      // ✅ NUEVAS MÉTRICAS AGREGADAS:
+      contradiction_detected: hasContradictoryHistory,  // ✅ NUEVO: Informar al frontend
+      // ✅ MÉTRICAS RAG COMPLETAS:
       rag_metrics: {
         response_time_ms: ragResponseTime || 0,
         threshold_used: thresholdUsed,
@@ -799,7 +871,8 @@ app.get('/api/info', (req, res) => {
       'Soporte Upload de Archivos', 
       'Gestión Inteligente de Contexto', 
       'Configuración Dinámica',
-      'Métricas RAG en Tiempo Real'
+      'Métricas RAG en Tiempo Real',
+      'Detección de Contradicciones Históricas'  // ✅ NUEVO
     ]
   });
 });
@@ -972,8 +1045,6 @@ function logSystemError(error: any, context: string): void {
 // ENDPOINT: GET /api/projects/:projectId/documents
 // Listar documentos de la Knowledge Base de un proyecto
 // ============================================================================
-// INSTRUCCIONES: Agregar este código en index.ts después de los otros endpoints
-// (aproximadamente línea 850, después del endpoint de health check)
 
 app.get('/api/projects/:projectId/documents', async (req, res) => {
   const startTime = Date.now();
@@ -1047,7 +1118,7 @@ app.get('/api/projects/:projectId/documents', async (req, res) => {
 
 // ============================================================================
 // ENDPOINT: DELETE /api/documents/:documentId
-// Eliminar un documento de la Knowledge Base (opcional)
+// Eliminar un documento de la Knowledge Base
 // ============================================================================
 
 app.delete('/api/documents/:documentId', async (req, res) => {
@@ -1105,6 +1176,7 @@ app.listen(port, () => {
   logger.info('✅ Knowledge Base RAG ACTIVO');
   logger.info('✅ Query Router ACTIVO');
   logger.info('✅ Métricas RAG en Tiempo Real ACTIVAS');
+  logger.info('✅ Detección de Contradicciones Históricas ACTIVA');
   logger.info('Integración de upload de archivos habilitada');
   logger.info('Gestión inteligente de contexto habilitada');
   logger.info('Soporte de configuración dinámica habilitado');
