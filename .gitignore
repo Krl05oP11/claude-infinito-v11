@@ -60,3 +60,4 @@ chroma/
 
 # Directorios de backup completos
 src.backup.pre-bge/
+logs/*.log

@@ -2,8 +2,8 @@
 
 # Claude Infinito v1.1 Desktop Launcher
 # Auto-start script with complete system initialization
-# Optimized for Ubuntu 24.04 LTS - Carlos Environment
-# Using pgvector in PostgreSQL (ChromaDB removed)
+# Optimized for Ubuntu 24.04 LTS
+# Architecture: PostgreSQL with pgvector + Ollama + Redis
 
 # Colors for terminal output (photophobic-friendly warm colors)
 export BROWN='\033[0;33m'      # Warm brown
@@ -165,12 +165,12 @@ check_requirements() {
 
 # Function to start Docker services
 start_docker_services() {
-    print_status "Starting Docker services..."
+    print_status "Starting Docker services (PostgreSQL + Redis)..."
     
     # Stop any existing containers
     docker-compose down 2>/dev/null
     
-    # Start services (PostgreSQL + Redis only, no ChromaDB)
+    # Start only PostgreSQL and Redis
     if docker-compose up -d postgres redis >> "$DOCKER_LOG" 2>&1; then
         print_success "Docker services started"
     else
@@ -183,22 +183,36 @@ start_docker_services() {
     print_status "Waiting for PostgreSQL..."
     sleep 5
     
+    # Verify PostgreSQL connection
+    if PGPASSWORD=claude_password psql -h localhost -p 5433 -U claude_user -d claude_infinito -c "SELECT 1" >/dev/null 2>&1; then
+        print_success "PostgreSQL connection verified"
+    else
+        print_error "PostgreSQL connection failed"
+        return 1
+    fi
+    
     # Check Ollama service
     print_status "Checking Ollama service..."
     if systemctl is-active --quiet ollama; then
         print_success "Ollama service is running"
         
-        # Check if model is loaded
-        if ollama ps | grep -q "nomic-embed-text"; then
-            print_success "Ollama model loaded"
+        # Check if bge-large model is available
+        if ollama list | grep -q "bge-large"; then
+            print_success "Ollama embedding model (bge-large) available"
         else
-            print_status "Loading Ollama model..."
-            ollama pull nomic-embed-text >/dev/null 2>&1 &
+            print_status "Downloading Ollama model (bge-large)..."
+            ollama pull bge-large >/dev/null 2>&1 &
         fi
     else
         print_status "Starting Ollama service..."
         sudo systemctl start ollama
         sleep 2
+        if systemctl is-active --quiet ollama; then
+            print_success "Ollama service started"
+        else
+            print_error "Failed to start Ollama service"
+            return 1
+        fi
     fi
 }
 
@@ -309,21 +323,24 @@ start_frontend() {
     fi
 }
 
-# Function to open browser on horizontal monitor
+# Ex-Function to open browser on horizontal monitor
+# Function to open browser
 open_browser() {
-    print_status "Opening browser on primary monitor..."
-    
-    # Check if browser is already open to avoid multiple instances
-    if pgrep -f "localhost:$FRONTEND_PORT" >/dev/null 2>&1; then
-        print_status "Browser already open to Claude Infinito"
-        return 0
-    fi
+    print_status "Checking browser status..."
     
     local url="http://localhost:$FRONTEND_PORT"
     
-    # Detect available browsers and open only ONE instance
+    # Check if there's already an active connection to the frontend
+    if ss -tn 2>/dev/null | grep -q ":$FRONTEND_PORT.*ESTAB"; then
+        print_success "Browser already connected to Claude Infinito"
+        print_status "No need to open new window"
+        return 0
+    fi
+    
+    # If no active connection, open browser
+    print_status "Opening browser..."
+    
     if command -v firefox >/dev/null 2>&1; then
-        # Open Firefox with single instance
         firefox --new-window "$url" >/dev/null 2>&1 &
         print_success "Firefox opened"
     elif command -v google-chrome >/dev/null 2>&1; then
@@ -338,7 +355,6 @@ open_browser() {
         return 1
     fi
     
-    # Give browser time to load
     sleep 3
 }
 
@@ -387,10 +403,10 @@ show_status() {
     echo "AI Services:"
     if systemctl is-active --quiet ollama; then
         echo -e "  ${GREEN}✓${NC} Ollama service"
-        if ollama ps | grep -q "nomic-embed-text"; then
-            echo -e "  ${GREEN}✓${NC} Embedding model loaded"
+        if ollama list | grep -q "bge-large"; then
+            echo -e "  ${GREEN}✓${NC} Embedding model (bge-large) available"
         else
-            echo -e "  ${ORANGE}!${NC} Embedding model loading..."
+            echo -e "  ${ORANGE}!${NC} Embedding model not found"
         fi
     else
         echo -e "  ${ORANGE}✗${NC} Ollama service"
@@ -401,10 +417,16 @@ show_status() {
     echo "Vector Database:"
     echo -e "  ${GREEN}✓${NC} pgvector in PostgreSQL (port $POSTGRES_PORT)"
     
+    # Documents count
+    if PGPASSWORD=claude_password psql -h localhost -p 5433 -U claude_user -d claude_infinito -t -c "SELECT COUNT(*) FROM documents" 2>/dev/null | grep -q "[0-9]"; then
+        local doc_count=$(PGPASSWORD=claude_password psql -h localhost -p 5433 -U claude_user -d claude_infinito -t -c "SELECT COUNT(*) FROM documents" 2>/dev/null | tr -d ' ')
+        local chunk_count=$(PGPASSWORD=claude_password psql -h localhost -p 5433 -U claude_user -d claude_infinito -t -c "SELECT COUNT(*) FROM document_chunks" 2>/dev/null | tr -d ' ')
+        echo -e "  ${GREEN}✓${NC} Knowledge Base: $doc_count documents, $chunk_count chunks"
+    fi
+    
     echo
     echo "Application URL: http://localhost:$FRONTEND_PORT"
     echo "Logs directory: $LOG_DIR"
-    echo "PID files: $LOG_DIR/*.pid"
     echo
 }
 
@@ -440,7 +462,6 @@ cleanup() {
     pkill -f "npm start" 2>/dev/null
     pkill -f "ts-node.*index.ts" 2>/dev/null
     pkill -f "node.*dist/index.js" 2>/dev/null
-    pkill -f "show-status-debug" 2>/dev/null
     
     print_success "Cleanup completed"
 }
@@ -453,9 +474,9 @@ main() {
     echo "| |    | | __ _ _   _  __| | ___   | || '_ \| |_| | '_ \| | __/ _ \ "
     echo "| |____| |/ _\` | | | |/ _\` |/ _ \  | || | | |  _| | | | | | || (_) |"
     echo " \_____|_|\__,_|_|_|_|\__,_|\___| |___|_| |_|_| |_|_| |_|_|\__\___/ "
-    echo "                                                                   "
+    echo "                                                                     "
     echo "                       v1.1 - Desktop Launcher"
-    echo "                       Vector DB: pgvector in PostgreSQL"
+    echo "               PostgreSQL + pgvector | Ollama | Redis"
     echo -e "${NC}"
     
     # Trap for cleanup
@@ -466,11 +487,16 @@ main() {
     
     # Execute startup sequence
     check_requirements
+   # Check if browser is already open BEFORE starting services
+    
     start_docker_services
     start_backend
     start_frontend
-    open_browser
     
+    # Don't open browser automatically - let user control it
+    print_success "Services started successfully!"
+    print_status "Open in browser: http://localhost:$FRONTEND_PORT"
+
     # Show final status
     show_status
     
@@ -542,7 +568,7 @@ elif [ "$1" = "--stop" ]; then
     exit 0
 elif [ "$1" = "--help" ]; then
     echo "Claude Infinito v1.1 Launcher"
-    echo "Using pgvector in PostgreSQL for vector storage"
+    echo "AI Assistant with Infinite Memory and Knowledge Base"
     echo ""
     echo "Usage: $0 [--status|--stop|--help]"
     echo ""
@@ -555,9 +581,11 @@ elif [ "$1" = "--help" ]; then
     echo ""
     echo "Architecture:"
     echo "  ✓ PostgreSQL 15 with pgvector extension"
-    echo "  ✓ Ollama for embeddings (bge-large-en-v1.5)"
+    echo "  ✓ Ollama for embeddings (bge-large)"
     echo "  ✓ Redis for caching"
     echo "  ✓ Claude Sonnet 4 for LLM"
+    echo ""
+    echo "Development: Schaller&Ponce Consultoría de IA, DS y Agentes"
     exit 0
 else
     main
