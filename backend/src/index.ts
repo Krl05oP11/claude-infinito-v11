@@ -1,10 +1,9 @@
 //-------------------index.ts
-//-------------------index.ts
-//-------------------index.ts
-//-------------------index.ts
-//-------------------index.ts
-//-------------------index.ts
-// FASE 3 INTEGRADA: Conversational RAG System v3.0 - CON MÉTRICAS
+// Claude Infinito v1.1 Backend
+// FASE 3: Conversational RAG System v3.0 con Métricas y Anti-Contradicciones
+// Última actualización: 23/10/2025
+//-------------------
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -16,14 +15,12 @@ import { DatabaseService } from './services/database.service';
 import { RAGService } from './services/rag.service';
 import uploadRoutes from './api/routes/upload';
 
-// Para ejecutar comandos del sistema (GPU status)
+// Sistema de comandos (GPU status)
 import { exec } from 'child_process';
 import { promisify } from 'util';
 const execAsync = promisify(exec);
 
-// ============================================================
-// NUEVOS IMPORTS - CONVERSATIONAL RAG SYSTEM
-// ============================================================
+// Servicios RAG
 import { QueryRouterService } from './services/query-router.service';
 import { ConversationalRAGService } from './services/conversational-rag.service';
 import { KnowledgeBaseRAGService } from './services/knowledge-base-rag.service';
@@ -39,7 +36,6 @@ const dbService = new DatabaseService();
 // INICIALIZACION DE SERVICIOS RAG
 // ============================================================
 
-// Crear Pool separado para servicios RAG (necesitan conexiones concurrentes)
 const ragPool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5433'),
@@ -63,7 +59,7 @@ const knowledgeBaseRAG = new KnowledgeBaseRAGService(
 logger.info('✅ Servicios Conversational RAG inicializados');
 
 // ================================================================================================
-// FUNCIONES AUXILIARES - EXTRAIDAS PARA MEJOR ORGANIZACION
+// FUNCIONES AUXILIARES - DETECCIÓN Y PROCESAMIENTO
 // ================================================================================================
 
 /**
@@ -72,8 +68,6 @@ logger.info('✅ Servicios Conversational RAG inicializados');
  * @returns true si la pregunta se refiere a archivos
  */
 function isFileRelatedQuestion(content: string): boolean {
-  console.log('🔍 DETECTION DEBUG - Input:', content);
-  
   const fileKeywords = [
     'archivo', 'document', 'pdf', 'file', 'libro', 'book',
     'qué dice', 'what does', 'según el', 'según', 'according to',
@@ -83,26 +77,16 @@ function isFileRelatedQuestion(content: string): boolean {
   ];
   
   const lowerContent = content.toLowerCase();
-  console.log('🔍 DETECTION DEBUG - Lowercase:', lowerContent);
-  
-  for (const keyword of fileKeywords) {
-    if (lowerContent.includes(keyword)) {
-      console.log('🔍 DETECTION DEBUG - MATCH:', keyword);
-      return true;
-    }
-  }
-  
-  console.log('🔍 DETECTION DEBUG - NO MATCH');
-  return false;
+  return fileKeywords.some(keyword => lowerContent.includes(keyword));
 }
 
 /**
  * Extrae palabras clave relevantes de una pregunta para filtrado de contexto
+ * Optimizado para términos técnicos y científicos
  * @param content - Contenido del mensaje del usuario  
  * @returns Array de keywords relevantes (máximo 8)
  */
 function extractQuestionKeywords(content: string): string[] {
-  // Palabras vacías que se deben ignorar
   const stopWords = [
     // Español básico
     'que', 'qué', 'el', 'la', 'de', 'en', 'y', 'a', 'un', 'una', 'es', 'se', 'no', 
@@ -111,46 +95,37 @@ function extractQuestionKeywords(content: string): string[] {
     'desde', 'hasta', 'cuando', 'donde', 'quien', 'cual', 'cuales', 'muy', 'más', 
     'menos', 'también', 'tan', 'tanto', 'toda', 'todo', 'todos', 'todas',
     'me', 'mi', 'mis', 'nos', 'nuestro', 'nuestra', 'nuestros', 'nuestras',
-    
     // Verbos comunes
     'ser', 'estar', 'tener', 'hacer', 'poder', 'decir', 'ir', 'ver', 'dar', 
     'saber', 'querer', 'llegar', 'poner', 'parecer', 'seguir', 'encontrar',
-    
     // Palabras genéricas de conversación
     'hola', 'claude', 'resume', 'resumen', 'unas', 'pocas', 'líneas', 'cuáles', 
     'ventajas', 'debes', 'debe', 'debo', 'tener', 'acceso',
-    
     // English básico
     'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 
     'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new'
   ];
   
-  // Palabras clave importantes que siempre se deben preservar
   const importantKeywords = [
     // Autores y nombres propios
-    'mitchell', 'melanie', 'darwin', 'holland', 'goldberg', 'koza', 'fogel',
-    
-    // Términos técnicos de algoritmos genéticos
+    'mitchell', 'melanie', 'darwin', 'holland', 'goldberg', 'koza', 'fogel', 'bishop',
+    // Términos técnicos ML/AI
     'algoritmos', 'genéticos', 'genetic', 'algorithm', 'algorithms',
     'fitness', 'selección', 'selection', 'mutación', 'mutation', 'crossover',
     'población', 'population', 'generación', 'generation', 'cromosoma', 'chromosome',
     'evolución', 'evolution', 'adaptación', 'adaptation', 'supervivencia', 'survival',
-    
-    // Términos de machine learning
     'machine', 'learning', 'aprendizaje', 'automático', 'inteligencia', 'artificial',
     'clustering', 'clasificación', 'regresión', 'neural', 'redes', 'networks',
     'elbow', 'method', 'método', 'codo', 'kmeans', 'svm', 'bayes',
-    
     // Términos de documentos
     'libro', 'capítulo', 'página', 'sección', 'documento', 'archivo', 'pdf', 'text',
     'paper', 'artículo', 'investigación', 'estudio', 'análisis',
-    
     // Conceptos específicos
     'optimización', 'optimization', 'búsqueda', 'search', 'heurística', 'heuristic',
-    'convergencia', 'convergence', 'diversidad', 'diversity', 'exploración', 'exploration'
+    'convergencia', 'convergence', 'diversidad', 'diversity', 'exploración', 'exploration',
+    'patrón', 'patrones', 'pattern', 'patterns', 'reconocimiento', 'recognition'
   ];
   
-  // Procesar y limpiar el contenido
   const words = content
     .toLowerCase()
     .replace(/[^\w\sáéíóúñü]/g, ' ')
@@ -159,14 +134,14 @@ function extractQuestionKeywords(content: string): string[] {
   
   const extractedKeywords: string[] = [];
   
-  // 1. Primero: palabras importantes identificadas específicamente
+  // 1. Palabras importantes identificadas específicamente
   words.forEach(word => {
     if (importantKeywords.includes(word) && !extractedKeywords.includes(word)) {
       extractedKeywords.push(word);
     }
   });
   
-  // 2. Segundo: sustantivos técnicos que no están en stop words
+  // 2. Sustantivos técnicos que no están en stop words
   words.forEach(word => {
     if (word.length >= 4 && 
         !stopWords.includes(word) && 
@@ -174,7 +149,7 @@ function extractQuestionKeywords(content: string): string[] {
         !extractedKeywords.includes(word) &&
         extractedKeywords.length < 8) {
       
-      // Priorizar palabras que parecen técnicas o específicas
+      // Priorizar palabras técnicas
       if (word.includes('tion') || word.includes('sion') || word.includes('ción') ||
           word.includes('ment') || word.includes('ness') || word.includes('ismo') ||
           word.includes('idad') || word.includes('encia') || word.includes('ancia')) {
@@ -183,7 +158,7 @@ function extractQuestionKeywords(content: string): string[] {
     }
   });
   
-  // 3. Tercero: otras palabras relevantes si aún necesitamos más
+  // 3. Otras palabras relevantes si necesitamos más
   if (extractedKeywords.length < 5) {
     words.forEach(word => {
       if (word.length >= 4 && 
@@ -200,11 +175,12 @@ function extractQuestionKeywords(content: string): string[] {
 
 /**
  * Construye el contexto de archivos basado en la estrategia seleccionada
- * @param strategy - Estrategia de contexto (full, filtered, minimal, standard)
+ * Soporta múltiples estrategias: full, filtered, minimal, standard, hybrid, knowledge_focus, conversation_focus
+ * @param strategy - Estrategia de contexto
  * @param fileMemories - Memorias de archivos encontradas
  * @param conversationMemories - Memorias de conversaciones encontradas
  * @param currentProjectId - ID del proyecto actual
- * @returns Contexto construido como string
+ * @returns Contexto construido como string formateado
  */
 function buildContextualMemory(
   strategy: string,
@@ -216,10 +192,10 @@ function buildContextualMemory(
   
   if (strategy === 'full' || strategy === 'standard' || strategy === 'hybrid' || 
       strategy === 'knowledge_focus' || strategy === 'conversation_focus') {
-    // Contexto completo para primera pregunta o seguimiento estándar
+    
     if (fileMemories.length > 0) {
       const priorityFileMemories = fileMemories.slice(0, 6);
-      const fileParts = priorityFileMemories.map((memory, index) => {
+      const fileParts = priorityFileMemories.map((memory) => {
         const fileName = memory.metadata?.file_name || memory.metadata?.filename || 'archivo_subido';
         const section = memory.metadata?.section || 'contenido';
         const similarity = ((memory.metadata?.similarity || memory.similarity || 0) * 100).toFixed(1);
@@ -235,7 +211,6 @@ function buildContextualMemory(
       contextSections.push(`--- ARCHIVOS SUBIDOS (${priorityFileMemories.length} encontrados) ---\n${fileParts.join('\n\n─────────────\n\n')}`);
     }
     
-    // Agregar contexto conversacional si es necesario
     const maxTotalMemories = 8;
     const usedSlots = Math.min(fileMemories.length, 6);
     const conversationSlots = Math.min(Math.max(maxTotalMemories - usedSlots, 0), 2);
@@ -251,7 +226,6 @@ function buildContextualMemory(
       contextSections.push(`--- CONTEXTO CONVERSACIONAL (${priorityConversationMemories.length} encontrados) ---\n${conversationParts.join('\n\n---\n\n')}`);
     }
   } else if (strategy === 'filtered' || strategy === 'minimal') {
-    // Contexto enfocado para preguntas específicas de seguimiento
     if (fileMemories.length > 0) {
       const focusedMemories = fileMemories.slice(0, 3);
       const fileParts = focusedMemories.map(memory => {
@@ -272,11 +246,12 @@ function buildContextualMemory(
 }
 
 /**
- * Función auxiliar para obtener información de la GPU usando nvidia-smi
+ * Obtiene información de la GPU usando nvidia-smi
+ * Fallback a Ollama si nvidia-smi no está disponible
+ * @returns Objeto con información de GPU (usage, memory, temperature, etc.)
  */
 async function getGPUStatus(): Promise<any> {
   try {
-    // Comando nvidia-smi para obtener utilización y memoria
     const { stdout: utilizationOutput } = await execAsync(
       'nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total,temperature.gpu,name --format=csv,noheader,nounits'
     );
@@ -284,8 +259,6 @@ async function getGPUStatus(): Promise<any> {
     const lines = utilizationOutput.trim().split('\n');
     if (lines.length > 0) {
       const [usage, memoryUsed, memoryTotal, temperature, name] = lines[0].split(',').map(s => s.trim());
-      
-      // Verificar si es RTX 5070 Ti (o RTX 4070 Ti mientras esperamos la 5070 Ti)
       const isRTX5070Ti = name.includes('5070') || name.includes('4070');
       
       return {
@@ -301,20 +274,16 @@ async function getGPUStatus(): Promise<any> {
     
     throw new Error('No GPU data available');
   } catch (error) {
-    // Si nvidia-smi no está disponible, intentar con Ollama
+    // Fallback: intentar con Ollama
     try {
       const { stdout: ollamaOutput } = await execAsync('ollama ps');
-      
-      // Si Ollama está usando GPU, asumimos que está activa
       const isUsingGPU = ollamaOutput.includes('GPU') || ollamaOutput.includes('CUDA');
-      
-      // Intentar estimar uso basado en si hay modelos cargados
       const hasModelsLoaded = ollamaOutput.includes('bge-large') || 
                               ollamaOutput.includes('llama') || 
                               ollamaOutput.includes('mistral');
       
       return {
-        usage: hasModelsLoaded ? 30 : 0, // Estimación básica
+        usage: hasModelsLoaded ? 30 : 0,
         memory_used: 0,
         memory_total: 0,
         temperature: 0,
@@ -324,39 +293,74 @@ async function getGPUStatus(): Promise<any> {
         source: 'ollama_estimate'
       };
     } catch (ollamaError) {
-      // Sin acceso a GPU info
       throw new Error('GPU information not available');
     }
   }
+}
+
+/**
+ * Registra errores del sistema con clasificación automática
+ * Actualiza variables globales para exposición via API
+ * @param error - Error capturado
+ * @param context - Contexto donde ocurrió el error
+ */
+function logSystemError(error: any, context: string): void {
+  let errorMessage = 'Error desconocido';
+  let errorType = 'unknown';
+  
+  if (error.message?.includes('529') || error.message?.includes('overloaded')) {
+    errorMessage = 'API Claude: Servidor sobrecargado';
+    errorType = 'api_overload';
+  } else if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
+    errorMessage = 'API Claude: Error de autenticación';
+    errorType = 'auth_error';
+  } else if (error.message?.includes('403') || error.message?.includes('forbidden')) {
+    errorMessage = 'API Claude: Acceso denegado';
+    errorType = 'access_denied';
+  } else if (error.message?.includes('429') || error.message?.includes('rate limit')) {
+    errorMessage = 'API Claude: Límite de velocidad excedido';
+    errorType = 'rate_limit';
+  } else if (error.message?.includes('500') || error.message?.includes('internal server error')) {
+    errorMessage = 'API Claude: Error interno del servidor';
+    errorType = 'server_error';
+  } else if (error.message?.includes('network') || error.message?.includes('ECONNREFUSED')) {
+    errorMessage = 'Error de conectividad de red';
+    errorType = 'network_error';
+  } else if (error.message?.includes('timeout')) {
+    errorMessage = 'Timeout de conexión';
+    errorType = 'timeout_error';
+  } else {
+    errorMessage = `Error en ${context}: ${error.message || 'Error desconocido'}`;
+    errorType = 'system_error';
+  }
+  
+  (global as any).lastSystemError = errorMessage;
+  (global as any).lastErrorType = errorType;
+  (global as any).lastErrorTime = new Date().toISOString();
+  (global as any).errorCount = ((global as any).errorCount || 0) + 1;
+  
+  logger.error(`[${context.toUpperCase()}] ${errorMessage}`, error);
 }
 
 // ================================================================================================
 // CONFIGURACION DE LA APLICACION
 // ================================================================================================
 
-// Conectar a la base de datos
 dbService.connect().catch(err => logger.error('Error de conexión a BD:', err));
 
-// Middleware de seguridad y optimización
 app.use(helmet());
 app.use(cors());
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Rutas de upload
 app.use('/api/upload', uploadRoutes);
-
-// Rutas de chat (legacy)
 app.use('/api/chat', require('./api/routes/chat').default);
 
 // ================================================================================================
 // ENDPOINTS DE CONVERSACIONES
 // ================================================================================================
 
-/**
- * Obtiene todas las conversaciones del usuario
- */
 app.get('/api/conversations', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const conversations = await dbService.getConversations();
@@ -367,9 +371,6 @@ app.get('/api/conversations', async (req: express.Request, res: express.Response
   }
 });
 
-/**
- * Crea una nueva conversación
- */
 app.post('/api/conversations', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const { title, project_id } = req.body;
@@ -384,9 +385,6 @@ app.post('/api/conversations', async (req: express.Request, res: express.Respons
   }
 });
 
-/**
- * Obtiene una conversación específica por ID
- */
 app.get('/api/conversations/:id', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const conversationId = req.params.id;
@@ -404,9 +402,6 @@ app.get('/api/conversations/:id', async (req: express.Request, res: express.Resp
   }
 });
 
-/**
- * Obtiene los mensajes de una conversación específica
- */
 app.get('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const conversationId = req.params.id;
@@ -419,14 +414,13 @@ app.get('/api/conversations/:id/messages', async (req: express.Request, res: exp
 });
 
 // ================================================================================================
-// ENDPOINT PRINCIPAL DE MENSAJES - CONVERSATIONAL RAG INTEGRATION CON MÉTRICAS
+// ENDPOINT PRINCIPAL DE MENSAJES - CONVERSATIONAL RAG + ANTI-CONTRADICCIONES
 // ================================================================================================
 
 /**
  * Procesa un nuevo mensaje del usuario con Conversational RAG completo
- * FASE 3: Sistema inteligente que combina memoria conversacional y knowledge base
- * ACTUALIZADO: Con métricas RAG completas para el footer
- * ✅ FIX: Detección de contradicciones en historial implementada
+ * Incluye detección automática de contradicciones en historial
+ * Sistema inteligente que combina memoria conversacional y knowledge base
  */
 app.post('/api/conversations/:id/messages', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
@@ -438,18 +432,14 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       return;
     }
 
-    // ============================================================
-    // NUEVAS VARIABLES PARA MÉTRICAS RAG
-    // ============================================================
-    const ragStartTime = Date.now(); // Para medir tiempo de respuesta
-    let similarityScores: number[] = []; // Para guardar todas las similitudes
-    let thresholdUsed = 0.3; // Valor por defecto
-    // Variables para estadísticas de similitud
+    // Variables para métricas RAG
+    const ragStartTime = Date.now();
+    let similarityScores: number[] = [];
+    let thresholdUsed = 0.3;
     let avgSimilarity = 0;
     let maxSimilarity = 0;
     let minSimilarity = 0;
 
-    // Extraer y validar configuración dinámica
     const claudeSettings = settings || {};
     
     logger.info(`Procesando mensaje para conversación ${conversationId}`);
@@ -460,15 +450,15 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     // 1. Guardar mensaje del usuario
     const userMessage = await dbService.addMessage(conversationId, 'user', content);
     
-    // 2. Obtener mensajes recientes de la conversación actual
+    // 2. Obtener mensajes recientes
     const recentMessages = await dbService.getMessages(conversationId, 10);
     
-    // 3. Obtener información de la conversación para determinar el proyecto actual
+    // 3. Obtener información de la conversación
     const conversation = await dbService.getConversationById(conversationId);
     const currentProjectId = conversation?.project_id || conversationId;
     
     // ============================================================
-    // ✅ NUEVO: DETECCIÓN DE CONTRADICCIONES EN HISTORIAL
+    // DETECCIÓN DE CONTRADICCIONES EN HISTORIAL
     // ============================================================
     
     let hasContradictoryHistory = false;
@@ -476,7 +466,6 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     if (recentMessages.length > 0) {
       logger.info('🔍 Checking for contradictions in conversation history...');
       
-      // Patrones que indican que Claude previamente negó acceso a archivos
       const contradictionPatterns = [
         'sorry, could not generate',
         'no tengo acceso',
@@ -495,12 +484,10 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
         'haven\'t received'
       ];
       
-      // Revisar mensajes del asistente buscando contradicciones
       recentMessages.forEach((msg, index) => {
-        if (msg.role === 'assistant') {
+        if (msg.role === 'assistant' && !hasContradictoryHistory) {
           const msgContent = msg.content.toLowerCase();
           
-          // Verificar cada patrón de contradicción
           for (const pattern of contradictionPatterns) {
             if (msgContent.includes(pattern)) {
               hasContradictoryHistory = true;
@@ -508,10 +495,6 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
               logger.warn(`⚠️ Previous response claimed no file access, but files may now be available`);
               break;
             }
-          }
-          
-          if (hasContradictoryHistory) {
-            return; // Break forEach
           }
         }
       });
@@ -525,12 +508,11 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     }
     
     // ============================================================
-    // CONVERSATIONAL RAG - NUEVO SISTEMA INTELIGENTE
+    // CONVERSATIONAL RAG - SISTEMA INTELIGENTE
     // ============================================================
     
     logger.info('[RAG] Iniciando análisis con QueryRouter...');
     
-    // 4. QueryRouter analiza la query y determina estrategia
     const queryContext = await queryRouter.analyzeQuery(
       content,
       conversationId,
@@ -540,19 +522,17 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
     const searchStrategy = queryRouter.determineSearchStrategy(queryContext);
     queryRouter.logQueryAnalysis(content, queryContext, searchStrategy);
     
-    // 5. Ejecutar búsquedas según estrategia determinada
-    // ✅ MODIFICADO: Solo buscar si NO hay contradicciones
     let conversationalResults: any[] = [];
     let knowledgeResults: any[] = [];
     let contextualMemory: string = '';
     
     try {
-      // ✅ NUEVO: Prevenir búsqueda si hay contradicciones
+      // Prevenir búsqueda si hay contradicciones
       if (hasContradictoryHistory) {
         logger.warn('⚠️ SKIPPING ALL RAG SEARCHES due to contradictory history');
         logger.warn('⚠️ This prevents confusing Claude with context that contradicts previous statements');
       } else {
-        // Búsqueda en memoria conversacional si la estrategia lo indica
+        // Búsqueda en memoria conversacional
         if (searchStrategy.useConversationalRAG) {
           logger.info(`[RAG] Buscando en memoria conversacional (max: ${searchStrategy.maxResults})...`);
           const startConvSearch = Date.now();
@@ -560,15 +540,12 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
           conversationalResults = await conversationalRAG.searchConversations(
             content,
             currentProjectId,
-            undefined, // conversationId opcional
+            undefined,
             searchStrategy.maxResults,
             searchStrategy.similarityThreshold
           );
           
-          // Capturar threshold usado
           thresholdUsed = searchStrategy.similarityThreshold;
-          
-          // Extraer scores de similitud de resultados conversacionales
           const convScores = conversationalResults.map((r: any) => r.similarity || 0);
           similarityScores.push(...convScores);
           
@@ -576,7 +553,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
           logger.info(`[RAG] Encontradas ${conversationalResults.length} memorias conversacionales en ${convSearchTime}ms`);
         }
         
-        // Búsqueda en knowledge base (documentos) si la estrategia lo indica
+        // Búsqueda en knowledge base
         if (searchStrategy.useKnowledgeBaseRAG) {
           logger.info(`[RAG] Buscando en knowledge base (max: ${searchStrategy.maxResults})...`);
           const startKbSearch = Date.now();
@@ -588,10 +565,7 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
             searchStrategy.similarityThreshold
           );
           
-          // Capturar threshold usado
           thresholdUsed = searchStrategy.similarityThreshold;
-          
-          // Extraer scores de similitud de resultados de knowledge base
           const kbScores = knowledgeResults.map((r: any) => r.similarity || 0);
           similarityScores.push(...kbScores);
           
@@ -600,22 +574,14 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
         }
       }
       
-      // Calcular tiempo total de RAG
-      const ragEndTime = Date.now();
-      const ragResponseTime = ragEndTime - ragStartTime;
-      
       // Calcular estadísticas de similitud
       avgSimilarity = similarityScores.length > 0 
         ? similarityScores.reduce((a, b) => a + b, 0) / similarityScores.length 
         : 0;
-      maxSimilarity = similarityScores.length > 0 
-        ? Math.max(...similarityScores) 
-        : 0;
-      minSimilarity = similarityScores.length > 0 
-        ? Math.min(...similarityScores) 
-        : 0;
+      maxSimilarity = similarityScores.length > 0 ? Math.max(...similarityScores) : 0;
+      minSimilarity = similarityScores.length > 0 ? Math.min(...similarityScores) : 0;
       
-      // 6. Combinar y construir contexto
+      // Combinar y construir contexto
       const allResults = [
         ...knowledgeResults.map(r => ({ ...r, source_type: 'knowledge_base' })),
         ...conversationalResults.map(r => ({ ...r, source_type: 'conversation' }))
@@ -624,11 +590,9 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       if (allResults.length > 0 && !hasContradictoryHistory) {
         logger.info(`[RAG] Total de resultados combinados: ${allResults.length}`);
         
-        // Separar por tipo para construcción de contexto
         const fileMemories = knowledgeResults;
         const conversationMemories = conversationalResults;
         
-        // Usar estrategia para determinar cómo construir el contexto
         const contextStrategy = searchStrategy.useConversationalRAG && searchStrategy.useKnowledgeBaseRAG ? 
           'hybrid' : searchStrategy.useKnowledgeBaseRAG ? 'knowledge_focus' : 'conversation_focus';
         
@@ -652,20 +616,19 @@ app.post('/api/conversations/:id/messages', async (req: express.Request, res: ex
       logger.warn('[RAG] Error en búsqueda, continuando sin contexto:', ragError);
     }
 
-    // 7. Construir mensajes para Claude
+    // Construir mensajes para Claude
     const claudeMessages = recentMessages.map(msg => ({
       role: msg.role as 'user' | 'assistant',
       content: msg.content
     }));
 
-    // 8. Inyección de contexto si se encontró información relevante
-    // ✅ MODIFICADO: Manejo especial para conversaciones con contradicciones
+    // Inyección de contexto con manejo de contradicciones
     if (claudeMessages.length > 0) {
       const lastUserIndex = claudeMessages.length - 1;
       if (claudeMessages[lastUserIndex].role === 'user') {
         let baseInstruction = '';
         
-        // ✅ NUEVO: Caso especial para conversaciones con contradicciones
+        // Caso especial para conversaciones con contradicciones
         if (hasContradictoryHistory) {
           baseInstruction = `NOTA IMPORTANTE: Esta conversación tiene historial previo donde no tenías acceso completo a archivos o información. 
 AHORA puedes tener acceso a archivos que han sido subidos recientemente al sistema. 
@@ -709,11 +672,10 @@ donde tendrás acceso completo al contenido de los archivos desde el inicio.
       }
     }
 
-    // 9. Enviar a Claude API con configuración dinámica
+    // Enviar a Claude API
     const { ClaudeService } = require('./services/claude.service');
     const claudeService = new ClaudeService();
     
-    // Validar configuración antes de enviar
     const validation = claudeService.validateSettings(claudeSettings);
     if (!validation.valid) {
       logger.warn('Configuración Claude inválida proporcionada:', validation.errors);
@@ -727,8 +689,7 @@ donde tendrás acceso completo al contenido de los archivos desde el inicio.
     const claudeResponse = await claudeService.sendMessage(claudeMessages, claudeSettings);
     const assistantContent = claudeResponse.content[0]?.text || 'Lo siento, no se pudo generar una respuesta.';
 
-    // 10. Guardar respuesta de Claude con metadatos de configuración
-    // ✅ MODIFICADO: Agregar flag de contradicción a metadata
+    // Guardar respuesta con metadata
     const assistantMessage = await dbService.addMessage(conversationId, 'assistant', assistantContent, { 
       model: claudeResponse.model,
       usage: claudeResponse.usage,
@@ -736,13 +697,10 @@ donde tendrás acceso completo al contenido de los archivos desde el inicio.
       query_type: queryContext.type,
       query_intent: queryContext.intent,
       settings_used: claudeSettings,
-      contradiction_detected: hasContradictoryHistory  // ✅ NUEVO: Flag de contradicción
+      contradiction_detected: hasContradictoryHistory
     });
 
-    // ============================================================
-    // ALMACENAMIENTO POST-RESPUESTA - CONVERSATIONAL RAG
-    // ============================================================
-    
+    // Almacenamiento post-respuesta
     try {
       logger.info('[RAG] Almacenando par conversacional para futuras búsquedas...');
       
@@ -760,7 +718,7 @@ donde tendrás acceso completo al contenido de los archivos desde el inicio.
       logger.warn('⚠️ Fallo al almacenar par conversacional:', storageError);
     }
 
-    // 11. Logging final
+    // Logging final
     logger.info(`✅ Mensaje procesado exitosamente`);
     logger.info(`   - Tipo de query: ${queryContext.type}`);
     logger.info(`   - Intent: ${queryContext.intent}`);
@@ -771,10 +729,7 @@ donde tendrás acceso completo al contenido de los archivos desde el inicio.
       logger.info(`   - ⚠️ Contradicción detectada: Contexto omitido`);
     }
 
-    // ============================================================
-    // 12. RESPONDER CON MÉTRICAS RAG COMPLETAS
-    // ============================================================
-    const ragResponseTime = Date.now() - ragStartTime; // Tiempo total final
+    const ragResponseTime = Date.now() - ragStartTime;
     
     res.json({
       user_message: userMessage,
@@ -788,12 +743,11 @@ donde tendrás acceso completo al contenido de los archivos desde el inicio.
       },
       settings_applied: claudeSettings,
       success: true,
-      contradiction_detected: hasContradictoryHistory,  // ✅ NUEVO: Informar al frontend
-      // ✅ MÉTRICAS RAG COMPLETAS:
+      contradiction_detected: hasContradictoryHistory,
       rag_metrics: {
         response_time_ms: ragResponseTime || 0,
         threshold_used: thresholdUsed,
-        similarity_scores: similarityScores.slice(0, 10), // Top 10 para no sobrecargar
+        similarity_scores: similarityScores.slice(0, 10),
         similarity_stats: {
           avg: avgSimilarity,
           max: maxSimilarity,
@@ -815,9 +769,6 @@ donde tendrás acceso completo al contenido de los archivos desde el inicio.
 // ENDPOINTS DE CONFIGURACION Y ESTADO
 // ================================================================================================
 
-/**
- * Obtiene opciones de configuración disponibles para Claude
- */
 app.get('/api/claude/config', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const { ClaudeService } = require('./services/claude.service');
@@ -837,9 +788,6 @@ app.get('/api/claude/config', async (req: express.Request, res: express.Response
   }
 });
 
-/**
- * Endpoint de verificación de salud del sistema
- */
 app.get('/api/health', async (req, res) => {
   res.json({
     status: 'ok',
@@ -855,9 +803,6 @@ app.get('/api/health', async (req, res) => {
   });
 });
 
-/**
- * Información sobre la aplicación
- */
 app.get('/api/info', (req, res) => {
   res.json({
     name: 'Claude Infinito v1.1 Backend',
@@ -872,14 +817,11 @@ app.get('/api/info', (req, res) => {
       'Gestión Inteligente de Contexto', 
       'Configuración Dinámica',
       'Métricas RAG en Tiempo Real',
-      'Detección de Contradicciones Históricas'  // ✅ NUEVO
+      'Detección de Contradicciones Históricas'
     ]
   });
 });
 
-/**
- * Endpoint raíz con información básica
- */
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Claude Infinito v1.1 Backend - Conversational RAG System Activo', 
@@ -891,9 +833,6 @@ app.get('/', (req, res) => {
 // SISTEMA DE MONITOREO DE ERRORES
 // ================================================================================================
 
-/**
- * Endpoint para obtener información de errores recientes del sistema
- */
 app.get('/api/system/errors', (req: express.Request, res: express.Response): void => {
   try {
     const errorInfo = {
@@ -911,9 +850,6 @@ app.get('/api/system/errors', (req: express.Request, res: express.Response): voi
   }
 });
 
-/**
- * Endpoint para limpiar errores del sistema (útil para testing)
- */
 app.post('/api/system/errors/clear', (req: express.Request, res: express.Response): void => {
   try {
     (global as any).lastSystemError = null;
@@ -930,16 +866,11 @@ app.post('/api/system/errors/clear', (req: express.Request, res: express.Respons
 });
 
 // ================================================================================================
-// NUEVOS ENDPOINTS PARA MÉTRICAS DEL SISTEMA
+// ENDPOINTS DE MÉTRICAS DEL SISTEMA
 // ================================================================================================
 
-/**
- * Endpoint para obtener el estado de la GPU
- * Usa nvidia-smi para obtener información real de la RTX 5070 Ti
- */
 app.get('/api/system/gpu-status', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
-    // Intentar obtener información de la GPU usando nvidia-smi
     const gpuInfo = await getGPUStatus();
     res.json(gpuInfo);
   } catch (error) {
@@ -955,18 +886,14 @@ app.get('/api/system/gpu-status', async (req: express.Request, res: express.Resp
   }
 });
 
-/**
- * Endpoint adicional para verificar específicamente Ollama GPU usage
- */
 app.get('/api/system/ollama-status', async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const { stdout } = await execAsync('ollama ps');
     
-    // Parsear la salida de ollama ps
     const lines = stdout.split('\n').filter(line => line.trim());
     const models: any[] = [];
     
-    for (let i = 1; i < lines.length; i++) { // Saltar header
+    for (let i = 1; i < lines.length; i++) {
       const parts = lines[i].split(/\s+/);
       if (parts.length >= 4) {
         models.push({
@@ -996,55 +923,9 @@ app.get('/api/system/ollama-status', async (req: express.Request, res: express.R
   }
 });
 
-/**
- * Función auxiliar para registrar errores del sistema
- * @param error - Error capturado
- * @param context - Contexto donde ocurrió el error
- */
-function logSystemError(error: any, context: string): void {
-  let errorMessage = 'Error desconocido';
-  let errorType = 'unknown';
-  
-  // Clasificar tipos de errores específicos
-  if (error.message?.includes('529') || error.message?.includes('overloaded')) {
-    errorMessage = 'API Claude: Servidor sobrecargado';
-    errorType = 'api_overload';
-  } else if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
-    errorMessage = 'API Claude: Error de autenticación';
-    errorType = 'auth_error';
-  } else if (error.message?.includes('403') || error.message?.includes('forbidden')) {
-    errorMessage = 'API Claude: Acceso denegado';
-    errorType = 'access_denied';
-  } else if (error.message?.includes('429') || error.message?.includes('rate limit')) {
-    errorMessage = 'API Claude: Límite de velocidad excedido';
-    errorType = 'rate_limit';
-  } else if (error.message?.includes('500') || error.message?.includes('internal server error')) {
-    errorMessage = 'API Claude: Error interno del servidor';
-    errorType = 'server_error';
-  } else if (error.message?.includes('network') || error.message?.includes('ECONNREFUSED')) {
-    errorMessage = 'Error de conectividad de red';
-    errorType = 'network_error';
-  } else if (error.message?.includes('timeout')) {
-    errorMessage = 'Timeout de conexión';
-    errorType = 'timeout_error';
-  } else {
-    errorMessage = `Error en ${context}: ${error.message || 'Error desconocido'}`;
-    errorType = 'system_error';
-  }
-  
-  // Guardar en variables globales para exposición via API
-  (global as any).lastSystemError = errorMessage;
-  (global as any).lastErrorType = errorType;
-  (global as any).lastErrorTime = new Date().toISOString();
-  (global as any).errorCount = ((global as any).errorCount || 0) + 1;
-  
-  logger.error(`[${context.toUpperCase()}] ${errorMessage}`, error);
-}
-
-// ============================================================================
-// ENDPOINT: GET /api/projects/:projectId/documents
-// Listar documentos de la Knowledge Base de un proyecto
-// ============================================================================
+// ================================================================================================
+// ENDPOINTS DE KNOWLEDGE BASE
+// ================================================================================================
 
 app.get('/api/projects/:projectId/documents', async (req, res) => {
   const startTime = Date.now();
@@ -1053,7 +934,6 @@ app.get('/api/projects/:projectId/documents', async (req, res) => {
   try {
     logger.info(`📂 Solicitando documentos para proyecto: ${projectId}`);
 
-    // Validar que el projectId sea un UUID válido
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(projectId)) {
       return res.status(400).json({
@@ -1062,7 +942,6 @@ app.get('/api/projects/:projectId/documents', async (req, res) => {
       });
     }
 
-    // Consultar documentos del proyecto con estadísticas de chunks
     const query = `
       SELECT 
         d.id,
@@ -1116,18 +995,12 @@ app.get('/api/projects/:projectId/documents', async (req, res) => {
   }
 });
 
-// ============================================================================
-// ENDPOINT: DELETE /api/documents/:documentId
-// Eliminar un documento de la Knowledge Base
-// ============================================================================
-
 app.delete('/api/documents/:documentId', async (req, res) => {
   const { documentId } = req.params;
 
   try {
     logger.info(`🗑️ Eliminando documento ID: ${documentId}`);
 
-    // Primero obtener información del documento
     const docQuery = 'SELECT filename, project_id FROM documents WHERE id = $1';
     const docResult = await ragPool.query(docQuery, [documentId]);
 
@@ -1140,7 +1013,6 @@ app.delete('/api/documents/:documentId', async (req, res) => {
 
     const document = docResult.rows[0];
 
-    // Eliminar documento (CASCADE eliminará automáticamente los chunks)
     const deleteQuery = 'DELETE FROM documents WHERE id = $1';
     await ragPool.query(deleteQuery, [documentId]);
 
